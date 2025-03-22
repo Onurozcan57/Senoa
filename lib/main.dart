@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senoa/AnaSayfa.dart';
 import 'LoginScreen.dart';
 
 void main() {
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: Anasayfa(),
     );
   }
 }

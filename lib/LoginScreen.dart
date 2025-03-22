@@ -128,7 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 5, // Gölgelendirme efekti
                   ),
-                  onPressed: () {},
+                  onPressed:
+                      () {}, //butonun çalışması için fonksiyonlar buraya yazılır
                   child: Text(
                     "Sign In",
                     style: TextStyle(
@@ -141,11 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 10),
                 // Şifremi unuttum bağlantısı
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {}, //fonksiyonun çalışması
                   child: Text(
                     "Şifreni mi unuttun?",
                     style: TextStyle(
-                      color: Colors.red.shade300,
+                      color: const Color.fromARGB(255, 115, 229, 119),
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -153,11 +154,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 // Kayıt ol bağlantısı
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {}, //fonksiyonun çalışması
                   child: Text(
                     "Hesabın yok mu? --> Kayıt ol",
                     style: TextStyle(
-                      color: Colors.blue.shade300,
+                      color: const Color.fromARGB(255, 100, 246, 146),
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
