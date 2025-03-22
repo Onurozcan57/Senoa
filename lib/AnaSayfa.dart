@@ -1,4 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false, //debug yazısını kaldırdı
+      home: const Anasayfa(),
+    );
+  }
+}
 
 class Anasayfa extends StatefulWidget {
   const Anasayfa({super.key});
@@ -46,13 +63,6 @@ class _AnasayfaState extends State<Anasayfa> {
             SizedBox(height: 10), // Başlık ile açıklama arasındaki boşluk
             Text(aciklama, textAlign: TextAlign.center), // Açıklama kısmı
             SizedBox(height: 20), // Açıklama ile buton arasındaki boşluk
-            /* ElevatedButton(
-              onPressed: () {
-                // Butona tıklandığında bir şey yapılacaksa burası kullanılır
-                print('$baslik seçildi'); // Seçilen kart başlığını konsola yazdır
-              },
-              child: Text('Seç'), // Butonun yazısı
-            ),*/
           ],
         ),
       ),
@@ -112,10 +122,38 @@ class _AnasayfaState extends State<Anasayfa> {
         ),
         child: Column(
           children: [
+            // Takvimi ekliyoruz (Üstte olacak)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TableCalendar(
+                firstDay: DateTime.utc(2010, 10, 20),
+                lastDay: DateTime.utc(2060, 10, 20),
+                focusedDay: DateTime.now(),
+                headerVisible: true,
+                daysOfWeekVisible: true, // Günlerin görünürlüğü
+                sixWeekMonthsEnforced: false, // Altı haftalık görünüm
+                shouldFillViewport:
+                    false, // Takvimin ekranın tamamını doldurmaması
+                headerStyle: HeaderStyle(
+                  titleTextStyle: TextStyle(
+                    fontSize: 18, // Başlık boyutunu küçülttük
+                    color: Colors.deepPurple,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                calendarStyle: CalendarStyle(
+                  todayTextStyle: TextStyle(
+                    fontSize:
+                        20, // hangi günde olduğunu belliolsun diye o günün yazısının fontu büyük
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
             // Başlık Sabit Kalacak
             Padding(
-              padding: const EdgeInsets.only(
-                  top: 0.0), // Başlık ve kartlar arasındaki boşluk
+              padding: const EdgeInsets.only(top: 0.0),
               child: Text(
                 'Diyet Paketleri',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
