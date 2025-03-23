@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:senoa/AnaSayfa.dart';
-import 'LoginScreen.dart';
 
 void main() {
   runApp(MyApp());
