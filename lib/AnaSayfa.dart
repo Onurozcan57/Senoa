@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -285,6 +281,37 @@ class _AnasayfaState extends State<Anasayfa> {
                         ),
             ),
 
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                'Egzersiz Planları',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            // Paket Kartları
+            SizedBox(
+              height: 250, // Kartların yüksekliği için sabit alan
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    PaketKart('Basic Paket', 'Günlük öneriler, basit takip.',
+                        Colors.blue, "lib/assets/arkaPlan3.jpg"),
+                    PaketKart(
+                        'Premium Paket',
+                        'Özel diyet listeleri, haftalık analizler.',
+                        Colors.green,
+                        "lib/assets/arkaPlan.jpg"),
+                    PaketKart(
+                        'VIP Paket',
+                        'Kişisel diyetisyen, gelişmiş analiz.',
+                        Colors.orange,
+                        "lib/assets/arkaPlan2.jpg"),
+                  ],
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Text(
