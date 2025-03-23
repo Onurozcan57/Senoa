@@ -30,6 +30,9 @@ class _AnasayfaState extends State<Anasayfa> {
   Map<DateTime, List<String>> _tasks = {};
   TextEditingController _taskController = TextEditingController();
 
+  // GlobalKey<ScaffoldState> kullanıyoruz
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   void _showPopup(BuildContext context, String baslik, String aciklama) {
     showDialog(
       context: context,
@@ -115,6 +118,7 @@ class _AnasayfaState extends State<Anasayfa> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15), // Köşeleri yuvarla
           image: DecorationImage(
+            opacity: 0.6,
             image: AssetImage(arkaPlan), // Resmin yolu
             fit: BoxFit.cover, // Resmi kapsayıcı şekilde yerleştir
           ),
@@ -124,7 +128,10 @@ class _AnasayfaState extends State<Anasayfa> {
           children: [
             Text(
               baslik,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             Text(aciklama, textAlign: TextAlign.center),
@@ -137,10 +144,60 @@ class _AnasayfaState extends State<Anasayfa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // Scaffold'a global key ekledik
       resizeToAvoidBottomInset: true, // Klavye açıldığında taşmayı önler
       appBar: AppBar(
         title: Text('Diyetisyenlik Uygulaması'),
         backgroundColor: Color(0xFF34C759),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            // Hamburger menü butonuna basıldığında Drawer'ı açar
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color(0xFF34C759),
+              ),
+              child: Text(
+                'Menü',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Ana Sayfa'),
+              onTap: () {
+                // Ana Sayfa'ya gitmek için yapılacak işlem
+                Navigator.pop(context); // Drawer'ı kapatır
+              },
+            ),
+            ListTile(
+              title: Text('Ayarlar'),
+              onTap: () {
+                // Ayarlara gitmek için yapılacak işlem
+                Navigator.pop(context); // Drawer'ı kapatır
+              },
+            ),
+            ListTile(
+              title: Text('Çıkış'),
+              onTap: () {
+                // Çıkış yapma işlemi
+                Navigator.pop(context); // Drawer'ı kapatır
+                // Çıkış işlemi yapılabilir
+              },
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -255,34 +312,6 @@ class _AnasayfaState extends State<Anasayfa> {
                         'Kişisel diyetisyen, gelişmiş analiz.',
                         Colors.orange,
                         "lib/assets/arkaPlan2.jpg"),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                'Egzersiz Alanı',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 250,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    PaketKart(
-                        'Başlangıç Seviye',
-                        'Hafif egzersizler, temel hareketler.',
-                        Colors.purple,
-                        "lib/assets/girisekrani.jpg"),
-                    PaketKart('Orta Seviye', 'Daha yoğun antrenman programı.',
-                        Colors.cyan, "lib/assets/girisekrani.jpg"),
-                    PaketKart('İleri Seviye', 'Kas geliştirme ve dayanıklılık.',
-                        Colors.amber, "lib/assets/girisekrani.jpg"),
-                    PaketKart('Pro Seviye', 'Sporcular için özel program.',
-                        Colors.teal, "lib/assets/girisekrani.jpg"),
                   ],
                 ),
               ),
