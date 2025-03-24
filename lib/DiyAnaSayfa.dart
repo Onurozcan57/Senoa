@@ -154,6 +154,12 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                           },
                         ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [],
+              ),
+            ),
           ],
         ),
       ),

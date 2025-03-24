@@ -171,10 +171,16 @@ class _AnasayfaState extends State<Anasayfa> {
               ),
             ),
             ListTile(
-              title: Text('Ana Sayfa'),
+              title: Text('Diyetisyenim'),
               onTap: () {
-                // Ana Sayfa'ya gitmek için yapılacak işlem
+                // Diyetisyenim'ya gitmek için yapılacak işlem
                 Navigator.pop(context); // Drawer'ı kapatır
+              },
+            ),
+            ListTile(
+              title: Text("AKış"),
+              onTap: () {
+                //Akış sayfasına geçişi sağlayacak
               },
             ),
             ListTile(
@@ -281,6 +287,50 @@ class _AnasayfaState extends State<Anasayfa> {
                         ),
             ),
 
+            SizedBox(
+              height: 75,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.auto_graph_outlined,
+                    size: 30, // İkonun boyutunu büyütüyoruz
+                    color: Colors.green, // İkonun rengini yeşil yapıyoruz
+                  ),
+                  SizedBox(width: 10), // İkon ile yazı arasına boşluk ekliyoruz
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Alınması Gereken Kalori Miktarı:",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[700], // Yazı rengini gri yapıyoruz
+                        ),
+                      ),
+                      TweenAnimationBuilder(
+                        tween: Tween<double>(
+                            begin: 0, end: 2500), // Başlangıç ve bitiş değeri
+                        duration: Duration(seconds: 3), // Animasyon süresi
+                        builder: (context, value, child) {
+                          return Text(
+                            "${value.toStringAsFixed(0)} Kcal",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors
+                                  .green, // Animasyonlu kalori miktarını yeşil yapıyoruz
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Text(
@@ -315,7 +365,7 @@ class _AnasayfaState extends State<Anasayfa> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Text(
-                'Diyet Paketleri',
+                'Egzersiz Bölümü',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
@@ -327,11 +377,14 @@ class _AnasayfaState extends State<Anasayfa> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    PaketKart('Basic Paket', 'Günlük öneriler, basit takip.',
-                        Colors.blue, "lib/assets/arkaPlan3.jpg"),
                     PaketKart(
-                        'Premium Paket',
-                        'Özel diyet listeleri, haftalık analizler.',
+                        'Başlangıç',
+                        'Isınma hareketleri, kardiyo hareketleri',
+                        Colors.blue,
+                        "lib/assets/arkaPlan3.jpg"),
+                    PaketKart(
+                        'Orta Seviye',
+                        'Isınma hareketleri, kardiyo hareketleri, full body antreman',
                         Colors.green,
                         "lib/assets/arkaPlan.jpg"),
                     PaketKart(
