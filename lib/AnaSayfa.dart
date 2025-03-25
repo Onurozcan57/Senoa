@@ -178,7 +178,7 @@ class _AnasayfaState extends State<Anasayfa> {
               },
             ),
             ListTile(
-              title: Text("AKış"),
+              title: Text("Akış"),
               onTap: () {
                 //Akış sayfasına geçişi sağlayacak
               },

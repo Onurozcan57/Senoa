@@ -163,7 +163,6 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
               ),
               SizedBox(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Diyet Listemmm",
