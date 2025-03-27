@@ -3,6 +3,7 @@ import 'package:senoa/AnaSayfa.dart';
 import 'package:senoa/DiyAnaSayfa.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:senoa/LoginScreen.dart';
+import 'package:senoa/Akış.dart';
 
 void main() {
   runApp(MyApp());

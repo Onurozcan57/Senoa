@@ -89,7 +89,7 @@ class _AnasayfaState extends State<Anasayfa> {
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
+                      foregroundColor: Colors.blue,
                       textStyle: TextStyle(fontSize: 16),
                     ),
                     child: Text("Kapat"),
@@ -154,53 +154,60 @@ class _AnasayfaState extends State<Anasayfa> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xFF34C759),
-              ),
-              child: Text(
-                'Menü',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: AppBar().preferredSize.height +
+                  MediaQuery.of(context).padding.top,
+              width: double.infinity,
+              color: Color(0xFF34C759),
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 16, bottom: 8),
+              child: SafeArea(
+                child: Text(
+                  'Menü',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            ListTile(
-              title: Text('Diyetisyenim'),
-              onTap: () {
-                // Diyetisyenim'ya gitmek için yapılacak işlem
-                Navigator.pop(context); // Drawer'ı kapatır
-              },
-            ),
-            ListTile(
-              title: Text("Akış"),
-              onTap: () {
-                //Akış sayfasına geçişi sağlayacak
-              },
-            ),
-            ListTile(
-              title: Text('Ayarlar'),
-              onTap: () {
-                // Ayarlara gitmek için yapılacak işlem
-                Navigator.pop(context); // Drawer'ı kapatır
-              },
-            ),
-            ListTile(
-              title: Text('Çıkış'),
-              onTap: () {
-                // Çıkış yapma işlemi
-                Navigator.pop(context); // Drawer'ı kapatır
-                // Çıkış işlemi yapılabilir
-              },
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    title: Text('Diyetisyenim'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text("Akış"),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text('Ayarlar'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Çıkış'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [

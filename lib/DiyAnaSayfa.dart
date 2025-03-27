@@ -31,44 +31,60 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xFF34C759),
-              ),
-              child: Text(
-                'Menü',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+            Container(
+              height: AppBar().preferredSize.height +
+                  MediaQuery.of(context).padding.top,
+              width: double.infinity,
+              color: Color(0xFF34C759),
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 16, bottom: 8),
+              child: SafeArea(
+                child: Text(
+                  'Menü',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.account_box),
-              title: Text("Profil"),
-              onTap: () => null, // bu çalışacak
-            ),
-            ListTile(
-              leading: Icon(Icons.access_alarm), // Ikon sol tarafta olacak
-              title: Text("Randevularım"), // Metin, başlık olarak eklenir
-              onTap: () {
-                // Ana sayfaya gitme işlemi veya başka bir işlem yapılabilir
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text("Çıkış"),
-              onTap: () {
-                // Çıkış işlemi
-              },
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    title: Text('Profilim'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text("Akış"),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text('Ayarlar'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Çıkış'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [

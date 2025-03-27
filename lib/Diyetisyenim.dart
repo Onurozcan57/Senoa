@@ -8,172 +8,231 @@ class Diyetisyenim extends StatefulWidget {
 }
 
 class _DiyetisyenimState extends State<Diyetisyenim> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController _waterController = TextEditingController();
+  double _waterIntake = 0;
+
+  void _submitWaterIntake() {
+    setState(() {
+      _waterIntake = double.tryParse(_waterController.text) ?? 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFF34C759),
-          title: Text("Dİyetisyenim"),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text('Diyetisyenlik Uygulaması'),
+        backgroundColor: Color(0xFF34C759),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  elevation: 5, // Gölgeleme ekliyoruz
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        15), // Kutu köşelerini yuvarlatıyoruz
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16), // Card içindeki padding
-                    child: Row(
-                      children: [
-                        // Profil Fotoğrafı
-                        ClipOval(
-                          child: Image.asset(
-                            "lib/assets/girisekrani.jpg", // Profil resminin yolu
-                            width: 100, // Resmin genişliği
-                            height: 100, // Resmin yüksekliği
-                            fit: BoxFit.cover, // Resmi sığdırıyoruz
-                          ),
-                        ),
-                        SizedBox(
-                            width:
-                                16), // Profil fotoğrafı ile yazılar arasına boşluk ekliyoruz
-                        // Profil Bilgileri
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Onur Özcan",
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "E-mail: onur.islem57@gmail.com",
-
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[700]),
-                                maxLines: 2, // Maksimum 2 satıra kadar izin
-                                overflow:
-                                    TextOverflow.ellipsis, // Taşmayı önler
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "Tel No: +90 555 555 55 55",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[700]),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+      ),
+      drawer: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: AppBar().preferredSize.height +
+                  MediaQuery.of(context).padding.top,
+              width: double.infinity,
+              color: Color(0xFF34C759),
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 16, bottom: 8),
+              child: SafeArea(
+                child: Text(
+                  'Menü',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 20,
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    title: Text('Diyetisyenim'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text("Akış"),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text('Ayarlar'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Çıkış'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 75,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.auto_graph_outlined,
-                      size: 30, // İkonun boyutunu büyütüyoruz
-                      color: Colors.green, // İkonun rengini yeşil yapıyoruz
-                    ),
-                    SizedBox(
-                        width: 10), // İkon ile yazı arasına boşluk ekliyoruz
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Alınması Gereken Kalori Miktarı:",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color:
-                                Colors.grey[700], // Yazı rengini gri yapıyoruz
-                          ),
+            ),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      ClipOval(
+                        child: Image.asset(
+                          "lib/assets/girisekrani.jpg",
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
                         ),
-                        TweenAnimationBuilder(
-                          tween: Tween<double>(
-                              begin: 0, end: 2500), // Başlangıç ve bitiş değeri
-                          duration: Duration(seconds: 3), // Animasyon süresi
-                          builder: (context, value, child) {
-                            return Text(
-                              "${value.toStringAsFixed(0)} Kcal",
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Onur Özcan",
                               style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors
-                                    .green, // Animasyonlu kalori miktarını yeşil yapıyoruz
-                              ),
-                            );
-                          },
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "E-mail: onur.islem57@gmail.com",
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey[700]),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "Tel No: +90 555 555 55 55",
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey[700]),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                child: Column(
-                  children: [
-                    Text(
-                      "Bugün Ne Kadar Su İçtin?",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 20),
-                    TextField(
-                      onTap: () {
-                        // bilgiyi database gönderecek
-                        print("Onur Özcan");
-                      },
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Bugün Ne Kadar Su İçtin?",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _waterController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            color: const Color.fromARGB(255, 255, 0, 0)),
+                        labelText: "Litres",
                         filled: true,
-                        fillColor: const Color.fromARGB(255, 204, 243, 205)
-                            .withOpacity(0.9),
+                        fillColor: Colors.blue[50],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 255, 0, 0)),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                child: Column(
-                  children: [
-                    Text(
-                      "Diyet Listemmm",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: _submitWaterIntake,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text("Kaydet"),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Toplam İçilen Su: ${_waterIntake.toStringAsFixed(1)} L",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Diyet Listem",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            MealCard(
+                mealTime: "Kahvaltı", meal: "Yulaf ezmesi, meyve, yeşil çay"),
+            MealCard(
+                mealTime: "Öğle",
+                meal: "Izgara tavuk, salata, tam tahıllı ekmek"),
+            MealCard(mealTime: "Akşam", meal: "Somon, sebzeler, esmer pirinç"),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MealCard extends StatelessWidget {
+  final String mealTime;
+  final String meal;
+
+  MealCard({required this.mealTime, required this.meal});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ListTile(
+        title: Text(
+          mealTime,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.green),
+        ),
+        subtitle: Text(
+          meal,
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+        ),
+        leading: Icon(
+          Icons.restaurant_menu,
+          color: Colors.orange,
+        ),
+      ),
+    );
   }
 }
