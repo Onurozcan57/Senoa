@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'AnaSayfa.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -7,6 +10,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isDietitian = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 20),
                 // Email giriş alanı
-                TextField(
+                TextFormField(
+                  controller: _emailController, // Bu satır eklendi
                   decoration: InputDecoration(
                     labelText: "Email",
                     labelStyle: TextStyle(color: Colors.white),
@@ -103,7 +109,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 10),
                 // Şifre giriş alanı
-                TextField(
+                TextFormField(
+                  controller: _passwordController, // Bu satır eklendi
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Password",
@@ -128,8 +135,67 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 5, // Gölgelendirme efekti
                   ),
-                  onPressed:
-                      () {}, //butonun çalışması için fonksiyonlar buraya yazılır
+                  onPressed: () async {
+                    // Kullanıcının girdiği e-posta ve şifreyi al
+                    String email = _emailController.text.trim();
+                    String password = _passwordController.text.trim();
+
+                    // API endpoint'i
+                    final String apiUrl = 'http://10.0.2.2:3000/login';
+
+                    try {
+                      // POST isteği gönder
+                      final response = await http.post(
+                        Uri.parse(apiUrl),
+                        headers: <String, String>{
+                          'Content-Type': 'application/json; charset=UTF-8',
+                        },
+                        body: jsonEncode(<String, String>{
+                          'email': email,
+                          'password': password,
+                        }),
+                      );
+
+                      // API'den gelen cevabı işle
+                      if (response.statusCode == 200) {
+                        // Giriş başarılı
+                        final Map<String, dynamic> responseData =
+                            jsonDecode(response.body);
+                        String message = responseData['message'];
+                        String token =
+                            responseData['token']; // Eğer token dönüyorsa
+
+                        // Burada başarılı giriş sonrası işlemleri yapabilirsiniz
+                        print('Giriş Başarılı: $message, Token: $token');
+
+                        // Örneğin, kullanıcıyı başka bir sayfaya yönlendirin
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Anasayfa()));
+                      } else {
+                        // Giriş başarısız
+                        final Map<String, dynamic> responseData =
+                            jsonDecode(response.body);
+                        String errorMessage = responseData['message'];
+
+                        // Kullanıcıya hata mesajını göster
+                        print('Giriş Başarısız: $errorMessage');
+                        // Örneğin, bir SnackBar veya AlertDialog ile hata mesajını gösterebilirsiniz
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(errorMessage)),
+                        );
+                      }
+                    } catch (error) {
+                      // İstek sırasında bir hata oluştu
+                      print('Hata oluştu: $error');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content:
+                                Text('Sunucuya bağlanırken bir hata oluştu.')),
+                      );
+                    }
+                  }, //butonun çalışması için fonksiyonlar buraya yazılır
                   child: Text(
                     "Sign In",
                     style: TextStyle(
