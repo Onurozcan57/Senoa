@@ -105,33 +105,37 @@ class _AnasayfaState extends State<Anasayfa> {
 
   Widget PaketKart(
       String baslik, String aciklama, Color renk, String arkaPlan) {
-    return GestureDetector(
-      onTap: () => _showPopup(context, baslik, aciklama),
-      child: Container(
-        width: 200,
-        height: 200,
-        margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), // Köşeleri yuvarla
-          image: DecorationImage(
-            opacity: 0.6,
-            image: AssetImage(arkaPlan), // Resmin yolu
-            fit: BoxFit.cover, // Resmi kapsayıcı şekilde yerleştir
-          ),
+    return Container(
+      width: 200,
+      height: 200,
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        image: DecorationImage(
+          opacity: 0.6,
+          image: AssetImage(arkaPlan),
+          fit: BoxFit.cover,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              baslik,
-              style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(aciklama, textAlign: TextAlign.center),
-          ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: () => _showPopup(context, baslik, aciklama),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                baslik,
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text(aciklama, textAlign: TextAlign.center),
+            ],
+          ),
         ),
       ),
     );
@@ -190,7 +194,7 @@ class _AnasayfaState extends State<Anasayfa> {
                     onTap: () {},
                   ),
                   ListTile(
-                    title: Text('Ayarlar'),
+                    title: Text('Profilim'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -341,7 +345,7 @@ class _AnasayfaState extends State<Anasayfa> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Text(
-                'Egzersiz Planları',
+                'Diyetisyenler',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
@@ -353,8 +357,11 @@ class _AnasayfaState extends State<Anasayfa> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    PaketKart('Basic Paket', 'Günlük öneriler, basit takip.',
-                        Colors.blue, "lib/assets/arkaPlan3.jpg"),
+                    PaketKart(
+                        'Selahattin Durmaz',
+                        'Günlük öneriler, basit takip.',
+                        Colors.blue,
+                        "lib/assets/arkaPlan3.jpg"),
                     PaketKart(
                         'Premium Paket',
                         'Özel diyet listeleri, haftalık analizler.',
@@ -385,20 +392,30 @@ class _AnasayfaState extends State<Anasayfa> {
                 child: Row(
                   children: [
                     PaketKart(
-                        'Başlangıç',
-                        'Isınma hareketleri, kardiyo hareketleri',
+                        'SIRT VE BACAK EGZERSİZİ PROGRAMI',
+                        'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
                         Colors.blue,
                         "lib/assets/arkaPlan3.jpg"),
                     PaketKart(
-                        'Orta Seviye',
-                        'Isınma hareketleri, kardiyo hareketleri, full body antreman',
+                        'GÖĞÜS VE ÖN KOL PROGRAMI',
+                        'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
                         Colors.green,
                         "lib/assets/arkaPlan.jpg"),
                     PaketKart(
-                        'VIP Paket',
-                        'Kişisel diyetisyen, gelişmiş analiz.',
+                        'OMUZ VE ARKA KOL PROGRAMI',
+                        'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
                         Colors.orange,
                         "lib/assets/arkaPlan2.jpg"),
+                    PaketKart(
+                        'FULL BODY PROGRAM',
+                        'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
+                        Colors.black,
+                        "lib/assets/arkaPlan.jpg"),
+                    PaketKart(
+                        "KARDİYO PROGRAMI",
+                        "Yağ yağmak ve ödem atmak için egzersizler",
+                        Colors.black,
+                        "lib/assets/arkaPlan.jpg")
                   ],
                 ),
               ),

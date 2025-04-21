@@ -1,5 +1,6 @@
 [
   { "email": "kullanici1@example.com", "password": "sifre123" },
   { "email": "test@example.com", "password": "gizli456" },
-  { "email": "demo@example.com", "password": "parola789" }
+  { "email": "demo@example.com", "password": "parola789" },
+  { "email": "onur@ozcan.com", "password": "Onur5757" }
 ]

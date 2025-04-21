@@ -177,7 +177,7 @@ class _FeedPageState extends State<FeedPage> {
                     onTap: () {},
                   ),
                   ListTile(
-                    title: Text('Ayarlar'),
+                    title: Text('Profilim'),
                     onTap: () {
                       Navigator.pop(context);
                     },

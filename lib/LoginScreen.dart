@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   }, //butonun çalışması için fonksiyonlar buraya yazılır
                   child: Text(
-                    "Sign In",
+                    "Log In",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

@@ -69,7 +69,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                     onTap: () {},
                   ),
                   ListTile(
-                    title: Text('Ayarlar'),
+                    title: Text('Profilim'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -206,6 +206,80 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
   }
 }
 
+void _showPopup(BuildContext context, String baslik, String aciklama) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      backgroundColor: Colors.transparent, // Arka planı şeffaf yapıyoruz
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      contentPadding: EdgeInsets.zero, // İçeriği tam olarak yerleştiriyoruz
+      content: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15), // Köşeleri yuvarla
+          image: DecorationImage(
+            image: AssetImage('lib/assets/girisekrani.jpg'), // Resmin yolu
+            fit: BoxFit.cover, // Resmi kapsayıcı şekilde yerleştir
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // İçeriği minimize et
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                baslik,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 0, 208, 255), // Başlık rengi
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                aciklama,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: const Color.fromARGB(255, 8, 0, 255), // İçerik rengi
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    // "Show more" butonuna basıldığında başka bir şey yapılabilir
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: const Color.fromARGB(255, 0, 191, 255),
+                    textStyle: TextStyle(fontSize: 16),
+                  ),
+                  child: Text("Show more"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.blue,
+                    textStyle: TextStyle(fontSize: 16),
+                  ),
+                  child: Text("Kapat"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 class MealCard extends StatelessWidget {
   final String mealTime;
   final String meal;
@@ -218,6 +292,9 @@ class MealCard extends StatelessWidget {
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
+        onTap: () {
+          _showPopup(context, mealTime, meal);
+        },
         title: Text(
           mealTime,
           style: TextStyle(
