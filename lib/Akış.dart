@@ -132,7 +132,7 @@ class _FeedPageState extends State<FeedPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: Color(0xFF34C759),
+        backgroundColor: Color.fromARGB(255, 13, 255, 0),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {

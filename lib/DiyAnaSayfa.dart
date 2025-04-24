@@ -21,7 +21,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
       key: _scaffoldKey, // scaffold key buraya eklenmeli
       appBar: AppBar(
         title: Text("Onur Özcan"),
-        backgroundColor: Color(0xFF34C759),
+        backgroundColor: Color.fromARGB(255, 13, 255, 0),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
@@ -38,7 +38,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
               height: AppBar().preferredSize.height +
                   MediaQuery.of(context).padding.top,
               width: double.infinity,
-              color: Color(0xFF34C759),
+              color: Color.fromARGB(255, 13, 255, 0),
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 16, bottom: 8),
               child: SafeArea(

@@ -24,7 +24,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: Color(0xFF34C759),
+        backgroundColor: Color.fromARGB(255, 13, 255, 0),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
@@ -40,7 +40,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
               height: AppBar().preferredSize.height +
                   MediaQuery.of(context).padding.top,
               width: double.infinity,
-              color: Color(0xFF34C759),
+              color: Color.fromARGB(255, 13, 255, 0),
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 16, bottom: 8),
               child: SafeArea(
