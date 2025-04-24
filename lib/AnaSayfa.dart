@@ -25,6 +25,7 @@ class _AnasayfaState extends State<Anasayfa> {
   DateTime _selectedDay = DateTime.now();
   Map<DateTime, List<String>> _tasks = {};
   TextEditingController _taskController = TextEditingController();
+  int currentPageIndex = 0;
 
   // GlobalKey<ScaffoldState> kullanıyoruz
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -250,6 +251,37 @@ class _AnasayfaState extends State<Anasayfa> {
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        indicatorColor: Color.fromARGB(160, 16, 237, 5),
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.account_box),
+              icon: Icon(Icons.account_box_outlined),
+              label: 'Profilim'),
+          NavigationDestination(
+            icon: Badge(
+                child: Icon(Icons
+                    .notifications_sharp)), //badge bildirim  olduğunu gösteriyor
+            label: 'Notifications',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.messenger),
+            icon: Icon(Icons.messenger_outline),
+            label: 'Messages',
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Column(

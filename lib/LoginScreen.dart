@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
                 ),
                 SizedBox(height: 10),
                 // Şifre giriş alanı
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
                 ),
                 SizedBox(height: 20),
                 // Giriş butonu

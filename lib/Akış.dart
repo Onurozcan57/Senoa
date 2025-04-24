@@ -148,7 +148,7 @@ class _FeedPageState extends State<FeedPage> {
               height: AppBar().preferredSize.height +
                   MediaQuery.of(context).padding.top,
               width: double.infinity,
-              color: Color(0xFF34C759),
+              color: Color.fromARGB(255, 13, 255, 0),
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 16, bottom: 8),
               child: SafeArea(
