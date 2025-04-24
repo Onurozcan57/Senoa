@@ -242,19 +242,13 @@ void _showPopup(BuildContext context, String baslik, String aciklama) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      backgroundColor: Colors.transparent, // Arka planı şeffaf yapıyoruz
+      backgroundColor: const Color.fromARGB(
+          255, 255, 255, 255), // Arka planı şeffaf yapıyoruz
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       contentPadding: EdgeInsets.zero, // İçeriği tam olarak yerleştiriyoruz
       content: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), // Köşeleri yuvarla
-          image: DecorationImage(
-            image: AssetImage('lib/assets/girisekrani.jpg'), // Resmin yolu
-            fit: BoxFit.cover, // Resmi kapsayıcı şekilde yerleştir
-          ),
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min, // İçeriği minimize et
           children: [

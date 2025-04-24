@@ -239,172 +239,181 @@ class _AnasayfaState extends State<Anasayfa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Scaffold'a global key ekledik
-      resizeToAvoidBottomInset: true, // Klavye açıldığında taşmayı önler
-      appBar: AppBar(
-        title: Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: Color.fromARGB(255, 13, 255, 0),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            // Hamburger menü butonuna basıldığında Drawer'ı açar
-            _scaffoldKey.currentState?.openDrawer();
-          },
+        key: _scaffoldKey, // Scaffold'a global key ekledik
+        resizeToAvoidBottomInset: true, // Klavye açıldığında taşmayı önler
+        appBar: AppBar(
+          title: Text('Diyetisyenlik Uygulaması'),
+          backgroundColor: Color.fromARGB(255, 13, 255, 0),
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              // Hamburger menü butonuna basıldığında Drawer'ı açar
+              _scaffoldKey.currentState?.openDrawer();
+            },
+          ),
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        indicatorColor: Color.fromARGB(160, 16, 237, 5),
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-              selectedIcon: Icon(Icons.account_box),
-              icon: Icon(Icons.account_box_outlined),
-              label: 'Profilim'),
-          NavigationDestination(
-            icon: Badge(
-                child: Icon(Icons
-                    .notifications_sharp)), //badge bildirim  olduğunu gösteriyor
-            label: 'Notifications',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.messenger),
-            icon: Icon(Icons.messenger_outline),
-            label: 'Messages',
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top,
-              width: double.infinity,
-              color: Color.fromARGB(255, 13, 255, 0),
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(left: 16, bottom: 8),
-              child: SafeArea(
-                child: Text(
-                  'Menü',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+        bottomNavigationBar: NavigationBar(
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+          indicatorColor: Color.fromARGB(160, 16, 237, 5),
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
             ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  ListTile(
-                    title: Text('Diyetisyenim'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text("Akış"),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: Text('Profilim'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Çıkış'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
+            NavigationDestination(
+                selectedIcon: Icon(Icons.account_box),
+                icon: Icon(Icons.account_box_outlined),
+                label: 'Profilim'),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.assignment_ind_rounded),
+              icon: Badge(
+                  child: Icon(
+                Icons.assignment_ind_outlined,
+              )), //badge bildirim  olduğunu gösteriyor
+              label: 'Diyetisyenim',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.messenger),
+              icon: Icon(Icons.messenger_outline),
+              label: 'Messages',
             ),
           ],
         ),
-      ),
-
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TableCalendar(
-                firstDay: DateTime.utc(2010, 10, 20),
-                lastDay: DateTime.utc(2060, 10, 20),
-                focusedDay: _selectedDay,
-                selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                  });
-                },
-                headerStyle: HeaderStyle(
-                  titleTextStyle: TextStyle(
-                    fontSize: 18,
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                calendarStyle: CalendarStyle(
-                  todayTextStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+        drawer: Drawer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: AppBar().preferredSize.height +
+                    MediaQuery.of(context).padding.top,
+                width: double.infinity,
+                color: Color.fromARGB(255, 13, 255, 0),
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 16, bottom: 8),
+                child: SafeArea(
+                  child: Text(
+                    'Menü',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-
-            // Görev ekleme alanı
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _taskController,
-                      decoration: InputDecoration(
-                        labelText: "Görev Ekle",
-                        border: OutlineInputBorder(),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    ListTile(
+                      title: Text('Diyetisyenim'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Akış"),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      title: Text('Profilim'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Çıkış'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(
+                    "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
+                fit: BoxFit.cover,
+                opacity: 0.06),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TableCalendar(
+                    firstDay: DateTime.utc(2010, 10, 20),
+                    lastDay: DateTime.utc(2060, 10, 20),
+                    focusedDay: _selectedDay,
+                    selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                      });
+                    },
+                    headerStyle: HeaderStyle(
+                      titleTextStyle: TextStyle(
+                        fontSize: 18,
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    calendarStyle: CalendarStyle(
+                      todayTextStyle: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      if (_taskController.text.isNotEmpty) {
-                        setState(() {
-                          _tasks[_selectedDay] = _tasks[_selectedDay] ?? [];
-                          _tasks[_selectedDay]!.add(_taskController.text);
-                          _taskController.clear();
-                        });
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
+                ),
 
-            // Seçilen güne ait görevler
-            SizedBox(
-              height: 200, // Yükseklik vererek overflow hatasını önlüyoruz
-              child:
-                  _tasks[_selectedDay] == null || _tasks[_selectedDay]!.isEmpty
+                // Görev ekleme alanı
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _taskController,
+                          decoration: InputDecoration(
+                            labelText: "Görev Ekle",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          if (_taskController.text.isNotEmpty) {
+                            setState(() {
+                              _tasks[_selectedDay] = _tasks[_selectedDay] ?? [];
+                              _tasks[_selectedDay]!.add(_taskController.text);
+                              _taskController.clear();
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Seçilen güne ait görevler
+                SizedBox(
+                  height: 130, // Yükseklik vererek overflow hatasını önlüyoruz
+                  child: _tasks[_selectedDay] == null ||
+                          _tasks[_selectedDay]!.isEmpty
                       ? Center(child: Text("Bu gün için görev yok."))
                       : ListView.builder(
                           itemCount: _tasks[_selectedDay]!.length,
@@ -422,178 +431,183 @@ class _AnasayfaState extends State<Anasayfa> {
                             );
                           },
                         ),
-            ),
-
-            SizedBox(
-              height: 75,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.auto_graph_outlined,
-                    size: 30, // İkonun boyutunu büyütüyoruz
-                    color: Colors.green, // İkonun rengini yeşil yapıyoruz
-                  ),
-                  SizedBox(width: 10), // İkon ile yazı arasına boşluk ekliyoruz
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 75,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        "Alınması Gereken Kalori Miktarı:",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[700], // Yazı rengini gri yapıyoruz
-                        ),
+                      Icon(
+                        Icons.auto_graph_outlined,
+                        size: 30, // İkonun boyutunu büyütüyoruz
+                        color: Colors.green, // İkonun rengini yeşil yapıyoruz
                       ),
-                      TweenAnimationBuilder(
-                        tween: Tween<double>(
-                            begin: 0, end: 2500), // Başlangıç ve bitiş değeri
-                        duration: Duration(seconds: 3), // Animasyon süresi
-                        builder: (context, value, child) {
-                          return Text(
-                            "${value.toStringAsFixed(0)} Kcal",
+                      SizedBox(
+                          width: 10), // İkon ile yazı arasına boşluk ekliyoruz
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Alınması Gereken Kalori Miktarı:",
                             style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
                               color: Colors
-                                  .green, // Animasyonlu kalori miktarını yeşil yapıyoruz
+                                  .grey[700], // Yazı rengini gri yapıyoruz
                             ),
-                          );
-                        },
+                          ),
+                          TweenAnimationBuilder(
+                            tween: Tween<double>(
+                                begin: 0,
+                                end: 2500), // Başlangıç ve bitiş değeri
+                            duration: Duration(seconds: 3), // Animasyon süresi
+                            builder: (context, value, child) {
+                              return Text(
+                                "${value.toStringAsFixed(0)} Kcal",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors
+                                      .green, // Animasyonlu kalori miktarını yeşil yapıyoruz
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                'Diyetisyenler',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
-
-            // Paket Kartları
-            SizedBox(
-              height: 250, // Kartların yüksekliği için sabit alan
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    PaketKart(
-                        'Selahattin Durmaz',
-                        'Günlük öneriler, basit takip.',
-                        "lib/assets/arkaPlan3.jpg"),
-                    PaketKart(
-                        'Premium Paket',
-                        'Özel diyet listeleri, haftalık analizler.',
-                        "lib/assets/arkaPlan.jpg"),
-                    PaketKart(
-                        'VIP Paket',
-                        'Kişisel diyetisyen, gelişmiş analiz.',
-                        "lib/assets/arkaPlan2.jpg"),
-                  ],
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                'Egzersiz Bölümü',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
 
-            // Paket Kartları
-            SizedBox(
-              height: 250, // Kartların yüksekliği için sabit alan
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    PaketKart(
-                      'SIRT VE BACAK EGZERSİZİ PROGRAMI',
-                      'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
-                      "lib/assets/arkaPlan3.jpg",
-                      onTap: () => _showExercisePopup(
-                        context,
-                        'Sırt ve Bacak Egzersizleri',
-                        [
-                          "Deadlift",
-                          "Squat",
-                          "Leg Press",
-                          "Barbell Row",
-                        ],
-                      ),
-                    ),
-                    PaketKart(
-                      'GÖĞÜS VE ÖN KOL PROGRAMI',
-                      'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
-                      "lib/assets/arkaPlan.jpg",
-                      onTap: () => _showExercisePopup(
-                        context,
-                        "Göğüs ve Ön Kol Egzersizleri",
-                        [
-                          "Bench Press",
-                          "Incline Dumbell Press",
-                          "Biceps Curl",
-                        ],
-                      ),
-                    ),
-                    PaketKart(
-                      'OMUZ VE ARKA KOL PROGRAMI',
-                      'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
-                      "lib/assets/arkaPlan2.jpg",
-                      onTap: () => _showExercisePopup(
-                        context,
-                        "Omuz ve Arka Kol Programı",
-                        [
-                          "Shoulder Press",
-                          "Lateral Raise",
-                          "Triceps Dips",
-                        ],
-                      ),
-                    ),
-                    PaketKart(
-                      'FULL BODY PROGRAM',
-                      'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
-                      "lib/assets/arkaPlan.jpg",
-                      onTap: () => _showExercisePopup(
-                        context,
-                        "Full Body Egzersizleri",
-                        [
-                          "Squats",
-                          "Push-ups",
-                          "Deadlifts",
-                          "Pull-ups",
-                        ],
-                      ),
-                    ),
-                    PaketKart(
-                      "KARDİYO PROGRAMI",
-                      "Yağ yağmak ve ödem atmak için egzersizler",
-                      "lib/assets/arkaPlan.jpg",
-                      onTap: () => _showExercisePopup(
-                        context,
-                        "Kardiyo Egzersizleri",
-                        [
-                          "Running",
-                          "Cycling",
-                          "Jumping Jacks",
-                          "Mountain Climbers",
-                        ],
-                      ),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    'Diyetisyenler',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
+
+                // Paket Kartları
+                SizedBox(
+                  height: 250, // Kartların yüksekliği için sabit alan
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        PaketKart(
+                            'Selahattin Durmaz',
+                            'Günlük öneriler, basit takip.',
+                            "lib/assets/arkaPlan3.jpg"),
+                        PaketKart(
+                            'Premium Paket',
+                            'Özel diyet listeleri, haftalık analizler.',
+                            "lib/assets/arkaPlan.jpg"),
+                        PaketKart(
+                            'VIP Paket',
+                            'Kişisel diyetisyen, gelişmiş analiz.',
+                            "lib/assets/arkaPlan2.jpg"),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    'Egzersiz Bölümü',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+                // Paket Kartları
+                SizedBox(
+                  height: 250, // Kartların yüksekliği için sabit alan
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        PaketKart(
+                          'SIRT VE BACAK EGZERSİZİ PROGRAMI',
+                          'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
+                          "lib/assets/arkaPlan3.jpg",
+                          onTap: () => _showExercisePopup(
+                            context,
+                            'Sırt ve Bacak Egzersizleri',
+                            [
+                              "Deadlift",
+                              "Squat",
+                              "Leg Press",
+                              "Barbell Row",
+                            ],
+                          ),
+                        ),
+                        PaketKart(
+                          'GÖĞÜS VE ÖN KOL PROGRAMI',
+                          'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
+                          "lib/assets/arkaPlan.jpg",
+                          onTap: () => _showExercisePopup(
+                            context,
+                            "Göğüs ve Ön Kol Egzersizleri",
+                            [
+                              "Bench Press",
+                              "Incline Dumbell Press",
+                              "Biceps Curl",
+                            ],
+                          ),
+                        ),
+                        PaketKart(
+                          'OMUZ VE ARKA KOL PROGRAMI',
+                          'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
+                          "lib/assets/arkaPlan2.jpg",
+                          onTap: () => _showExercisePopup(
+                            context,
+                            "Omuz ve Arka Kol Programı",
+                            [
+                              "Shoulder Press",
+                              "Lateral Raise",
+                              "Triceps Dips",
+                            ],
+                          ),
+                        ),
+                        PaketKart(
+                          'FULL BODY PROGRAM',
+                          'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
+                          "lib/assets/arkaPlan.jpg",
+                          onTap: () => _showExercisePopup(
+                            context,
+                            "Full Body Egzersizleri",
+                            [
+                              "Squats",
+                              "Push-ups",
+                              "Deadlifts",
+                              "Pull-ups",
+                            ],
+                          ),
+                        ),
+                        PaketKart(
+                          "KARDİYO PROGRAMI",
+                          "Yağ yağmak ve ödem atmak için egzersizler",
+                          "lib/assets/arkaPlan.jpg",
+                          onTap: () => _showExercisePopup(
+                            context,
+                            "Kardiyo Egzersizleri",
+                            [
+                              "Running",
+                              "Cycling",
+                              "Jumping Jacks",
+                              "Mountain Climbers",
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
