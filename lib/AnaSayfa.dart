@@ -29,6 +29,69 @@ class _AnasayfaState extends State<Anasayfa> {
   // GlobalKey<ScaffoldState> kullanıyoruz
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // ⬇️ Fonksiyonu buraya yazıyorsun
+  String _getGifPath(String hareketAdi) {
+    switch (hareketAdi) {
+      case "Barbell Row":
+        return "lib/assets/gifs/barbellRow.gif";
+      case "Deadlift":
+        return "lib/assets/gifs/deadlift.gif";
+      case "Squat":
+        return "lib/assets/gifs/squat.gif";
+      case "Leg Press":
+        return "lib/assets/gifs/legpress.gif";
+      case "Bench Press":
+        return "lib/assets/gifs/benchPress.gif";
+      case "Incline Dumbell Press":
+        return "lib/assets/gifs/inclinee.gif";
+      case "Biceps Curl":
+        return "lib/assets/gifs/bicepsCurl.gif";
+      case "Shoulder Press":
+        return "lib/assets/gifs/shoulderPress.gif";
+      case "Lateral Raise":
+        return "lib/assets/gifs/latereal.gif";
+      case "Triceps Dips":
+        return "lib/assets/gifs/dips.gif";
+      case "Squats":
+        return "lib/assets/gifs/squat.gif";
+      case "Push-ups":
+        return "lib/assets/gifs/pushUp.gif";
+      case "Deadlifts":
+        return "lib/assets/gifs/deadlift.gif";
+      case "Pull-ups":
+        return "lib/assets/gifs/pullUps.gif";
+      case "Running":
+        return "lib/assets/gifs/running.gif";
+      case "Cycling":
+        return "lib/assets/gifs/cycling.gif";
+      case "Jumping Jacks":
+        return "lib/assets/gifs/jmp.gif";
+      case "Mountain Climbers":
+        return "lib/assets/gifs/mountain.gif";
+      default:
+        return "lib/assets/gifs/default.gif";
+    }
+  }
+
+  // Diğer metodların burada devam eder...
+  // örneğin _showGif() buradaysa onunla beraber durabilir
+  void _showGif(BuildContext context, String hareketAdi, String giffYolu) {
+    final gifPath = _getGifPath(hareketAdi);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(hareketAdi),
+        content: Image.asset(giffYolu),
+        actions: [
+          TextButton(
+            child: Text("Kapat"),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showPopup(BuildContext context, String baslik, String aciklama) {
     showDialog(
       context: context,
@@ -103,8 +166,39 @@ class _AnasayfaState extends State<Anasayfa> {
     );
   }
 
-  Widget PaketKart(
-      String baslik, String aciklama, Color renk, String arkaPlan) {
+  void _showExercisePopup(
+      BuildContext context, String title, List<String> hareketler) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(title),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: hareketler.length,
+              itemBuilder: (context, index) {
+                final hareketAdi = hareketler[index];
+                final giffYolu = _getGifPath(hareketAdi);
+                return ListTile(
+                  title: Text(hareketAdi),
+                  onTap: () => _showGif(context, hareketAdi, giffYolu),
+                );
+              }),
+        ),
+        actions: [
+          TextButton(
+            child: Text("Kapat"),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget PaketKart(String baslik, String aciklama, Color renk, String arkaPlan,
+      {VoidCallback? onTap}) {
     return Container(
       width: 200,
       height: 200,
@@ -121,7 +215,7 @@ class _AnasayfaState extends State<Anasayfa> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
-          onTap: () => _showPopup(context, baslik, aciklama),
+          onTap: onTap ?? () => _showPopup(context, baslik, aciklama),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -392,30 +486,83 @@ class _AnasayfaState extends State<Anasayfa> {
                 child: Row(
                   children: [
                     PaketKart(
-                        'SIRT VE BACAK EGZERSİZİ PROGRAMI',
-                        'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
-                        Colors.blue,
-                        "lib/assets/arkaPlan3.jpg"),
+                      'SIRT VE BACAK EGZERSİZİ PROGRAMI',
+                      'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
+                      Colors.blue,
+                      "lib/assets/arkaPlan3.jpg",
+                      onTap: () => _showExercisePopup(
+                        context,
+                        'Sırt ve Bacak Egzersizleri',
+                        [
+                          "Deadlift",
+                          "Squat",
+                          "Leg Press",
+                          "Barbell Row",
+                        ],
+                      ),
+                    ),
                     PaketKart(
-                        'GÖĞÜS VE ÖN KOL PROGRAMI',
-                        'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
-                        Colors.green,
-                        "lib/assets/arkaPlan.jpg"),
+                      'GÖĞÜS VE ÖN KOL PROGRAMI',
+                      'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
+                      Colors.green,
+                      "lib/assets/arkaPlan.jpg",
+                      onTap: () => _showExercisePopup(
+                        context,
+                        "Göğüs ve Ön Kol Egzersizleri",
+                        [
+                          "Bench Press",
+                          "Incline Dumbell Press",
+                          "Biceps Curl",
+                        ],
+                      ),
+                    ),
                     PaketKart(
-                        'OMUZ VE ARKA KOL PROGRAMI',
-                        'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
-                        Colors.orange,
-                        "lib/assets/arkaPlan2.jpg"),
+                      'OMUZ VE ARKA KOL PROGRAMI',
+                      'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
+                      Colors.orange,
+                      "lib/assets/arkaPlan2.jpg",
+                      onTap: () => _showExercisePopup(
+                        context,
+                        "Omuz ve Arka Kol Programı",
+                        [
+                          "Shoulder Press",
+                          "Lateral Raise",
+                          "Triceps Dips",
+                        ],
+                      ),
+                    ),
                     PaketKart(
-                        'FULL BODY PROGRAM',
-                        'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
-                        Colors.black,
-                        "lib/assets/arkaPlan.jpg"),
+                      'FULL BODY PROGRAM',
+                      'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
+                      Colors.black,
+                      "lib/assets/arkaPlan.jpg",
+                      onTap: () => _showExercisePopup(
+                        context,
+                        "Full Body Egzersizleri",
+                        [
+                          "Squats",
+                          "Push-ups",
+                          "Deadlifts",
+                          "Pull-ups",
+                        ],
+                      ),
+                    ),
                     PaketKart(
-                        "KARDİYO PROGRAMI",
-                        "Yağ yağmak ve ödem atmak için egzersizler",
-                        Colors.black,
-                        "lib/assets/arkaPlan.jpg")
+                      "KARDİYO PROGRAMI",
+                      "Yağ yağmak ve ödem atmak için egzersizler",
+                      Colors.black,
+                      "lib/assets/arkaPlan.jpg",
+                      onTap: () => _showExercisePopup(
+                        context,
+                        "Kardiyo Egzersizleri",
+                        [
+                          "Running",
+                          "Cycling",
+                          "Jumping Jacks",
+                          "Mountain Climbers",
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

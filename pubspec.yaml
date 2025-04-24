@@ -69,6 +69,8 @@ flutter:
     - lib/assets/atistirmalik.jpeg
     - lib/assets/sporSalonu.jpeg
     - lib/assets/veganlife.jpeg
+    - lib/assets/gifs/
+  
      #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
