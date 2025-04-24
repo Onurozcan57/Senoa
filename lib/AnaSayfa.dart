@@ -172,7 +172,7 @@ class _AnasayfaState extends State<Anasayfa> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 13, 255, 0),
+        backgroundColor: const Color.fromARGB(236, 13, 255, 0),
         title: Text(title),
         content: SizedBox(
           width: double.maxFinite,
@@ -345,7 +345,7 @@ class _AnasayfaState extends State<Anasayfa> {
                 image: AssetImage(
                     "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
                 fit: BoxFit.cover,
-                opacity: 0.06),
+                opacity: 0.07),
           ),
           child: SingleChildScrollView(
             child: Column(

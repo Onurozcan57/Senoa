@@ -18,140 +18,147 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // scaffold key buraya eklenmeli
-      appBar: AppBar(
-        title: Text("Onur Özcan"),
-        backgroundColor: Color.fromARGB(255, 13, 255, 0),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            // Hamburger menü butonuna basıldığında Drawer'ı açar
-            _scaffoldKey.currentState?.openDrawer(); // Drawer'ı açma işlemi
-          },
+        key: _scaffoldKey, // scaffold key buraya eklenmeli
+        appBar: AppBar(
+          title: Text("Onur Özcan"),
+          backgroundColor: Color.fromARGB(255, 13, 255, 0),
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              // Hamburger menü butonuna basıldığında Drawer'ı açar
+              _scaffoldKey.currentState?.openDrawer(); // Drawer'ı açma işlemi
+            },
+          ),
         ),
-      ),
-      drawer: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top,
-              width: double.infinity,
-              color: Color.fromARGB(255, 13, 255, 0),
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(left: 16, bottom: 8),
-              child: SafeArea(
-                child: Text(
-                  'Menü',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+        drawer: Drawer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: AppBar().preferredSize.height +
+                    MediaQuery.of(context).padding.top,
+                width: double.infinity,
+                color: Color.fromARGB(255, 13, 255, 0),
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 16, bottom: 8),
+                child: SafeArea(
+                  child: Text(
+                    'Menü',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  ListTile(
-                    title: Text('Profilim'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text("Akış"),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: Text('Ayarlar'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Çıkış'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    ListTile(
+                      title: Text('Profilim'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Akış"),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      title: Text('Ayarlar'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Çıkış'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TableCalendar(
-                firstDay: DateTime.utc(2010, 10, 20),
-                lastDay: DateTime.utc(2060, 10, 20),
-                focusedDay: _selectedDay,
-                selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                  });
-                },
-                headerStyle: HeaderStyle(
-                  titleTextStyle: TextStyle(
-                    fontSize: 18,
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                calendarStyle: CalendarStyle(
-                  todayTextStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-
-            // Görev ekleme alanı
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _taskController,
-                      decoration: InputDecoration(
-                        labelText: "Görev Ekle",
-                        border: OutlineInputBorder(),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(
+                    "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
+                fit: BoxFit.cover,
+                opacity: 0.06),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TableCalendar(
+                    firstDay: DateTime.utc(2010, 10, 20),
+                    lastDay: DateTime.utc(2060, 10, 20),
+                    focusedDay: _selectedDay,
+                    selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                      });
+                    },
+                    headerStyle: HeaderStyle(
+                      titleTextStyle: TextStyle(
+                        fontSize: 18,
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    calendarStyle: CalendarStyle(
+                      todayTextStyle: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      if (_taskController.text.isNotEmpty) {
-                        setState(() {
-                          _tasks[_selectedDay] = _tasks[_selectedDay] ?? [];
-                          _tasks[_selectedDay]!.add(_taskController.text);
-                          _taskController.clear();
-                        });
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
+                ),
 
-            // Seçilen güne ait görevler
-            SizedBox(
-              height: 200, // Yükseklik vererek overflow hatasını önlüyoruz
-              child:
-                  _tasks[_selectedDay] == null || _tasks[_selectedDay]!.isEmpty
+                // Görev ekleme alanı
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _taskController,
+                          decoration: InputDecoration(
+                            labelText: "Görev Ekle",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          if (_taskController.text.isNotEmpty) {
+                            setState(() {
+                              _tasks[_selectedDay] = _tasks[_selectedDay] ?? [];
+                              _tasks[_selectedDay]!.add(_taskController.text);
+                              _taskController.clear();
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Seçilen güne ait görevler
+                SizedBox(
+                  height: 200, // Yükseklik vererek overflow hatasını önlüyoruz
+                  child: _tasks[_selectedDay] == null ||
+                          _tasks[_selectedDay]!.isEmpty
                       ? Center(child: Text("Bu gün için görev yok."))
                       : ListView.builder(
                           itemCount: _tasks[_selectedDay]!.length,
@@ -169,16 +176,19 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                             );
                           },
                         ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [],
+                  ),
+                ),
+                SizedBox(
+                  height: 300,
+                )
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

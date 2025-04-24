@@ -55,7 +55,11 @@ class _MyWidgetState extends State<Profile> {
                   icon: Icon(Icons.account_box_outlined),
                   label: 'Profilim'),
               NavigationDestination(
-                icon: Badge(child: Icon(Icons.assignment_ind_outlined)),
+                selectedIcon: Icon(Icons.assignment_ind_rounded),
+                icon: Badge(
+                    child: Icon(
+                  Icons.assignment_ind_outlined,
+                )), //badge bildirim  olduğunu gösteriyor
                 label: 'Diyetisyenim',
               ),
               NavigationDestination(
