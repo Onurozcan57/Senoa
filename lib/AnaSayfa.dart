@@ -25,29 +25,25 @@ class _AnasayfaState extends State<Anasayfa> {
   DateTime _selectedDay = DateTime.now();
   Map<DateTime, List<String>> _tasks = {};
   TextEditingController _taskController = TextEditingController();
-
-  // GlobalKey<ScaffoldState> kullanıyoruz
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _showPopup(BuildContext context, String baslik, String aciklama) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.transparent, // Arka planı şeffaf yapıyoruz
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        contentPadding: EdgeInsets.zero, // İçeriği tam olarak yerleştiriyoruz
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        contentPadding: EdgeInsets.zero,
         content: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), // Köşeleri yuvarla
+            borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
-              image: AssetImage('lib/assets/girisekrani.jpg'), // Resmin yolu
-              fit: BoxFit.cover, // Resmi kapsayıcı şekilde yerleştir
+              image: AssetImage('lib/assets/girisekrani.jpg'),
+              fit: BoxFit.cover,
             ),
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // İçeriği minimize et
+            mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -57,7 +53,7 @@ class _AnasayfaState extends State<Anasayfa> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white, // Başlık rengi
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -68,7 +64,7 @@ class _AnasayfaState extends State<Anasayfa> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white, // İçerik rengi
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -77,9 +73,7 @@ class _AnasayfaState extends State<Anasayfa> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: () {
-                      // "Show more" butonuna basıldığında başka bir şey yapılabilir
-                    },
+                    onPressed: () {},
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.blue,
                       textStyle: TextStyle(fontSize: 16),
@@ -144,15 +138,14 @@ class _AnasayfaState extends State<Anasayfa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Scaffold'a global key ekledik
-      resizeToAvoidBottomInset: true, // Klavye açıldığında taşmayı önler
+      key: _scaffoldKey,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Diyetisyenlik Uygulaması'),
         backgroundColor: Color(0xFF34C759),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
-            // Hamburger menü butonuna basıldığında Drawer'ı açar
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
@@ -184,34 +177,21 @@ class _AnasayfaState extends State<Anasayfa> {
                 padding: EdgeInsets.zero,
                 children: [
                   ListTile(
-                    title: Text('Diyetisyenim'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+                      title: Text('Diyetisyenim'),
+                      onTap: () => Navigator.pop(context)),
+                  ListTile(title: Text("Akış"), onTap: () {}),
                   ListTile(
-                    title: Text("Akış"),
-                    onTap: () {},
-                  ),
+                      title: Text('Profilim'),
+                      onTap: () => Navigator.pop(context)),
                   ListTile(
-                    title: Text('Profilim'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Çıkış'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+                      title: Text('Çıkış'),
+                      onTap: () => Navigator.pop(context)),
                 ],
               ),
             ),
           ],
         ),
       ),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -243,8 +223,6 @@ class _AnasayfaState extends State<Anasayfa> {
                 ),
               ),
             ),
-
-            // Görev ekleme alanı
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -273,10 +251,8 @@ class _AnasayfaState extends State<Anasayfa> {
                 ],
               ),
             ),
-
-            // Seçilen güne ait görevler
             SizedBox(
-              height: 200, // Yükseklik vererek overflow hatasını önlüyoruz
+              height: 200,
               child:
                   _tasks[_selectedDay] == null || _tasks[_selectedDay]!.isEmpty
                       ? Center(child: Text("Bu gün için görev yok."))
@@ -297,42 +273,32 @@ class _AnasayfaState extends State<Anasayfa> {
                           },
                         ),
             ),
-
             SizedBox(
               height: 75,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.auto_graph_outlined,
-                    size: 30, // İkonun boyutunu büyütüyoruz
-                    color: Colors.green, // İkonun rengini yeşil yapıyoruz
-                  ),
-                  SizedBox(width: 10), // İkon ile yazı arasına boşluk ekliyoruz
+                  Icon(Icons.auto_graph_outlined,
+                      size: 30, color: Colors.green),
+                  SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Alınması Gereken Kalori Miktarı:",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[700], // Yazı rengini gri yapıyoruz
-                        ),
-                      ),
+                      Text("Alınması Gereken Kalori Miktarı:",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey[700])),
                       TweenAnimationBuilder(
-                        tween: Tween<double>(
-                            begin: 0, end: 2500), // Başlangıç ve bitiş değeri
-                        duration: Duration(seconds: 3), // Animasyon süresi
+                        tween: Tween<double>(begin: 0, end: 2500),
+                        duration: Duration(seconds: 3),
                         builder: (context, value, child) {
                           return Text(
                             "${value.toStringAsFixed(0)} Kcal",
                             style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors
-                                  .green, // Animasyonlu kalori miktarını yeşil yapıyoruz
-                            ),
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
                           );
                         },
                       ),
@@ -341,7 +307,6 @@ class _AnasayfaState extends State<Anasayfa> {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Text(
@@ -349,10 +314,8 @@ class _AnasayfaState extends State<Anasayfa> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-
-            // Paket Kartları
             SizedBox(
-              height: 250, // Kartların yüksekliği için sabit alan
+              height: 250,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -383,10 +346,8 @@ class _AnasayfaState extends State<Anasayfa> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-
-            // Paket Kartları
             SizedBox(
-              height: 250, // Kartların yüksekliği için sabit alan
+              height: 250,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -415,7 +376,7 @@ class _AnasayfaState extends State<Anasayfa> {
                         "KARDİYO PROGRAMI",
                         "Yağ yağmak ve ödem atmak için egzersizler",
                         Colors.black,
-                        "lib/assets/arkaPlan.jpg")
+                        "lib/assets/arkaPlan.jpg"),
                   ],
                 ),
               ),
