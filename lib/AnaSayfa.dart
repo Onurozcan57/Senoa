@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -169,32 +171,87 @@ class _AnasayfaState extends State<Anasayfa> {
 
   void _showExercisePopup(
       BuildContext context, String title, List<String> hareketler) {
+    int currentIndex = 0;
+    int remainingSeconds = 10;
+    late Timer timer;
+
+    void startTimer(StateSetter setState) {
+      remainingSeconds = 45;
+      timer = Timer.periodic(Duration(seconds: 1), (t) {
+        if (remainingSeconds == 0) {
+          t.cancel();
+          if (currentIndex < hareketler.length - 1) {
+            currentIndex++;
+            startTimer(setState);
+          } else {
+            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text("TEBRİKLER:)"),
+                content: Text("Tüm Egzersizleri Tamamladınız."),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Kapat"),
+                  )
+                ],
+              ),
+            );
+          }
+        } else {
+          setState(() {
+            remainingSeconds--;
+          });
+        }
+      });
+    }
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color.fromARGB(236, 13, 255, 0),
-        title: Text(title),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: hareketler.length,
-              itemBuilder: (context, index) {
-                final hareketAdi = hareketler[index];
-                final giffYolu = _getGifPath(hareketAdi);
-                return ListTile(
-                  title: Text(hareketAdi),
-                  onTap: () => _showGif(context, hareketAdi, giffYolu),
-                );
-              }),
-        ),
-        actions: [
-          TextButton(
-            child: Text("Kapat"),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          if (remainingSeconds == 10 && currentIndex == 0) {
+            startTimer(setState); // ilk başlatma
+          }
+
+          String hareketAdi = hareketler[currentIndex];
+          String gifPath = _getGifPath(hareketAdi);
+
+          return AlertDialog(
+            title: Text("$title\n(${currentIndex + 1}/${hareketler.length})"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  hareketAdi,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                SizedBox(height: 10),
+                Image.asset(gifPath, height: 150),
+                SizedBox(height: 10),
+                Text(
+                  "$remainingSeconds saniye",
+                  style: TextStyle(fontSize: 28, color: Colors.red),
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    timer.cancel();
+                    if (currentIndex < hareketler.length - 1) {
+                      currentIndex++;
+                      startTimer(setState);
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text("Geç (İleri)"),
+                ),
+              ],
+            ),
+          );
+        });
+      },
     );
   }
 
@@ -500,15 +557,15 @@ class _AnasayfaState extends State<Anasayfa> {
                         PaketKart(
                             'Selahattin Durmaz',
                             'Günlük öneriler, basit takip.',
-                            "lib/assets/arkaPlan3.jpg"),
+                            "lib/assets/diyetisyenArkaPlan.jpg"),
                         PaketKart(
                             'Premium Paket',
                             'Özel diyet listeleri, haftalık analizler.',
-                            "lib/assets/arkaPlan.jpg"),
+                            "lib/assets/d3.jpeg"),
                         PaketKart(
                             'VIP Paket',
                             'Kişisel diyetisyen, gelişmiş analiz.',
-                            "lib/assets/arkaPlan2.jpg"),
+                            "lib/assets/d3.jpeg"),
                       ],
                     ),
                   ),
@@ -531,7 +588,7 @@ class _AnasayfaState extends State<Anasayfa> {
                         PaketKart(
                           'SIRT VE BACAK EGZERSİZİ PROGRAMI',
                           'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
-                          "lib/assets/arkaPlan3.jpg",
+                          "lib/assets/fitnessArkaPlan.jpg",
                           onTap: () => _showExercisePopup(
                             context,
                             'Sırt ve Bacak Egzersizleri',
@@ -546,7 +603,7 @@ class _AnasayfaState extends State<Anasayfa> {
                         PaketKart(
                           'GÖĞÜS VE ÖN KOL PROGRAMI',
                           'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
-                          "lib/assets/arkaPlan.jpg",
+                          "lib/assets/fitnessArkaPlan.jpg",
                           onTap: () => _showExercisePopup(
                             context,
                             "Göğüs ve Ön Kol Egzersizleri",
@@ -560,7 +617,7 @@ class _AnasayfaState extends State<Anasayfa> {
                         PaketKart(
                           'OMUZ VE ARKA KOL PROGRAMI',
                           'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
-                          "lib/assets/arkaPlan2.jpg",
+                          "lib/assets/fitnessArkaPlan.jpg",
                           onTap: () => _showExercisePopup(
                             context,
                             "Omuz ve Arka Kol Programı",
@@ -574,7 +631,7 @@ class _AnasayfaState extends State<Anasayfa> {
                         PaketKart(
                           'FULL BODY PROGRAM',
                           'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
-                          "lib/assets/arkaPlan.jpg",
+                          "lib/assets/fitnessArkaPlan.jpg",
                           onTap: () => _showExercisePopup(
                             context,
                             "Full Body Egzersizleri",
@@ -589,7 +646,7 @@ class _AnasayfaState extends State<Anasayfa> {
                         PaketKart(
                           "KARDİYO PROGRAMI",
                           "Yağ yağmak ve ödem atmak için egzersizler",
-                          "lib/assets/arkaPlan.jpg",
+                          "lib/assets/fitnessArkaPlan.jpg",
                           onTap: () => _showExercisePopup(
                             context,
                             "Kardiyo Egzersizleri",

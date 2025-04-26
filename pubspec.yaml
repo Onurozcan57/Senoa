@@ -69,6 +69,10 @@ flutter:
     - lib/assets/atistirmalik.jpeg
     - lib/assets/sporSalonu.jpeg
     - lib/assets/veganlife.jpeg
+    - lib/assets/diyetisyenArkaPlan.jpg
+    - lib/assets/fitnessArkaPlan.jpg
+    - lib/assets/d3.jpeg
+
     - lib/assets/gifs/
   
      #   - images/a_dot_ham.jpeg
