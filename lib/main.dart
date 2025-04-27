@@ -4,6 +4,7 @@ import 'package:senoa/DiyAnaSayfa.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:senoa/LoginScreen.dart';
 import 'package:senoa/Akış.dart';
+import 'package:senoa/YemekTarifleri.dart';
 import 'Profile.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Anasayfa(),
+      home: LoginScreen(),
     );
   }
 }

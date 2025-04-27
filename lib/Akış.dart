@@ -12,8 +12,7 @@ class _FeedPageState extends State<FeedPage> {
   List<Map<String, dynamic>> posts = [
     {
       "username": "diyetisyen_ayse",
-      "content":
-          "Sağlıklı beslenme için gün içinde yeterli su içmeyi unutmayın! 💧",
+      "content": "Sağlıklı beslenme için gün içinde yeterli su içmeyi unutmayın! 💧",
       "time": "2 saat önce",
       "image": "lib/assets/girisekrani.jpg",
       "liked": false,
@@ -22,8 +21,7 @@ class _FeedPageState extends State<FeedPage> {
     },
     {
       "username": "fitadam",
-      "content":
-          "Protein ihtiyacınızı karşılamak için hangi besinleri tercih ediyorsunuz? 🍗🥦",
+      "content": "Protein ihtiyacınızı karşılamak için hangi besinleri tercih ediyorsunuz? 🍗🥦",
       "time": "5 saat önce",
       "image": "lib/assets/arkaPlan.jpg",
       "liked": false,
@@ -32,8 +30,7 @@ class _FeedPageState extends State<FeedPage> {
     },
     {
       "username": "sporcan",
-      "content":
-          "Antrenman öncesi bir avuç badem yemek enerji verir! Deneyin! 💪",
+      "content": "Antrenman öncesi bir avuç badem yemek enerji verir! Deneyin! 💪",
       "time": "1 gün önce",
       "image": "lib/assets/sporSalonu.jpeg",
       "liked": false,
@@ -51,8 +48,7 @@ class _FeedPageState extends State<FeedPage> {
     },
     {
       "username": "fitanne",
-      "content":
-          "Çocuklar için sağlıklı atıştırmalık tarifleri isteyen var mı? 🍎🍌",
+      "content": "Çocuklar için sağlıklı atıştırmalık tarifleri isteyen var mı? 🍎🍌",
       "time": "4 saat önce",
       "image": "lib/assets/atistirmalik.jpeg",
       "liked": false,
@@ -61,8 +57,7 @@ class _FeedPageState extends State<FeedPage> {
     },
     {
       "username": "diyetisyen_ayse",
-      "content":
-          "Kahvaltıyı atlamak metabolizmayı yavaşlatabilir. Dengeli kahvaltı şart! 🍳🥑",
+      "content": "Kahvaltıyı atlamak metabolizmayı yavaşlatabilir. Dengeli kahvaltı şart! 🍳🥑",
       "time": "Bugün",
       "image": "lib/assets/atistirmalik.jpeg",
       "liked": false,
@@ -73,10 +68,12 @@ class _FeedPageState extends State<FeedPage> {
 
   List<TextEditingController> commentControllers = [];
 
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController contentController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    // Initialize controllers for existing posts
     for (int i = 0; i < posts.length; i++) {
       commentControllers.add(TextEditingController());
     }
@@ -88,6 +85,8 @@ class _FeedPageState extends State<FeedPage> {
     for (var controller in commentControllers) {
       controller.dispose();
     }
+    titleController.dispose();
+    contentController.dispose();
     super.dispose();
   }
 
@@ -109,20 +108,18 @@ class _FeedPageState extends State<FeedPage> {
     });
   }
 
-  void addPost(String title, String content) {
+  void addPost(String content) {
     setState(() {
       posts.insert(0, {
         "username": "Yeni Kullanıcı",
         "content": content,
         "time": "Şimdi",
-        "image": "", // Resim eklenmedi
+        "image": "", // Varsayılan boş
         "liked": false,
         "showComments": false,
         "comments": []
       });
-
-      // Yeni gönderi eklerken commentControllers listesine de yeni bir controller ekle
-      commentControllers.add(TextEditingController());
+      commentControllers.insert(0, TextEditingController());
     });
   }
 
@@ -155,15 +152,15 @@ class _FeedPageState extends State<FeedPage> {
             label: 'Home',
           ),
           NavigationDestination(
-              selectedIcon: Icon(Icons.account_box),
-              icon: Icon(Icons.account_box_outlined),
-              label: 'Profilim'),
+            selectedIcon: Icon(Icons.account_box),
+            icon: Icon(Icons.account_box_outlined),
+            label: 'Profilim',
+          ),
           NavigationDestination(
             selectedIcon: Icon(Icons.assignment_ind_rounded),
             icon: Badge(
-                child: Icon(
-              Icons.assignment_ind_outlined,
-            )), //badge bildirim  olduğunu gösteriyor
+              child: Icon(Icons.assignment_ind_outlined),
+            ),
             label: 'Diyetisyenim',
           ),
           NavigationDestination(
@@ -206,8 +203,10 @@ class _FeedPageState extends State<FeedPage> {
                     },
                   ),
                   ListTile(
-                    title: Text("Akış"),
-                    onTap: () {},
+                    title: Text('Akış'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
                   ListTile(
                     title: Text('Profilim'),
@@ -256,7 +255,7 @@ class _FeedPageState extends State<FeedPage> {
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                post["username"]!,
+                                post["username"],
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -267,18 +266,19 @@ class _FeedPageState extends State<FeedPage> {
                           ],
                         ),
                         SizedBox(height: 10),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            post["image"]!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 200,
+                        if (post["image"] != "")
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              post["image"],
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 200,
+                            ),
                           ),
-                        ),
                         SizedBox(height: 10),
                         Text(
-                          post["content"]!,
+                          post["content"],
                           style: TextStyle(fontSize: 14),
                         ),
                         SizedBox(height: 10),
@@ -305,7 +305,7 @@ class _FeedPageState extends State<FeedPage> {
                               ],
                             ),
                             Text(
-                              post["time"]!,
+                              post["time"],
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
@@ -316,7 +316,7 @@ class _FeedPageState extends State<FeedPage> {
                         if (post["showComments"])
                           Column(
                             children: [
-                              ...post["comments"].map((comment) => Padding(
+                              ...post["comments"].map<Widget>((comment) => Padding(
                                     padding: EdgeInsets.symmetric(vertical: 4),
                                     child: Row(
                                       children: [
@@ -366,53 +366,51 @@ class _FeedPageState extends State<FeedPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 13, 255, 0),
+        child: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
             context: context,
+            isScrollControlled: true,
             builder: (context) {
               return Padding(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                    top: 20,
+                    left: 16,
+                    right: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Yeni Gönderi',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 16),
                     TextField(
-                      controller: TextEditingController(),
+                      controller: contentController,
                       decoration: InputDecoration(
-                        labelText: 'Başlık',
+                        hintText: "Ne düşünüyorsun?",
                         border: OutlineInputBorder(),
                       ),
+                      maxLines: 3,
                     ),
-                    SizedBox(height: 16),
-                    TextField(
-                      controller: TextEditingController(),
-                      decoration: InputDecoration(
-                        labelText: 'İçerik',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () {
-                        addPost("Başlık", "İçerik");
-                        Navigator.pop(context);
+                        if (contentController.text.isNotEmpty) {
+                          addPost(contentController.text.trim());
+                          contentController.clear();
+                          Navigator.pop(context);
+                        }
                       },
-                      child: Text('Gönder'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 13, 255, 0),
+                      ),
+                      child: Text("Paylaş"),
                     ),
+                    SizedBox(height: 10),
                   ],
                 ),
               );
             },
           );
         },
-        backgroundColor: Color(0xFF34C759),
-        child: Icon(Icons.add),
       ),
     );
   }

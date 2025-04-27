@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:senoa/DiyAnaSayfa.dart';
+import 'package:senoa/Diyetisyenim.dart';
 import 'dart:convert';
 import 'AnaSayfa.dart';
 
@@ -136,9 +138,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     elevation: 5, // Gölgelendirme efekti
                   ),
                   onPressed: () async {
+                    print(
+                        'Gönderilen Rol: ${isDietitian ? 'dietitian' : 'user'}');
                     // Kullanıcının girdiği e-posta ve şifreyi al
                     String email = _emailController.text.trim();
                     String password = _passwordController.text.trim();
+                    String role =
+                        isDietitian ? 'dietitian' : 'user'; // Rol bilgisini al
 
                     // API endpoint'i
                     final String apiUrl = 'http://10.0.2.2:3000/login';
@@ -153,6 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         body: jsonEncode(<String, String>{
                           'email': email,
                           'password': password,
+                          'role': role, // Rol bilgisini gönder
                         }),
                       );
 
@@ -164,15 +171,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         String message = responseData['message'];
                         String token =
                             responseData['token']; // Eğer token dönüyorsa
+                        String userRole =
+                            responseData['role']; // Gelen rol bilgisini al
 
                         // Burada başarılı giriş sonrası işlemleri yapabilirsiniz
-                        print('Giriş Başarılı: $message, Token: $token');
+                        print(
+                            'Giriş Başarılı: $message, Token: $token, Rol: $userRole');
 
-                        // Örneğin, kullanıcıyı başka bir sayfaya yönlendirin
-                        Navigator.pushReplacement(
+                        // Kullanıcıyı rolüne göre doğru sayfaya yönlendir
+                        if (userRole == 'dietitian') {
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Anasayfa()));
+                                builder: (context) =>
+                                    Diyanasayfa()), // DiyAnaSayfa.dart
+                          );
+                        } else if (userRole == 'user') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Diyetisyenim()), // Diyetisyenim.dart
+                          );
+                        }
                       } else {
                         // Giriş başarısız
                         final Map<String, dynamic> responseData =
@@ -181,7 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         // Kullanıcıya hata mesajını göster
                         print('Giriş Başarısız: $errorMessage');
-                        // Örneğin, bir SnackBar veya AlertDialog ile hata mesajını gösterebilirsiniz
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(errorMessage)),
                         );
@@ -195,25 +215,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Text('Sunucuya bağlanırken bir hata oluştu.')),
                       );
                     }
-                  }, //butonun çalışması için fonksiyonlar buraya yazılır
+                  },
                   child: Text(
                     "Log In",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                // Şifremi unuttum bağlantısı
-                TextButton(
-                  onPressed: () {}, //fonksiyonun çalışması
-                  child: Text(
-                    "Şifreni mi unuttun?",
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 115, 229, 119),
-                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

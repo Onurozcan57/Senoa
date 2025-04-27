@@ -72,7 +72,16 @@ flutter:
     - lib/assets/diyetisyenArkaPlan.jpg
     - lib/assets/fitnessArkaPlan.jpg
     - lib/assets/d3.jpeg
-
+    - lib/assets/sandvic.jpg
+    - lib/assets/detoks.jpg
+    - lib/assets/omlet.jpeg
+    - lib/assets/biftek.jpg
+    - lib/assets/somon.webp
+    - lib/assets/kinoa.jpg
+    - lib/assets/tart.jpg
+    - lib/assets/enginar.jpg
+    - lib/assets/avokado.webp
+    - lib/assets/acaibowll.jpg
     - lib/assets/gifs/
   
      #   - images/a_dot_ham.jpeg
