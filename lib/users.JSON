@@ -2,7 +2,7 @@
   "dietitians": [
     { "email": "onur@senoa.com", "password": "sifre1" },
     { "email": "ayse@senoa.com", "password": "sifre2" },
-    { "email": "apo@senoa.com", "password": "sifre3" }
+    { "email": "nisa@senoa.com", "password": "sifre3" }
   ],
   "users": [
     { "email": "emre@senoa.com", "password": "parola1" },
