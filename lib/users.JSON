@@ -1,6 +1,11 @@
-[
-  { "email": "kullanici1@example.com", "password": "sifre123" },
-  { "email": "test@example.com", "password": "gizli456" },
-  { "email": "demo@example.com", "password": "parola789" },
-  { "email": "onur@ozcan.com", "password": "Onur5757" }
-]
+{
+  "dietitians": [
+    { "email": "onur@senoa.com", "password": "sifre1" },
+    { "email": "ayse@senoa.com", "password": "sifre2" },
+    { "email": "apo@senoa.com", "password": "sifre3" }
+  ],
+  "users": [
+    { "email": "emre@senoa.com", "password": "parola1" },
+    { "email": "apo@senoa.com", "password": "parola2" }
+  ]
+}
