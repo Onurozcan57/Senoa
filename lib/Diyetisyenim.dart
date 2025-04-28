@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:senoa/LoginScreen.dart';
+import 'package:senoa/Profile.dart';
 
 class Diyetisyenim extends StatefulWidget {
   const Diyetisyenim({super.key});
@@ -92,28 +94,40 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    ListTile(
-                      title: Text('Diyetisyenim'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+                         ListTile(
+                    title: const Text('Diyetisyenim'),
+                    onTap: () {
+                      Navigator.pop(context); // Drawer'ı kapatır
+                      Navigator.push( // Akış sayfasını açar
+                     context,
+                     MaterialPageRoute(builder: (context) => Diyetisyenim()),
+  );
+                    },
+                  ),
                     ListTile(
                       title: Text("Akış"),
                       onTap: () {},
                     ),
-                    ListTile(
-                      title: Text('Profilim'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: Text('Çıkış'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+                        ListTile(
+                    title: const Text('Profilim'),
+                    onTap: () {
+                      Navigator.pop(context); // Drawer'ı kapatır
+                      Navigator.push( // Akış sayfasını açar
+                     context,
+                     MaterialPageRoute(builder: (context) => Profile()),
+  );
+                    },
+                  ),
+                         ListTile(
+                    title: const Text('Çıkış'),
+                    onTap: () {
+                      Navigator.pop(context); // Drawer'ı kapatır
+                      Navigator.push( // Akış sayfasını açar
+                     context,
+                     MaterialPageRoute(builder: (context) => LoginScreen()),
+  );
+                    },
+                  ),
                   ],
                 ),
               ),

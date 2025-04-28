@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:senoa/AnaSayfa.dart';
+import 'package:senoa/Diyetisyenim.dart';
+import 'package:senoa/LoginScreen.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -61,6 +64,8 @@ class _MyWidgetState extends State<Profile> {
                   Icons.assignment_ind_outlined,
                 )), //badge bildirim  olduğunu gösteriyor
                 label: 'Diyetisyenim',
+                
+                
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.messenger),
@@ -95,28 +100,46 @@ class _MyWidgetState extends State<Profile> {
                   child: ListView(
                     padding: EdgeInsets.zero,
                     children: [
-                      ListTile(
-                        title: Text('Diyetisyenim'),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      ListTile(
-                        title: Text("Akış"),
-                        onTap: () {},
-                      ),
-                      ListTile(
-                        title: Text('Profilim'),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      ListTile(
-                        title: Text('Çıkış'),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                         ListTile(
+                    title: const Text('Diyetisyenim'),
+                    onTap: () {
+                      Navigator.pop(context); // Drawer'ı kapatır
+                      Navigator.push( // Akış sayfasını açar
+                     context,
+                     MaterialPageRoute(builder: (context) => Diyetisyenim()),
+  );
+                    },
+                  ),
+                         ListTile(
+                    title: const Text('Akış'),
+                    onTap: () {
+                      Navigator.pop(context); // Drawer'ı kapatır
+                      Navigator.push( // Akış sayfasını açar
+                     context,
+                     MaterialPageRoute(builder: (context) => AkisSayfasi()),
+  );
+                    },
+                  ),
+                           ListTile(
+                    title: const Text('Profilim'),
+                    onTap: () {
+                      Navigator.pop(context); // Drawer'ı kapatır
+                      Navigator.push( // Akış sayfasını açar
+                     context,
+                     MaterialPageRoute(builder: (context) => Profile()),
+  );
+                    },
+                  ),
+                    ListTile(
+                    title: const Text('Çıkış'),
+                    onTap: () {
+                      Navigator.pop(context); // Drawer'ı kapatır
+                      Navigator.push( // Akış sayfasını açar
+                     context,
+                     MaterialPageRoute(builder: (context) => LoginScreen()),
+  );
+                    },
+                  ),
                     ],
                   ),
                 ),
