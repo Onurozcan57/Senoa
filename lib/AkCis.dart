@@ -12,7 +12,8 @@ class _FeedPageState extends State<FeedPage> {
   List<Map<String, dynamic>> posts = [
     {
       "username": "diyetisyen_ayse",
-      "content": "Sağlıklı beslenme için gün içinde yeterli su içmeyi unutmayın! 💧",
+      "content":
+          "Sağlıklı beslenme için gün içinde yeterli su içmeyi unutmayın! 💧",
       "time": "2 saat önce",
       "image": "lib/assets/girisekrani.jpg",
       "liked": false,
@@ -21,7 +22,8 @@ class _FeedPageState extends State<FeedPage> {
     },
     {
       "username": "fitadam",
-      "content": "Protein ihtiyacınızı karşılamak için hangi besinleri tercih ediyorsunuz? 🍗🥦",
+      "content":
+          "Protein ihtiyacınızı karşılamak için hangi besinleri tercih ediyorsunuz? 🍗🥦",
       "time": "5 saat önce",
       "image": "lib/assets/arkaPlan.jpg",
       "liked": false,
@@ -30,7 +32,8 @@ class _FeedPageState extends State<FeedPage> {
     },
     {
       "username": "sporcan",
-      "content": "Antrenman öncesi bir avuç badem yemek enerji verir! Deneyin! 💪",
+      "content":
+          "Antrenman öncesi bir avuç badem yemek enerji verir! Deneyin! 💪",
       "time": "1 gün önce",
       "image": "lib/assets/sporSalonu.jpeg",
       "liked": false,
@@ -48,7 +51,8 @@ class _FeedPageState extends State<FeedPage> {
     },
     {
       "username": "fitanne",
-      "content": "Çocuklar için sağlıklı atıştırmalık tarifleri isteyen var mı? 🍎🍌",
+      "content":
+          "Çocuklar için sağlıklı atıştırmalık tarifleri isteyen var mı? 🍎🍌",
       "time": "4 saat önce",
       "image": "lib/assets/atistirmalik.jpeg",
       "liked": false,
@@ -57,7 +61,8 @@ class _FeedPageState extends State<FeedPage> {
     },
     {
       "username": "diyetisyen_ayse",
-      "content": "Kahvaltıyı atlamak metabolizmayı yavaşlatabilir. Dengeli kahvaltı şart! 🍳🥑",
+      "content":
+          "Kahvaltıyı atlamak metabolizmayı yavaşlatabilir. Dengeli kahvaltı şart! 🍳🥑",
       "time": "Bugün",
       "image": "lib/assets/atistirmalik.jpeg",
       "liked": false,
@@ -316,17 +321,19 @@ class _FeedPageState extends State<FeedPage> {
                         if (post["showComments"])
                           Column(
                             children: [
-                              ...post["comments"].map<Widget>((comment) => Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 4),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.comment,
-                                            size: 16, color: Colors.grey),
-                                        SizedBox(width: 6),
-                                        Text(comment),
-                                      ],
-                                    ),
-                                  )),
+                              ...post["comments"]
+                                  .map<Widget>((comment) => Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 4),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.comment,
+                                                size: 16, color: Colors.grey),
+                                            SizedBox(width: 6),
+                                            Text(comment),
+                                          ],
+                                        ),
+                                      )),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0),
                                 child: Row(

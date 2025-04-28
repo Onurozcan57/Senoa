@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:senoa/AkCis.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -382,10 +383,11 @@ class _AnasayfaState extends State<Anasayfa> {
                     title: const Text('Diyetisyenim'),
                     onTap: () {
                       Navigator.pop(context); // Drawer'ı kapatır
-  Navigator.push( // Akış sayfasını açar
-    context,
-    MaterialPageRoute(builder: (context) => Diyetisyenim()),
-  );
+                      Navigator.push(
+                        // Akış sayfasını açar
+                        context,
+                        MaterialPageRoute(builder: (context) => Diyetisyenim()),
+                      );
                     },
                   ),
                   ListTile(
@@ -394,8 +396,7 @@ class _AnasayfaState extends State<Anasayfa> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const AkisSayfasi()),
+                        MaterialPageRoute(builder: (context) => FeedPage()),
                       );
                     },
                   ),
@@ -486,7 +487,8 @@ class _AnasayfaState extends State<Anasayfa> {
               ),
               SizedBox(
                 height: 130,
-                child: _tasks[_selectedDay] == null || _tasks[_selectedDay]!.isEmpty
+                child: _tasks[_selectedDay] == null ||
+                        _tasks[_selectedDay]!.isEmpty
                     ? const Center(child: Text("Bu gün için görev yok."))
                     : ListView.builder(
                         itemCount: _tasks[_selectedDay]!.length,
@@ -561,17 +563,17 @@ class _AnasayfaState extends State<Anasayfa> {
                   child: Row(
                     children: [
                       PaketKart(
-                        'Selahattin Durmaz',
-                        'Günlük öneriler, basit takip.',
-                        "lib/assets/diyetisyenArkaPlan.jpg"),
+                          'Selahattin Durmaz',
+                          'Günlük öneriler, basit takip.',
+                          "lib/assets/diyetisyenArkaPlan.jpg"),
                       PaketKart(
-                        'Premium Paket',
-                        'Özel diyet listeleri, haftalık analizler.',
-                        "lib/assets/d3.jpeg"),
+                          'Premium Paket',
+                          'Özel diyet listeleri, haftalık analizler.',
+                          "lib/assets/d3.jpeg"),
                       PaketKart(
-                        'VIP Paket',
-                        'Kişisel diyetisyen, gelişmiş analiz.',
-                        "lib/assets/d3.jpeg"),
+                          'VIP Paket',
+                          'Kişisel diyetisyen, gelişmiş analiz.',
+                          "lib/assets/d3.jpeg"),
                     ],
                   ),
                 ),
@@ -606,7 +608,11 @@ class _AnasayfaState extends State<Anasayfa> {
                         onTap: () => _showExercisePopup(
                           context,
                           "Göğüs ve Ön Kol Egzersizleri",
-                          ["Bench Press", "Incline Dumbell Press", "Biceps Curl"],
+                          [
+                            "Bench Press",
+                            "Incline Dumbell Press",
+                            "Biceps Curl"
+                          ],
                         ),
                       ),
                       PaketKart(
@@ -636,7 +642,12 @@ class _AnasayfaState extends State<Anasayfa> {
                         onTap: () => _showExercisePopup(
                           context,
                           "Kardiyo Egzersizleri",
-                          ["Running", "Cycling", "Jumping Jacks", "Mountain Climbers"],
+                          [
+                            "Running",
+                            "Cycling",
+                            "Jumping Jacks",
+                            "Mountain Climbers"
+                          ],
                         ),
                       ),
                     ],
