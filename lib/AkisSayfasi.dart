@@ -134,7 +134,7 @@ class _FeedPageState extends State<FeedPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: Color.fromARGB(255, 13, 255, 0),
+        backgroundColor: Color(0xFFD69C6C),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
@@ -183,7 +183,7 @@ class _FeedPageState extends State<FeedPage> {
               height: AppBar().preferredSize.height +
                   MediaQuery.of(context).padding.top,
               width: double.infinity,
-              color: Color.fromARGB(255, 13, 255, 0),
+              color: Color(0xFFD69C6C),
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 16, bottom: 8),
               child: SafeArea(

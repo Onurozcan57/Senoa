@@ -17,7 +17,7 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Yemek Tarifleri'),
-        backgroundColor: Color.fromARGB(255, 13, 255, 0),
+        backgroundColor: Color(0xFFD69C6C),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
@@ -31,30 +31,68 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: Color.fromARGB(160, 16, 237, 5),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        indicatorColor: Color.fromARGB(182, 17, 237, 5),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            selectedIcon: Icon(
+              Icons.home,
+              size: 30,
+              color: Colors.white,
+            ),
+            icon: Icon(
+              Icons.home_outlined,
+              size: 30,
+            ),
+            label: 'Ana Sayfa',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.account_box),
-            icon: Icon(Icons.account_box_outlined),
+            selectedIcon: Icon(
+              Icons.account_box,
+              size: 30,
+              color: Colors.white,
+            ),
+            icon: Icon(
+              Icons.account_box_outlined,
+              size: 30,
+            ),
             label: 'Profilim',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.assignment_ind_rounded),
+            selectedIcon: Icon(
+              Icons.assignment_ind_rounded,
+              size: 30,
+              color: Colors.white,
+            ),
             icon: Badge(
-              child: Icon(Icons.assignment_ind_outlined),
+              child: Icon(
+                Icons.assignment_ind_outlined,
+                size: 30,
+              ),
             ),
             label: 'Diyetisyenim',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.messenger),
-            icon: Icon(Icons.messenger_outline),
-            label: 'Messages',
+            selectedIcon: Icon(
+              Icons.messenger,
+              size: 25,
+              color: Colors.white,
+            ),
+            icon: Icon(Icons.messenger_outline, size: 25),
+            label: 'GÜndem',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(
+              Icons.food_bank,
+              color: Colors.white,
+              size: 35,
+            ),
+            label: "Yemek",
+            icon: Icon(
+              Icons.food_bank_outlined,
+              size: 35,
+            ),
           ),
         ],
       ),
@@ -66,7 +104,7 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               height: AppBar().preferredSize.height +
                   MediaQuery.of(context).padding.top,
               width: double.infinity,
-              color: Color.fromARGB(255, 13, 255, 0),
+              color: Color(0xFFD69C6C),
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 16, bottom: 8),
               child: SafeArea(

@@ -314,7 +314,7 @@ class _AnasayfaState extends State<Anasayfa> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: const Color.fromARGB(255, 13, 255, 0),
+        backgroundColor: const Color(0xFFD69C6C),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
@@ -328,7 +328,7 @@ class _AnasayfaState extends State<Anasayfa> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: const Color.fromARGB(160, 16, 237, 5),
+        indicatorColor: const Color(0xFFD69C6C),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
@@ -361,7 +361,7 @@ class _AnasayfaState extends State<Anasayfa> {
               height: AppBar().preferredSize.height +
                   MediaQuery.of(context).padding.top,
               width: double.infinity,
-              color: const Color.fromARGB(255, 13, 255, 0),
+              color: const Color(0xFFD69C6C),
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.only(left: 16, bottom: 8),
               child: SafeArea(
