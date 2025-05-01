@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'AkisSayfasi.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -314,7 +315,7 @@ class _AnasayfaState extends State<Anasayfa> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: const Color(0xFFD69C6C),
+        backgroundColor: const Color.fromARGB(255, 13, 255, 0),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
@@ -328,68 +329,28 @@ class _AnasayfaState extends State<Anasayfa> {
             currentPageIndex = index;
           });
         },
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        indicatorColor: Color(0xFFD69C6C),
+        indicatorColor: const Color.fromARGB(160, 16, 237, 5),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(
-              Icons.home,
-              size: 30,
-              color: Colors.white,
-            ),
-            icon: Icon(
-              Icons.home_outlined,
-              size: 30,
-            ),
-            label: 'Ana Sayfa',
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
           ),
           NavigationDestination(
-            selectedIcon: Icon(
-              Icons.account_box,
-              size: 30,
-              color: Colors.white,
-            ),
-            icon: Icon(
-              Icons.account_box_outlined,
-              size: 30,
-            ),
+            selectedIcon: Icon(Icons.account_box),
+            icon: Icon(Icons.account_box_outlined),
             label: 'Profilim',
           ),
           NavigationDestination(
-            selectedIcon: Icon(
-              Icons.assignment_ind_rounded,
-              size: 30,
-              color: Colors.white,
-            ),
-            icon: Badge(
-              child: Icon(
-                Icons.assignment_ind_outlined,
-                size: 30,
-              ),
-            ),
+            selectedIcon: Icon(Icons.assignment_ind_rounded),
+            icon: Badge(child: Icon(Icons.assignment_ind_outlined)),
             label: 'Diyetisyenim',
           ),
           NavigationDestination(
-            selectedIcon: Icon(
-              Icons.messenger,
-              size: 25,
-              color: Colors.white,
-            ),
-            icon: Icon(Icons.messenger_outline, size: 25),
-            label: 'GÜndem',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(
-              Icons.food_bank,
-              color: Colors.white,
-              size: 35,
-            ),
-            label: "Yemek",
-            icon: Icon(
-              Icons.food_bank_outlined,
-              size: 35,
-            ),
+            selectedIcon: Icon(Icons.messenger),
+            icon: Icon(Icons.messenger_outline),
+            label: 'Messages',
           ),
         ],
       ),
@@ -401,7 +362,7 @@ class _AnasayfaState extends State<Anasayfa> {
               height: AppBar().preferredSize.height +
                   MediaQuery.of(context).padding.top,
               width: double.infinity,
-              color: const Color(0xFFD69C6C),
+              color: const Color.fromARGB(255, 13, 255, 0),
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.only(left: 16, bottom: 8),
               child: SafeArea(
@@ -548,10 +509,11 @@ class _AnasayfaState extends State<Anasayfa> {
                       ),
               ),
               const SizedBox(height: 20),
+              const SizedBox(height: 20),
               SizedBox(
-                height: 75,
+                height: 200,
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Icon(
                       Icons.auto_graph_outlined,
@@ -559,38 +521,54 @@ class _AnasayfaState extends State<Anasayfa> {
                       color: Colors.green,
                     ),
                     const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Alınması Gereken Kalori Miktarı:",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Alınması Gereken Kalori Miktarı:",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                        TweenAnimationBuilder(
-                          tween: Tween<double>(begin: 0, end: 2500),
-                          duration: const Duration(seconds: 3),
-                          builder: (context, value, child) {
-                            return Text(
-                              "${value.toStringAsFixed(0)} Kcal",
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                          TweenAnimationBuilder(
+                            tween: Tween<double>(begin: 0, end: 2250),
+                            duration: const Duration(seconds: 3),
+                            builder: (context, value, child) {
+                              double progress = value / 2500;
+
+                              return Row(
+                                children: [
+                                  CircularPercentIndicator(
+                                    radius: 70.0,
+                                    lineWidth: 12.0,
+                                    percent: progress.clamp(0.0, 1.0),
+                                    center: Text(
+                                      "${value.toStringAsFixed(0)}\nKcal",
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    progressColor: Colors.green,
+                                    backgroundColor: Colors.grey.shade300,
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 10.0),
+                padding: EdgeInsets.only(top: 35.0),
                 child: Text(
                   'Diyetisyenler',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

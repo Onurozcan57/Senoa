@@ -32,7 +32,7 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
           });
         },
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        indicatorColor: Color(0xFFD69C6C),
+        indicatorColor: Color.fromARGB(182, 17, 237, 5),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
