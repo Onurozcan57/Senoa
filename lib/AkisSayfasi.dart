@@ -11,7 +11,8 @@ class _FeedPageState extends State<FeedPage> {
   int currentPageIndex = 0;
   List<Map<String, dynamic>> posts = [
     {
-      "username": "diyetisyen_ayse",
+      "profile_Photo": "lib/assets/Onur_Ozcan.png",
+      "username": "Onur_ÖZCAN57",
       "content":
           "Sağlıklı beslenme için gün içinde yeterli su içmeyi unutmayın! 💧",
       "time": "2 saat önce",
@@ -21,7 +22,8 @@ class _FeedPageState extends State<FeedPage> {
       "comments": ["Çok doğru!", "Bunu daha çok uygulamalıyım."]
     },
     {
-      "username": "fitadam",
+      "profile_Photo": "lib/assets/Nisa_Sakar.png",
+      "username": "Nisanur_Şakar",
       "content":
           "Protein ihtiyacınızı karşılamak için hangi besinleri tercih ediyorsunuz? 🍗🥦",
       "time": "5 saat önce",
@@ -31,6 +33,7 @@ class _FeedPageState extends State<FeedPage> {
       "comments": ["Tavuk göğsü ve mercimek vazgeçilmezim!"]
     },
     {
+      "profile_Photo": "lib/assets/girisekrani.jpg",
       "username": "sporcan",
       "content":
           "Antrenman öncesi bir avuç badem yemek enerji verir! Deneyin! 💪",
@@ -41,6 +44,7 @@ class _FeedPageState extends State<FeedPage> {
       "comments": ["Bu bilgiyi bilmiyordum, teşekkürler!", "Deneyeceğim!"]
     },
     {
+      "profile_Photo": "lib/assets/girisekrani.jpg",
       "username": "veganlife",
       "content": "Vegan beslenmede B12 takviyesi almayı unutmayın! 🌱",
       "time": "3 gün önce",
@@ -50,6 +54,7 @@ class _FeedPageState extends State<FeedPage> {
       "comments": ["Çok önemli bir detay!", "Harika öneri."]
     },
     {
+      "profile_Photo": "lib/assets/girisekrani.jpg",
       "username": "fitanne",
       "content":
           "Çocuklar için sağlıklı atıştırmalık tarifleri isteyen var mı? 🍎🍌",
@@ -60,6 +65,7 @@ class _FeedPageState extends State<FeedPage> {
       "comments": ["Evet lütfen!", "Paylaşır mısınız tarifleri?"]
     },
     {
+      "profile_Photo": "lib/assets/girisekrani.jpg",
       "username": "diyetisyen_ayse",
       "content":
           "Kahvaltıyı atlamak metabolizmayı yavaşlatabilir. Dengeli kahvaltı şart! 🍳🥑",
@@ -116,13 +122,14 @@ class _FeedPageState extends State<FeedPage> {
   void addPost(String content) {
     setState(() {
       posts.insert(0, {
-        "username": "Yeni Kullanıcı",
+        "profile_Photo": "lib/assets/Onur_Ozcan.png",
+        "username": "Onur_ÖZCAN57",
         "content": content,
         "time": "Şimdi",
         "image": "", // Varsayılan boş
         "liked": false,
         "showComments": false,
-        "comments": []
+        "comments": [],
       });
       commentControllers.insert(0, TextEditingController());
     });
@@ -148,30 +155,68 @@ class _FeedPageState extends State<FeedPage> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: Color.fromARGB(160, 16, 237, 5),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        indicatorColor: Color(0xFFD69C6C),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            selectedIcon: Icon(
+              Icons.home,
+              size: 30,
+              color: Colors.white,
+            ),
+            icon: Icon(
+              Icons.home_outlined,
+              size: 30,
+            ),
+            label: 'Ana Sayfa',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.account_box),
-            icon: Icon(Icons.account_box_outlined),
+            selectedIcon: Icon(
+              Icons.account_box,
+              size: 30,
+              color: Colors.white,
+            ),
+            icon: Icon(
+              Icons.account_box_outlined,
+              size: 30,
+            ),
             label: 'Profilim',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.assignment_ind_rounded),
+            selectedIcon: Icon(
+              Icons.assignment_ind_rounded,
+              size: 30,
+              color: Colors.white,
+            ),
             icon: Badge(
-              child: Icon(Icons.assignment_ind_outlined),
+              child: Icon(
+                Icons.assignment_ind_outlined,
+                size: 30,
+              ),
             ),
             label: 'Diyetisyenim',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.messenger),
-            icon: Icon(Icons.messenger_outline),
-            label: 'Messages',
+            selectedIcon: Icon(
+              Icons.messenger,
+              size: 25,
+              color: Colors.white,
+            ),
+            icon: Icon(Icons.messenger_outline, size: 25),
+            label: 'GÜndem',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(
+              Icons.food_bank,
+              color: Colors.white,
+              size: 35,
+            ),
+            label: "Yemek",
+            icon: Icon(
+              Icons.food_bank_outlined,
+              size: 35,
+            ),
           ),
         ],
       ),
@@ -253,10 +298,13 @@ class _FeedPageState extends State<FeedPage> {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.grey[300],
-                              child: Icon(Icons.person, color: Colors.white),
-                            ),
+                            if (post["profile_Photo"] != "")
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundImage:
+                                    AssetImage(post["profile_Photo"]),
+                                backgroundColor: Colors.grey[200],
+                              ),
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(

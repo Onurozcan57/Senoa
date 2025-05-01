@@ -22,16 +22,16 @@ class _MyWidgetState extends State<Profile> {
             image: DecorationImage(
                 image: AssetImage("lib/assets/girisekrani.jpg"),
                 fit: BoxFit.cover,
-                opacity: 0.7),
+                opacity: 0.8),
           ),
         ),
         Scaffold(
           backgroundColor: const Color.fromARGB(
-              0, 255, 255, 255), // Arka planı şeffaf yapıyoruz
+              154, 255, 255, 255), // Arka planı şeffaf yapıyoruz
           key: _scaffoldKey,
           appBar: AppBar(
             title: Text('Profilim'),
-            backgroundColor: Color.fromARGB(255, 13, 255, 0),
+            backgroundColor: Color(0xFFD69C6C),
             leading: IconButton(
               icon: Icon(Icons.menu),
               onPressed: () {
@@ -45,32 +45,68 @@ class _MyWidgetState extends State<Profile> {
                 currentPageIndex = index;
               });
             },
-            indicatorColor: Color.fromARGB(160, 16, 237, 5),
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            indicatorColor: Color(0xFFD69C6C),
             selectedIndex: currentPageIndex,
             destinations: const <Widget>[
               NavigationDestination(
-                selectedIcon: Icon(Icons.home),
-                icon: Icon(Icons.home_outlined),
-                label: 'Home',
+                selectedIcon: Icon(
+                  Icons.home,
+                  size: 30,
+                  color: Colors.white,
+                ),
+                icon: Icon(
+                  Icons.home_outlined,
+                  size: 30,
+                ),
+                label: 'Ana Sayfa',
               ),
               NavigationDestination(
-                  selectedIcon: Icon(Icons.account_box),
-                  icon: Icon(Icons.account_box_outlined),
-                  label: 'Profilim'),
+                selectedIcon: Icon(
+                  Icons.account_box,
+                  size: 30,
+                  color: Colors.white,
+                ),
+                icon: Icon(
+                  Icons.account_box_outlined,
+                  size: 30,
+                ),
+                label: 'Profilim',
+              ),
               NavigationDestination(
-                selectedIcon: Icon(Icons.assignment_ind_rounded),
+                selectedIcon: Icon(
+                  Icons.assignment_ind_rounded,
+                  size: 30,
+                  color: Colors.white,
+                ),
                 icon: Badge(
-                    child: Icon(
-                  Icons.assignment_ind_outlined,
-                )), //badge bildirim  olduğunu gösteriyor
+                  child: Icon(
+                    Icons.assignment_ind_outlined,
+                    size: 30,
+                  ),
+                ),
                 label: 'Diyetisyenim',
-                
-                
               ),
               NavigationDestination(
-                selectedIcon: Icon(Icons.messenger),
-                icon: Icon(Icons.messenger_outline),
-                label: 'Messages',
+                selectedIcon: Icon(
+                  Icons.messenger,
+                  size: 25,
+                  color: Colors.white,
+                ),
+                icon: Icon(Icons.messenger_outline, size: 25),
+                label: 'GÜndem',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(
+                  Icons.food_bank,
+                  color: Colors.white,
+                  size: 35,
+                ),
+                label: "Yemek",
+                icon: Icon(
+                  Icons.food_bank_outlined,
+                  size: 35,
+                ),
               ),
             ],
           ),
@@ -100,46 +136,53 @@ class _MyWidgetState extends State<Profile> {
                   child: ListView(
                     padding: EdgeInsets.zero,
                     children: [
-                         ListTile(
-                    title: const Text('Diyetisyenim'),
-                    onTap: () {
-                      Navigator.pop(context); // Drawer'ı kapatır
-                      Navigator.push( // Akış sayfasını açar
-                     context,
-                     MaterialPageRoute(builder: (context) => Diyetisyenim()),
-  );
-                    },
-                  ),
-                         ListTile(
-                    title: const Text('Akış'),
-                    onTap: () {
-                      Navigator.pop(context); // Drawer'ı kapatır
-                      Navigator.push( // Akış sayfasını açar
-                     context,
-                     MaterialPageRoute(builder: (context) => AkisSayfasi()),
-  );
-                    },
-                  ),
-                           ListTile(
-                    title: const Text('Profilim'),
-                    onTap: () {
-                      Navigator.pop(context); // Drawer'ı kapatır
-                      Navigator.push( // Akış sayfasını açar
-                     context,
-                     MaterialPageRoute(builder: (context) => Profile()),
-  );
-                    },
-                  ),
-                    ListTile(
-                    title: const Text('Çıkış'),
-                    onTap: () {
-                      Navigator.pop(context); // Drawer'ı kapatır
-                      Navigator.push( // Akış sayfasını açar
-                     context,
-                     MaterialPageRoute(builder: (context) => LoginScreen()),
-  );
-                    },
-                  ),
+                      ListTile(
+                        title: const Text('Diyetisyenim'),
+                        onTap: () {
+                          Navigator.pop(context); // Drawer'ı kapatır
+                          Navigator.push(
+                            // Akış sayfasını açar
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Diyetisyenim()),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('Akış'),
+                        onTap: () {
+                          Navigator.pop(context); // Drawer'ı kapatır
+                          Navigator.push(
+                            // Akış sayfasını açar
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AkisSayfasi()),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('Profilim'),
+                        onTap: () {
+                          Navigator.pop(context); // Drawer'ı kapatır
+                          Navigator.push(
+                            // Akış sayfasını açar
+                            context,
+                            MaterialPageRoute(builder: (context) => Profile()),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('Çıkış'),
+                        onTap: () {
+                          Navigator.pop(context); // Drawer'ı kapatır
+                          Navigator.push(
+                            // Akış sayfasını açar
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -161,7 +204,7 @@ class _MyWidgetState extends State<Profile> {
                       children: [
                         ClipOval(
                           child: Image.asset(
-                            "lib/assets/girisekrani.jpg",
+                            "lib/assets/Onur_Ozcan.png",
                             width: 100,
                             height: 100,
                             fit: BoxFit.cover,
@@ -199,6 +242,75 @@ class _MyWidgetState extends State<Profile> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Card(
+                  elevation: 10,
+                  margin: EdgeInsets.all(3),
+                  child: ListTile(
+                    onTap: () {},
+                    title: Text(
+                      "Ayarlar",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.green),
+                    ),
+                    leading: Icon(
+                      Icons.settings_suggest,
+                      size: 45,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Card(
+                  elevation: 10,
+                  margin: EdgeInsets.all(3),
+                  child: ListTile(
+                    onTap: () {},
+                    title: Text(
+                      "Şifremi Unuttum",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.green),
+                    ),
+                    leading: Icon(
+                      Icons.password,
+                      size: 45,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Card(
+                  elevation: 10,
+                  margin: EdgeInsets.all(3),
+                  child: ListTile(
+                    onTap: () {},
+                    title: Text(
+                      "Çıkış",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.green),
+                    ),
+                    leading: Icon(
+                      Icons.output_sharp,
+                      size: 45,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ),
+              )
             ]),
           ),
         ),

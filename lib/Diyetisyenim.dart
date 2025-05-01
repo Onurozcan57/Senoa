@@ -27,7 +27,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text('Diyetisyenlik Uygulaması'),
-          backgroundColor: Color.fromARGB(255, 13, 255, 0),
+          backgroundColor: Color(0xFFD69C6C),
           leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
@@ -41,30 +41,68 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
               currentPageIndex = index;
             });
           },
-          indicatorColor: Color.fromARGB(160, 16, 237, 5),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          indicatorColor: Color(0xFFD69C6C),
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
             NavigationDestination(
-              selectedIcon: Icon(Icons.home),
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
+              selectedIcon: Icon(
+                Icons.home,
+                size: 30,
+                color: Colors.white,
+              ),
+              icon: Icon(
+                Icons.home_outlined,
+                size: 30,
+              ),
+              label: 'Ana Sayfa',
             ),
             NavigationDestination(
-                selectedIcon: Icon(Icons.account_box),
-                icon: Icon(Icons.account_box_outlined),
-                label: 'Profilim'),
+              selectedIcon: Icon(
+                Icons.account_box,
+                size: 30,
+                color: Colors.white,
+              ),
+              icon: Icon(
+                Icons.account_box_outlined,
+                size: 30,
+              ),
+              label: 'Profilim',
+            ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.assignment_ind_rounded),
+              selectedIcon: Icon(
+                Icons.assignment_ind_rounded,
+                size: 30,
+                color: Colors.white,
+              ),
               icon: Badge(
-                  child: Icon(
-                Icons.assignment_ind_outlined,
-              )), //badge bildirim  olduğunu gösteriyor
+                child: Icon(
+                  Icons.assignment_ind_outlined,
+                  size: 30,
+                ),
+              ),
               label: 'Diyetisyenim',
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.messenger),
-              icon: Icon(Icons.messenger_outline),
-              label: 'Messages',
+              selectedIcon: Icon(
+                Icons.messenger,
+                size: 25,
+                color: Colors.white,
+              ),
+              icon: Icon(Icons.messenger_outline, size: 25),
+              label: 'GÜndem',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.food_bank,
+                color: Colors.white,
+                size: 35,
+              ),
+              label: "Yemek",
+              icon: Icon(
+                Icons.food_bank_outlined,
+                size: 35,
+              ),
             ),
           ],
         ),
@@ -76,7 +114,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                 height: AppBar().preferredSize.height +
                     MediaQuery.of(context).padding.top,
                 width: double.infinity,
-                color: Color.fromARGB(255, 13, 255, 0),
+                color: Color(0xFFD69C6C),
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(left: 16, bottom: 8),
                 child: SafeArea(
@@ -94,40 +132,45 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                         ListTile(
-                    title: const Text('Diyetisyenim'),
-                    onTap: () {
-                      Navigator.pop(context); // Drawer'ı kapatır
-                      Navigator.push( // Akış sayfasını açar
-                     context,
-                     MaterialPageRoute(builder: (context) => Diyetisyenim()),
-  );
-                    },
-                  ),
+                    ListTile(
+                      title: const Text('Diyetisyenim'),
+                      onTap: () {
+                        Navigator.pop(context); // Drawer'ı kapatır
+                        Navigator.push(
+                          // Akış sayfasını açar
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Diyetisyenim()),
+                        );
+                      },
+                    ),
                     ListTile(
                       title: Text("Akış"),
                       onTap: () {},
                     ),
-                        ListTile(
-                    title: const Text('Profilim'),
-                    onTap: () {
-                      Navigator.pop(context); // Drawer'ı kapatır
-                      Navigator.push( // Akış sayfasını açar
-                     context,
-                     MaterialPageRoute(builder: (context) => Profile()),
-  );
-                    },
-                  ),
-                         ListTile(
-                    title: const Text('Çıkış'),
-                    onTap: () {
-                      Navigator.pop(context); // Drawer'ı kapatır
-                      Navigator.push( // Akış sayfasını açar
-                     context,
-                     MaterialPageRoute(builder: (context) => LoginScreen()),
-  );
-                    },
-                  ),
+                    ListTile(
+                      title: const Text('Profilim'),
+                      onTap: () {
+                        Navigator.pop(context); // Drawer'ı kapatır
+                        Navigator.push(
+                          // Akış sayfasını açar
+                          context,
+                          MaterialPageRoute(builder: (context) => Profile()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Çıkış'),
+                      onTap: () {
+                        Navigator.pop(context); // Drawer'ı kapatır
+                        Navigator.push(
+                          // Akış sayfasını açar
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -158,7 +201,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                         children: [
                           ClipOval(
                             child: Image.asset(
-                              "lib/assets/girisekrani.jpg",
+                              "lib/assets/Nisa_Sakar.png",
                               width: 100,
                               height: 100,
                               fit: BoxFit.cover,
@@ -170,14 +213,14 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Onur Özcan",
+                                  "Nisanur Şakar",
                                   style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  "E-mail: onur.islem57@gmail.com",
+                                  "E-mail: Nisanur@senoa.com",
                                   style: TextStyle(
                                       fontSize: 18, color: Colors.grey[700]),
                                   maxLines: 2,

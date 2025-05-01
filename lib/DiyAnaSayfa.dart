@@ -20,8 +20,8 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
     return Scaffold(
         key: _scaffoldKey, // scaffold key buraya eklenmeli
         appBar: AppBar(
-          title: Text("Onur Özcan"),
-          backgroundColor: Color.fromARGB(255, 13, 255, 0),
+          title: Text("Nisanur Şakar"),
+          backgroundColor: Color(0xFFD69C6C),
           leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
@@ -38,7 +38,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                 height: AppBar().preferredSize.height +
                     MediaQuery.of(context).padding.top,
                 width: double.infinity,
-                color: Color.fromARGB(255, 13, 255, 0),
+                color: Color(0xFFD69C6C),
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(left: 16, bottom: 8),
                 child: SafeArea(
@@ -133,13 +133,13 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                         child: TextField(
                           controller: _taskController,
                           decoration: InputDecoration(
-                            labelText: "Görev Ekle",
+                            labelText: "Randevu Ekle",
                             border: OutlineInputBorder(),
                           ),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: Icon(Icons.send),
                         onPressed: () {
                           if (_taskController.text.isNotEmpty) {
                             setState(() {
@@ -156,7 +156,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
 
                 // Seçilen güne ait görevler
                 SizedBox(
-                  height: 200, // Yükseklik vererek overflow hatasını önlüyoruz
+                  height: 100, // Yükseklik vererek overflow hatasını önlüyoruz
                   child: _tasks[_selectedDay] == null ||
                           _tasks[_selectedDay]!.isEmpty
                       ? Center(child: Text("Bu gün için görev yok."))
@@ -178,13 +178,38 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                         ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    children: [],
-                  ),
+                    padding: const EdgeInsets.all(16),
+                    child: Patients(
+                        nameSurname: "Onur Özcan",
+                        age: "20",
+                        height: 177,
+                        weight: 120)),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Patients(
+                      nameSurname: "Abdurrahman Gökçen",
+                      age: "22",
+                      height: 182,
+                      weight: 75),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Patients(
+                      nameSurname: "Ayşe Sümeyra Keskin",
+                      age: "18",
+                      height: 167,
+                      weight: 60),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Patients(
+                      nameSurname: "Emre İleri",
+                      age: "21",
+                      height: 182,
+                      weight: 80),
                 ),
                 SizedBox(
-                  height: 300,
+                  height: 0,
                 )
               ],
             ),
@@ -192,3 +217,156 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
         ));
   }
 }
+
+class Patients extends StatelessWidget {
+  final String nameSurname;
+  final String age;
+  final int weight;
+  final int height;
+
+  Patients(
+      {required this.nameSurname,
+      required this.age,
+      required this.height,
+      required this.weight});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 10,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ListTile(
+        onTap: () {
+          _showPopup(
+            context,
+            nameSurname,
+            age,
+            height,
+            weight,
+          );
+        },
+        title: Text(
+          nameSurname,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.green),
+        ),
+        subtitle: Text(
+          age,
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+        ),
+        leading: Icon(
+          Icons.accessibility_sharp,
+          color: Color(0xFFD69C6C),
+          size: 40,
+        ),
+      ),
+    );
+  }
+}
+
+void _showPopup(
+  BuildContext context,
+  String nameSurname,
+  String age,
+  int height,
+  int weight,
+) {
+  double bmi = weight / ((height / 100) * (height / 100));
+  String bmiResult = bmi.toStringAsFixed(1);
+
+  // Diyet kontrolcüleri
+  final TextEditingController _breakfastController = TextEditingController();
+  final TextEditingController _lunchController = TextEditingController();
+  final TextEditingController _dinnerController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      contentPadding: const EdgeInsets.all(25),
+      backgroundColor: Colors.white,
+      content: SingleChildScrollView(
+        // Taşmayı önler
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Bilgiler
+            Text("İsim ve Soyisim:", style: _popupLabelStyle),
+            Text(nameSurname, style: _popupValueStyle),
+            SizedBox(height: 10),
+            Text("Yaş:", style: _popupLabelStyle),
+            Text(age, style: _popupValueStyle),
+            SizedBox(height: 10),
+            Text("Boy:", style: _popupLabelStyle),
+            Text("$height cm", style: _popupValueStyle),
+            SizedBox(height: 10),
+            Text("Kilo:", style: _popupLabelStyle),
+            Text("$weight kg", style: _popupValueStyle),
+            SizedBox(height: 10),
+            Text("Vücut Kitle Endeksi:", style: _popupLabelStyle),
+            Text(bmiResult, style: _popupValueStyle),
+
+            SizedBox(height: 20),
+            Divider(),
+
+            // Diyet Giriş Alanları
+            Text("Diyet Listesi Hazırla", style: _popupLabelStyle),
+            SizedBox(height: 10),
+            _buildTextField("Sabah Öğünü", _breakfastController),
+            SizedBox(height: 10),
+            _buildTextField("Öğle Öğünü", _lunchController),
+            SizedBox(height: 10),
+            _buildTextField("Akşam Öğünü", _dinnerController),
+
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    print("Sabah: ${_breakfastController.text}");
+                    print("Öğle: ${_lunchController.text}");
+                    print("Akşam: ${_dinnerController.text}");
+                    Navigator.pop(context);
+                  },
+                  child: Text("Listeyi Gönder"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Kapat"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildTextField(String label, TextEditingController controller) {
+  return TextField(
+    controller: controller,
+    decoration: InputDecoration(
+      labelText: label,
+      border: OutlineInputBorder(),
+      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    ),
+    maxLines: 2,
+  );
+}
+
+final _popupLabelStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 16,
+  color: Colors.black54,
+);
+
+final _popupValueStyle = TextStyle(
+  fontSize: 16,
+  color: Colors.black87,
+);
