@@ -142,12 +142,6 @@ class _FeedPageState extends State<FeedPage> {
       appBar: AppBar(
         title: Text('Diyetisyenlik Uygulaması'),
         backgroundColor: Color(0xFFD69C6C),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-        ),
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -219,62 +213,6 @@ class _FeedPageState extends State<FeedPage> {
             ),
           ),
         ],
-      ),
-      drawer: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top,
-              width: double.infinity,
-              color: Color(0xFFD69C6C),
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(left: 16, bottom: 8),
-              child: SafeArea(
-                child: Text(
-                  'Menü',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  ListTile(
-                    title: Text('Diyetisyenim'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Akış'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Profilim'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Çıkış'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
       body: CustomScrollView(
         controller: _scrollController,

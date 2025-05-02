@@ -227,7 +227,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 // Kayıt ol bağlantısı
                 TextButton(
-                  onPressed: () {}, //fonksiyonun çalışması
+                  onPressed: () {
+                    _showRegisterPopup(context);
+                  }, //fonksiyonun çalışması
                   child: Text(
                     "Hesabın yok mu? --> Kayıt ol",
                     style: TextStyle(
@@ -244,4 +246,206 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+void _showRegisterPopup(BuildContext context) {
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  DateTime? selectedDate;
+
+  String? phoneError;
+  String? emailError;
+  String? passwordError;
+  String? dateError;
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: const Color(0xFFF5E7DC),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        title: const Text(
+          "Kayıt Ol",
+          style: TextStyle(color: Colors.black87),
+        ),
+        content: StatefulBuilder(
+          builder: (context, setState) {
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _customInputField(phoneController, "Telefon Numarası"),
+                  if (phoneError != null)
+                    Text(phoneError!,
+                        style:
+                            const TextStyle(color: Colors.red, fontSize: 12)),
+                  _customInputField(emailController, "Email"),
+                  if (emailError != null)
+                    Text(emailError!,
+                        style:
+                            const TextStyle(color: Colors.red, fontSize: 12)),
+                  _customInputField(passwordController, "Şifre", obscure: true),
+                  if (passwordError != null)
+                    Text(passwordError!,
+                        style:
+                            const TextStyle(color: Colors.red, fontSize: 12)),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Text(
+                        "Doğum Tarihi: ",
+                        style: TextStyle(color: Colors.black87),
+                      ),
+                      Text(
+                        selectedDate == null
+                            ? "Seçilmedi"
+                            : "${selectedDate!.day}.${selectedDate!.month}.${selectedDate!.year}",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.calendar_today,
+                            color: Color(0xFFD69C6C)),
+                        onPressed: () async {
+                          DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime(2000),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: const ColorScheme.light(
+                                    primary: Color(0xFFD69C6C),
+                                    onPrimary: Colors.white,
+                                    onSurface: Colors.black,
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+                          if (picked != null) {
+                            setState(() {
+                              selectedDate = picked;
+                              dateError = null;
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  if (dateError != null)
+                    Text(dateError!,
+                        style:
+                            const TextStyle(color: Colors.red, fontSize: 12)),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        phoneError = phoneController.text.length < 10
+                            ? "Geçerli bir telefon girin"
+                            : null;
+                        emailError = !emailController.text.contains('@')
+                            ? "Geçerli email girin"
+                            : null;
+                        passwordError = passwordController.text.length < 6
+                            ? "Şifre en az 6 karakter olmalı"
+                            : null;
+                        dateError =
+                            selectedDate == null ? "Doğum tarihi seçin" : null;
+                      });
+
+                      if (phoneError == null &&
+                          emailError == null &&
+                          passwordError == null &&
+                          dateError == null) {
+                        Navigator.pop(context);
+                        _showBodyWeightPopup(
+                            context); // Sonraki popup burada çağrılır
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD69C6C),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text("Devam Et"),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    },
+  );
+}
+
+void _showBodyWeightPopup(BuildContext context) {
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: const Color(0xFFF5E7DC),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        title: const Text(
+          "Boy & Kilo",
+          style: TextStyle(color: Colors.black87),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _customInputField(heightController, "Boy (cm)"),
+            _customInputField(weightController, "Kilo (kg)"),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // heightController.text ve weightController.text alınabilir
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFD69C6C),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text("Kayıt Ol"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Widget _customInputField(TextEditingController controller, String label,
+    {bool obscure = false}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: TextField(
+      controller: controller,
+      obscureText: obscure,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.black54),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    ),
+  );
 }

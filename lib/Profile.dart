@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senoa/AkisSayfasi.dart';
 import 'package:senoa/AnaSayfa.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:senoa/LoginScreen.dart';
@@ -32,12 +33,6 @@ class _MyWidgetState extends State<Profile> {
           appBar: AppBar(
             title: Text('Profilim'),
             backgroundColor: Color(0xFFD69C6C),
-            leading: IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                _scaffoldKey.currentState?.openDrawer();
-              },
-            ),
           ),
           bottomNavigationBar: NavigationBar(
             onDestinationSelected: (int index) {
@@ -110,85 +105,7 @@ class _MyWidgetState extends State<Profile> {
               ),
             ],
           ),
-          drawer: Drawer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: AppBar().preferredSize.height +
-                      MediaQuery.of(context).padding.top,
-                  width: double.infinity,
-                  color: Color.fromARGB(255, 13, 255, 0),
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(left: 16, bottom: 8),
-                  child: SafeArea(
-                    child: Text(
-                      'Menü',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      ListTile(
-                        title: const Text('Diyetisyenim'),
-                        onTap: () {
-                          Navigator.pop(context); // Drawer'ı kapatır
-                          Navigator.push(
-                            // Akış sayfasını açar
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Diyetisyenim()),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        title: const Text('Akış'),
-                        onTap: () {
-                          Navigator.pop(context); // Drawer'ı kapatır
-                          Navigator.push(
-                            // Akış sayfasını açar
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AkisSayfasi()),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        title: const Text('Profilim'),
-                        onTap: () {
-                          Navigator.pop(context); // Drawer'ı kapatır
-                          Navigator.push(
-                            // Akış sayfasını açar
-                            context,
-                            MaterialPageRoute(builder: (context) => Profile()),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        title: const Text('Çıkış'),
-                        onTap: () {
-                          Navigator.pop(context); // Drawer'ı kapatır
-                          Navigator.push(
-                            // Akış sayfasını açar
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+
           body: SingleChildScrollView(
             child: Column(children: [
               Padding(
@@ -251,7 +168,9 @@ class _MyWidgetState extends State<Profile> {
                   elevation: 10,
                   margin: EdgeInsets.all(3),
                   child: ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      _showSettingsPopup(context);
+                    },
                     title: Text(
                       "Ayarlar",
                       style: TextStyle(
@@ -261,6 +180,28 @@ class _MyWidgetState extends State<Profile> {
                     ),
                     leading: Icon(
                       Icons.settings_suggest,
+                      size: 45,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Card(
+                  elevation: 10,
+                  margin: EdgeInsets.all(3),
+                  child: ListTile(
+                    onTap: () {},
+                    title: Text(
+                      "İletişim Bilgilerini Değiştir",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.green),
+                    ),
+                    leading: Icon(
+                      Icons.phone_android_sharp,
                       size: 45,
                       color: Colors.orange,
                     ),
@@ -317,4 +258,127 @@ class _MyWidgetState extends State<Profile> {
       ],
     );
   }
+}
+
+void _showSettingsPopup(BuildContext context) {
+  bool isDarkMode = false;
+  bool notificationsEnabled = true;
+  String selectedLanguage = "tr"; // varsayılan dil: Türkçe
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Ayarlar",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                  ),
+                  child: SwitchListTile(
+                    title: const Text("Karanlık Mod"),
+                    value: isDarkMode,
+                    activeColor: Colors.black,
+                    onChanged: (value) {
+                      setState(() => isDarkMode = value);
+                      // Temayı değiştirme işlemi
+                    },
+                  ),
+                ),
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                  ),
+                  child: SwitchListTile(
+                    title: const Text("Bildirimler"),
+                    value: notificationsEnabled,
+                    activeColor: Color(0xFFD69C6C),
+                    onChanged: (value) {
+                      setState(() => notificationsEnabled = value);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const Text(
+                      "Dil Seçimi:",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(width: 16),
+                    DropdownButton<String>(
+                      value: selectedLanguage,
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedLanguage = newValue;
+                          });
+                          // Burada dil değişimini uygulamaya yansıtabilirsin
+                        }
+                      },
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'tr',
+                          child: Text("Türkçe"),
+                        ),
+                        DropdownMenuItem(
+                          value: 'en',
+                          child: Text("English"),
+                        ),
+                        DropdownMenuItem(
+                          value: 'de',
+                          child: Text("Deutsch"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFD69C6C),
+                    foregroundColor: Colors.white,
+                    elevation: 5,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text("Kaydet ve Kapat"),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }

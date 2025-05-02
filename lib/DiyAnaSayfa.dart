@@ -22,67 +22,6 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
         appBar: AppBar(
           title: Text("Nisanur Şakar"),
           backgroundColor: Color(0xFFD69C6C),
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              // Hamburger menü butonuna basıldığında Drawer'ı açar
-              _scaffoldKey.currentState?.openDrawer(); // Drawer'ı açma işlemi
-            },
-          ),
-        ),
-        drawer: Drawer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: AppBar().preferredSize.height +
-                    MediaQuery.of(context).padding.top,
-                width: double.infinity,
-                color: Color(0xFFD69C6C),
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 16, bottom: 8),
-                child: SafeArea(
-                  child: Text(
-                    'Menü',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    ListTile(
-                      title: Text('Profilim'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: Text("Akış"),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: Text('Ayarlar'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: Text('Çıkış'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
         body: Container(
           decoration: BoxDecoration(

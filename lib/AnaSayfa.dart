@@ -5,36 +5,6 @@ import 'AkisSayfasi.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-// Akış sayfası için yeni sınıf ekledik
-class AkisSayfasi extends StatelessWidget {
-  const AkisSayfasi({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Akış'),
-        backgroundColor: const Color.fromARGB(255, 13, 255, 0),
-      ),
-      body: const Center(
-        child: Text('Akış sayfası içeriği buraya gelecek'),
-      ),
-    );
-  }
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const Anasayfa(),
-    );
-  }
-}
-
 class Anasayfa extends StatefulWidget {
   const Anasayfa({super.key});
 
@@ -315,13 +285,7 @@ class _AnasayfaState extends State<Anasayfa> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: const Color.fromARGB(255, 13, 255, 0),
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-        ),
+        backgroundColor: const Color(0xFFD69C6C),
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -329,95 +293,70 @@ class _AnasayfaState extends State<Anasayfa> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: const Color.fromARGB(160, 16, 237, 5),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        indicatorColor: Color(0xFFD69C6C),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            selectedIcon: Icon(
+              Icons.home,
+              size: 30,
+              color: Colors.white,
+            ),
+            icon: Icon(
+              Icons.home_outlined,
+              size: 30,
+            ),
+            label: 'Ana Sayfa',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.account_box),
-            icon: Icon(Icons.account_box_outlined),
+            selectedIcon: Icon(
+              Icons.account_box,
+              size: 30,
+              color: Colors.white,
+            ),
+            icon: Icon(
+              Icons.account_box_outlined,
+              size: 30,
+            ),
             label: 'Profilim',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.assignment_ind_rounded),
-            icon: Badge(child: Icon(Icons.assignment_ind_outlined)),
+            selectedIcon: Icon(
+              Icons.assignment_ind_rounded,
+              size: 30,
+              color: Colors.white,
+            ),
+            icon: Badge(
+              child: Icon(
+                Icons.assignment_ind_outlined,
+                size: 30,
+              ),
+            ),
             label: 'Diyetisyenim',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.messenger),
-            icon: Icon(Icons.messenger_outline),
-            label: 'Messages',
+            selectedIcon: Icon(
+              Icons.messenger,
+              size: 25,
+              color: Colors.white,
+            ),
+            icon: Icon(Icons.messenger_outline, size: 25),
+            label: 'GÜndem',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(
+              Icons.food_bank,
+              color: Colors.white,
+              size: 35,
+            ),
+            label: "Yemek",
+            icon: Icon(
+              Icons.food_bank_outlined,
+              size: 35,
+            ),
           ),
         ],
-      ),
-      drawer: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top,
-              width: double.infinity,
-              color: const Color.fromARGB(255, 13, 255, 0),
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(left: 16, bottom: 8),
-              child: SafeArea(
-                child: const Text(
-                  'Menü',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  ListTile(
-                    title: const Text('Diyetisyenim'),
-                    onTap: () {
-                      Navigator.pop(context); // Drawer'ı kapatır
-                      Navigator.push(
-                        // Akış sayfasını açar
-                        context,
-                        MaterialPageRoute(builder: (context) => Diyetisyenim()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text("Akış"),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => FeedPage()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Profilim'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Çıkış'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -445,7 +384,7 @@ class _AnasayfaState extends State<Anasayfa> {
                   headerStyle: const HeaderStyle(
                     titleTextStyle: TextStyle(
                       fontSize: 18,
-                      color: Colors.deepPurple,
+                      color: Color.fromARGB(255, 0, 0, 0),
                       fontWeight: FontWeight.w900,
                     ),
                   ),
