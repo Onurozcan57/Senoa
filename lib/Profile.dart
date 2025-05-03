@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senoa/AkisSayfasi.dart';
+import 'package:senoa/FeedPage.dart';
 import 'package:senoa/AnaSayfa.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:senoa/LoginScreen.dart';
@@ -16,246 +16,175 @@ class _MyWidgetState extends State<Profile> {
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("lib/assets/girisekrani.jpg"),
-                fit: BoxFit.cover,
-                opacity: 0.8),
+    return Scaffold(
+      // Ana Scaffold
+      key: _scaffoldKey,
+      body: Stack(
+        // Stack, Scaffold'ın body'sinde
+        children: [
+          Container(
+            // Arka plan Container'ı
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("lib/assets/girisekrani.jpg"),
+                  fit: BoxFit.cover,
+                  opacity: 0.8),
+            ),
           ),
-        ),
-        Scaffold(
-          backgroundColor: const Color.fromARGB(
-              154, 255, 255, 255), // Arka planı şeffaf yapıyoruz
-          key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text('Profilim'),
-            backgroundColor: Color(0xFFD69C6C),
-          ),
-          bottomNavigationBar: NavigationBar(
-            onDestinationSelected: (int index) {
-              setState(() {
-                currentPageIndex = index;
-              });
-            },
-            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-            indicatorColor: Color(0xFFD69C6C),
-            selectedIndex: currentPageIndex,
-            destinations: const <Widget>[
-              NavigationDestination(
-                selectedIcon: Icon(
-                  Icons.home,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                icon: Icon(
-                  Icons.home_outlined,
-                  size: 30,
-                ),
-                label: 'Ana Sayfa',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(
-                  Icons.account_box,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                icon: Icon(
-                  Icons.account_box_outlined,
-                  size: 30,
-                ),
-                label: 'Profilim',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(
-                  Icons.assignment_ind_rounded,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                icon: Badge(
-                  child: Icon(
-                    Icons.assignment_ind_outlined,
-                    size: 30,
-                  ),
-                ),
-                label: 'Diyetisyenim',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(
-                  Icons.messenger,
-                  size: 25,
-                  color: Colors.white,
-                ),
-                icon: Icon(Icons.messenger_outline, size: 25),
-                label: 'GÜndem',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(
-                  Icons.food_bank,
-                  color: Colors.white,
-                  size: 35,
-                ),
-                label: "Yemek",
-                icon: Icon(
-                  Icons.food_bank_outlined,
-                  size: 35,
-                ),
-              ),
-            ],
-          ),
-
-          body: SingleChildScrollView(
-            child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        ClipOval(
-                          child: Image.asset(
-                            "lib/assets/Onur_Ozcan.png",
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
+          SingleChildScrollView(
+            // İçerik
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          ClipOval(
+                            child: Image.asset(
+                              "lib/assets/Onur_Ozcan.png",
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Onur Özcan",
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "E-mail: onur.islem57@gmail.com",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[700]),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "Tel No: +90 555 555 55 55",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[700]),
-                              ),
-                            ],
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Onur Özcan",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "E-mail: onur.islem57@gmail.com",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.grey[700]),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "Tel No: +90 555 555 55 55",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.grey[700]),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  elevation: 10,
-                  margin: EdgeInsets.all(3),
-                  child: ListTile(
-                    onTap: () {
-                      _showSettingsPopup(context);
-                    },
-                    title: Text(
-                      "Ayarlar",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.green),
-                    ),
-                    leading: Icon(
-                      Icons.settings_suggest,
-                      size: 45,
-                      color: Colors.orange,
+                SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Card(
+                    elevation: 10,
+                    margin: EdgeInsets.all(3),
+                    child: ListTile(
+                      onTap: () {
+                        _showSettingsPopup(context);
+                      },
+                      title: Text(
+                        "Ayarlar",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.green),
+                      ),
+                      leading: Icon(
+                        Icons.settings_suggest,
+                        size: 45,
+                        color: Colors.orange,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  elevation: 10,
-                  margin: EdgeInsets.all(3),
-                  child: ListTile(
-                    onTap: () {},
-                    title: Text(
-                      "İletişim Bilgilerini Değiştir",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.green),
-                    ),
-                    leading: Icon(
-                      Icons.phone_android_sharp,
-                      size: 45,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  elevation: 10,
-                  margin: EdgeInsets.all(3),
-                  child: ListTile(
-                    onTap: () {},
-                    title: Text(
-                      "Şifremi Unuttum",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.green),
-                    ),
-                    leading: Icon(
-                      Icons.password,
-                      size: 45,
-                      color: Colors.orange,
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Card(
+                    elevation: 10,
+                    margin: EdgeInsets.all(3),
+                    child: ListTile(
+                      onTap: () {},
+                      title: Text(
+                        "İletişim Bilgilerini Değiştir",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.green),
+                      ),
+                      leading: Icon(
+                        Icons.phone_android_sharp,
+                        size: 45,
+                        color: Colors.orange,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  elevation: 10,
-                  margin: EdgeInsets.all(3),
-                  child: ListTile(
-                    onTap: () {},
-                    title: Text(
-                      "Çıkış",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.green),
-                    ),
-                    leading: Icon(
-                      Icons.output_sharp,
-                      size: 45,
-                      color: Colors.orange,
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Card(
+                    elevation: 10,
+                    margin: EdgeInsets.all(3),
+                    child: ListTile(
+                      onTap: () {},
+                      title: Text(
+                        "Şifremi Unuttum",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.green),
+                      ),
+                      leading: Icon(
+                        Icons.password,
+                        size: 45,
+                        color: Colors.orange,
+                      ),
                     ),
                   ),
                 ),
-              )
-            ]),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Card(
+                    elevation: 10,
+                    margin: EdgeInsets.all(3),
+                    child: ListTile(
+                      onTap: () {},
+                      title: Text(
+                        "Çıkış",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.green),
+                      ),
+                      leading: Icon(
+                        Icons.output_sharp,
+                        size: 45,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

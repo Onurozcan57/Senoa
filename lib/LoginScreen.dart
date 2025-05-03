@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 20),
                 // Email giriş alanı
                 TextFormField(
-                  controller: _emailController, // Bu satır eklendi
+                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: "Email",
                     labelStyle: TextStyle(color: Colors.white),
@@ -184,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    Diyanasayfa()), // DiyAnaSayfa.dart
+                                    Anasayfa()), // DiyAnaSayfa.dart
                           );
                         } else if (userRole == 'user') {
                           Navigator.pushReplacement(

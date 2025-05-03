@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:senoa/LoginScreen.dart';
-import 'package:senoa/Profile.dart';
 
 class Diyetisyenim extends StatefulWidget {
   const Diyetisyenim({super.key});
@@ -23,214 +21,169 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text('Diyetisyenlik Uygulaması'),
-          backgroundColor: Color(0xFFD69C6C),
-        ),
-        bottomNavigationBar: NavigationBar(
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          indicatorColor: Color(0xFFD69C6C),
-          selectedIndex: currentPageIndex,
-          destinations: const <Widget>[
-            NavigationDestination(
-              selectedIcon: Icon(
-                Icons.home,
-                size: 30,
-                color: Colors.white,
-              ),
-              icon: Icon(
-                Icons.home_outlined,
-                size: 30,
-              ),
-              label: 'Ana Sayfa',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
-                Icons.account_box,
-                size: 30,
-                color: Colors.white,
-              ),
-              icon: Icon(
-                Icons.account_box_outlined,
-                size: 30,
-              ),
-              label: 'Profilim',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
-                Icons.assignment_ind_rounded,
-                size: 30,
-                color: Colors.white,
-              ),
-              icon: Badge(
-                child: Icon(
-                  Icons.assignment_ind_outlined,
-                  size: 30,
+    return Container(
+      // En dıştaki Scaffold kaldırıldı, yerine Container
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage(
+                "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
+            fit: BoxFit.cover,
+            opacity: 0.07),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-              ),
-              label: 'Diyetisyenim',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
-                Icons.messenger,
-                size: 25,
-                color: Colors.white,
-              ),
-              icon: Icon(Icons.messenger_outline, size: 25),
-              label: 'GÜndem',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
-                Icons.food_bank,
-                color: Colors.white,
-                size: 35,
-              ),
-              label: "Yemek",
-              icon: Icon(
-                Icons.food_bank_outlined,
-                size: 35,
-              ),
-            ),
-          ],
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                    "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
-                fit: BoxFit.cover,
-                opacity: 0.07),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
+                child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          ClipOval(
-                            child: Image.asset(
-                              "lib/assets/Nisa_Sakar.png",
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Nisanur Şakar",
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "E-mail: Nisanur@senoa.com",
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.grey[700]),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "Tel No: +90 555 555 55 55",
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.grey[700]),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Bugün Ne Kadar Su İçtin?",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _waterController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            labelText: "Litres",
-                            filled: true,
-                            fillColor: Colors.blue[50],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                      ClipOval(
+                        child: Image.asset(
+                          "lib/assets/Nisa_Sakar.png",
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: _submitWaterIntake,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Nisanur Şakar",
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "E-mail: Nisanur@senoa.com",
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey[700]),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "Tel No: +90 555 555 55 55",
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey[700]),
+                            ),
+                          ],
                         ),
-                        child: Text("Kaydet"),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
-                  "Toplam İçilen Su: ${_waterIntake.toStringAsFixed(1)} L",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Diyet Listem",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                MealCard(
-                    mealTime: "Kahvaltı",
-                    meal: "Yulaf ezmesi, meyve, yeşil çay"),
-                MealCard(
-                    mealTime: "Öğle",
-                    meal: "Izgara tavuk, salata, tam tahıllı ekmek"),
-                MealCard(
-                    mealTime: "Akşam", meal: "Somon, sebzeler, esmer pirinç"),
-                SizedBox(
-                  height: 30,
-                )
-              ],
+              ),
             ),
-          ),
-        ));
+            SizedBox(height: 20),
+            Text(
+              "Bugün Ne Kadar Su İçtin?",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _waterController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Litres",
+                        filled: true,
+                        fillColor: Colors.blue[50],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: _submitWaterIntake,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text("Kaydet"),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Toplam İçilen Su: ${_waterIntake.toStringAsFixed(1)} L",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Diyet Listem",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            MealCard(
+                mealTime: "Kahvaltı", meal: "Yulaf ezmesi, meyve, yeşil çay"),
+            MealCard(
+                mealTime: "Öğle",
+                meal: "Izgara tavuk, salata, tam tahıllı ekmek"),
+            MealCard(mealTime: "Akşam", meal: "Somon, sebzeler, esmer pirinç"),
+            SizedBox(
+              height: 30,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MealCard extends StatelessWidget {
+  final String mealTime;
+  final String meal;
+
+  MealCard({required this.mealTime, required this.meal});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ListTile(
+        onTap: () {
+          _showPopup(context, mealTime, meal);
+        },
+        title: Text(
+          mealTime,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.green),
+        ),
+        subtitle: Text(
+          meal,
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+        ),
+        leading: Icon(
+          Icons.restaurant_menu,
+          color: Colors.orange,
+        ),
+      ),
+    );
   }
 }
 
@@ -300,38 +253,4 @@ void _showPopup(BuildContext context, String baslik, String aciklama) {
       ),
     ),
   );
-}
-
-class MealCard extends StatelessWidget {
-  final String mealTime;
-  final String meal;
-
-  MealCard({required this.mealTime, required this.meal});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        onTap: () {
-          _showPopup(context, mealTime, meal);
-        },
-        title: Text(
-          mealTime,
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.green),
-        ),
-        subtitle: Text(
-          meal,
-          style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
-        ),
-        leading: Icon(
-          Icons.restaurant_menu,
-          color: Colors.orange,
-        ),
-      ),
-    );
-  }
 }
