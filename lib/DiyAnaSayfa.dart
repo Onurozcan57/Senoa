@@ -11,6 +11,7 @@ class Diyanasayfa extends StatefulWidget {
 class _DiyanasayfaState extends State<Diyanasayfa> {
   DateTime _selectedDay = DateTime.now();
   Map<DateTime, List<String>> _tasks = {};
+  int currentPageIndex = 0;
   TextEditingController _taskController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>(); // scaffold key tanımlandı
@@ -56,20 +57,6 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                 size: 30,
               ),
               label: 'Profilim',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
-                Icons.assignment_ind_rounded,
-                size: 30,
-                color: Colors.white,
-              ),
-              icon: Badge(
-                child: Icon(
-                  Icons.assignment_ind_outlined,
-                  size: 30,
-                ),
-              ),
-              label: 'Diyetisyenim',
             ),
             NavigationDestination(
               selectedIcon: Icon(
