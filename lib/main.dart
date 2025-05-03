@@ -6,6 +6,7 @@ import 'package:senoa/LoginScreen.dart';
 import 'package:senoa/FeedPage.dart';
 import 'package:senoa/YemekTarifleri.dart';
 import 'Profile.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());

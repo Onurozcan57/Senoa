@@ -11,6 +11,7 @@ class Diyanasayfa extends StatefulWidget {
 class _DiyanasayfaState extends State<Diyanasayfa> {
   DateTime _selectedDay = DateTime.now();
   Map<DateTime, List<String>> _tasks = {};
+  int currentPageIndex = 0;
   TextEditingController _taskController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>(); // scaffold key tanımlandı
@@ -22,6 +23,63 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
         appBar: AppBar(
           title: Text("Nisanur Şakar"),
           backgroundColor: Color(0xFFD69C6C),
+        ),
+        bottomNavigationBar: NavigationBar(
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          indicatorColor: Color(0xFFD69C6C),
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.home,
+                size: 30,
+                color: Colors.white,
+              ),
+              icon: Icon(
+                Icons.home_outlined,
+                size: 30,
+              ),
+              label: 'Ana Sayfa',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.account_box,
+                size: 30,
+                color: Colors.white,
+              ),
+              icon: Icon(
+                Icons.account_box_outlined,
+                size: 30,
+              ),
+              label: 'Profilim',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.messenger,
+                size: 25,
+                color: Colors.white,
+              ),
+              icon: Icon(Icons.messenger_outline, size: 25),
+              label: 'GÜndem',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.food_bank,
+                color: Colors.white,
+                size: 35,
+              ),
+              label: "Yemek",
+              icon: Icon(
+                Icons.food_bank_outlined,
+                size: 35,
+              ),
+            ),
+          ],
         ),
         body: Container(
           decoration: BoxDecoration(
