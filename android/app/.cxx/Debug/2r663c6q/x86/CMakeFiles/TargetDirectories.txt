@@ -1,0 +1,2 @@
+C:/projectsflutter/basic_to_do_list/Senoa/android/app/.cxx/Debug/2r663c6q/x86/CMakeFiles/edit_cache.dir
+C:/projectsflutter/basic_to_do_list/Senoa/android/app/.cxx/Debug/2r663c6q/x86/CMakeFiles/rebuild_cache.dir
