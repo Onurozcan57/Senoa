@@ -5,6 +5,7 @@ import 'package:senoa/Diyetisyenim.dart';
 import 'package:senoa/LoginScreen.dart';
 import 'package:senoa/FeedPage.dart';
 import 'package:senoa/YemekTarifleri.dart';
+import 'package:senoa/diyetisyenler.dart';
 import 'Profile.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: Diyetisyenler(),
     );
   }
 }
