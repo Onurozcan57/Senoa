@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:senoa/ChatPage.dart';
+import 'package:senoa/GlowingChatButton.dart';
 import 'FeedPage.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -404,6 +406,15 @@ class AnaSayfaIcerigi extends StatelessWidget {
                                 "Mountain Climbers"
                               ],
                             ),
+                          ),
+                          GlowingChatButton(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const ChatPage()),
+                              );
+                            },
                           ),
                         ],
                       ),
