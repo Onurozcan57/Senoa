@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Diyanasayfa()),
+          MaterialPageRoute(builder: (context) => Anasayfa()),
         );
       }
     } on FirebaseAuthException catch (e) {

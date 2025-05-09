@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:senoa/LoginScreen.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -52,10 +53,6 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profil'),
-        backgroundColor: Colors.orange.shade700,
-      ),
       body: userData == null
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -137,7 +134,9 @@ class _ProfileState extends State<Profile> {
                       child: ListTile(
                         onTap: () async {
                           await _auth.signOut();
-                          Navigator.pushReplacementNamed(context, '/login');
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (_) => LoginScreen()),
+                          );
                         },
                         title: Text(
                           "Çıkış",
@@ -172,7 +171,7 @@ class _ProfileState extends State<Profile> {
             Text(
               title,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
