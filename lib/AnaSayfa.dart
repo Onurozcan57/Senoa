@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:senoa/ChatPage.dart';
-import 'package:senoa/GlowingChatButton.dart';
 import 'FeedPage.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -92,13 +91,13 @@ class PaketKart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: MediaQuery.of(context).size.width - 20,
       height: 200,
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         image: DecorationImage(
-          opacity: 0.6,
+          opacity: 0.8,
           image: AssetImage(arkaPlan),
           fit: BoxFit.cover,
         ),
@@ -309,24 +308,80 @@ class AnaSayfaIcerigi extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 250,
+                    height: 724,
                     child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          PaketKart(
-                              'Selahattin Durmaz',
-                              'Günlük öneriler, basit takip.',
-                              "lib/assets/diyetisyenArkaPlan.jpg"),
-                          PaketKart(
-                              'Premium Paket',
-                              'Özel diyet listeleri, haftalık analizler.',
-                              "lib/assets/d3.jpeg"),
-                          PaketKart(
-                              'VIP Paket',
-                              'Kişisel diyetisyen, gelişmiş analiz.',
-                              "lib/assets/d3.jpeg"),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(children: [
+                          DiyetisyenKart(
+                            d: {
+                              "isim": "Dyt. Nisanur Irmak Şakar",
+                              "uzmanlik": "Klinik Beslenme Uzmanı",
+                              "resimYolu": "lib/assets/Nisa_Sakar.png",
+                              "biyografi": "10+ yıllık tecrübe...",
+                              "alanlar": [
+                                "Kilo Kontrolü",
+                                "Sporcu Beslenmesi",
+                                "Diyabet Beslenmesi"
+                              ],
+                              "iletisim": {
+                                "instagram": "@diyetisyenselahattin",
+                                "mail": "nisanur@example.com",
+                                "telefon": "+90 555 555 5555"
+                              }
+                            },
+                          ),
+                          DiyetisyenKart(
+                            d: {
+                              "isim": "Dyt. Selahattin Durmaz",
+                              "uzmanlik": "Klinik Beslenme Uzmanı",
+                              "resimYolu": "lib/assets/diyetisyenArkaPlan.jpg",
+                              "biyografi": "10+ yıllık tecrübe...",
+                              "alanlar": [
+                                "Kilo Kontrolü",
+                                "Sporcu Beslenmesi",
+                                "Diyabet Beslenmesi"
+                              ],
+                              "iletisim": {
+                                "instagram": "@diyetisyenselahattin",
+                                "mail": "selahattin@example.com",
+                                "telefon": "+90 555 555 5555"
+                              }
+                            },
+                          ),
+                          DiyetisyenKart(
+                            d: {
+                              "isim": "Dyt. Selahattin Durmaz",
+                              "uzmanlik": "Klinik Beslenme Uzmanı",
+                              "resimYolu": "lib/assets/diyetisyenArkaPlan.jpg",
+                              "biyografi": "10+ yıllık tecrübe...",
+                              "alanlar": [
+                                "Kilo Kontrolü",
+                                "Sporcu Beslenmesi",
+                                "Diyabet Beslenmesi"
+                              ],
+                              "iletisim": {
+                                "instagram": "@diyetisyenselahattin",
+                                "mail": "selahattin@example.com",
+                                "telefon": "+90 555 555 5555"
+                              }
+                            },
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Buraya tıklanınca yapılacak işlemi yaz
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.orange[800],
+                              textStyle: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            child: const Text("Tümünü Gör"),
+                          ),
+                        ]),
                       ),
                     ),
                   ),
@@ -407,15 +462,6 @@ class AnaSayfaIcerigi extends StatelessWidget {
                               ],
                             ),
                           ),
-                          GlowingChatButton(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const ChatPage()),
-                              );
-                            },
-                          ),
                         ],
                       ),
                     ),
@@ -424,29 +470,6 @@ class AnaSayfaIcerigi extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TableCalendar(
-              firstDay: DateTime.utc(2010, 10, 20),
-              lastDay: DateTime.utc(2060, 10, 20),
-              focusedDay: DateTime.now(),
-              headerStyle: const HeaderStyle(
-                titleTextStyle: TextStyle(
-                  fontSize: 18,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              calendarStyle: const CalendarStyle(
-                todayTextStyle: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const Text("Diğer Ana Sayfa İçerikleri Burada"),
         ],
       ),
     );
@@ -801,4 +824,180 @@ class _AnasayfaState extends State<Anasayfa> {
       ),
     );
   }
+}
+
+/// 📌 DİYETİSYEN KARTI  ────────────────────────────────────────────────
+class DiyetisyenKart extends StatelessWidget {
+  final Map<String, dynamic> d; // Kart + detay verisi
+
+  const DiyetisyenKart({super.key, required this.d});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // ⬆️ Alttan detay ekranını aç
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          builder: (_) => DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.75,
+            maxChildSize: 0.95,
+            minChildSize: 0.5,
+            builder: (_, controller) =>
+                _diyetisyenDetay(context, d, controller),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 5,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            children: [
+              // 📷 Fotoğraf
+              AspectRatio(
+                aspectRatio: 2, // kare
+                child: Image.asset(
+                  d['resimYolu'],
+                  fit: BoxFit.cover,
+                ),
+              ),
+              // 🌫️ Alt gölge + isim/uzmanlık
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.black.withOpacity(0.45),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        d['isim'],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        d['uzmanlik'],
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 📌 DİYETİSYEN DETAY BOTTOM-SHEET  ───────────────────────────────────
+Widget _diyetisyenDetay(
+    BuildContext context, Map<String, dynamic> d, ScrollController c) {
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+
+  Future<void> pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) selectedDate = picked;
+  }
+
+  Future<void> pickTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) selectedTime = picked;
+  }
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    child: ListView(
+      controller: c,
+      children: [
+        Center(
+          child: Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+                color: Colors.grey[400],
+                borderRadius: BorderRadius.circular(4)),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Center(
+          child: Text(
+            d['isim'],
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Center(child: Text("Uzmanlık: ${d['uzmanlik']}")),
+        const Divider(height: 32),
+        const Text("📄 Detaylı Biyografi",
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 6),
+        Text(d['biyografi']),
+        const SizedBox(height: 18),
+        const Text("🏷️ Hizmet Verdiği Alanlar",
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 6),
+        ...List<Widget>.from(
+            d['alanlar'].map<Widget>((a) => Text("• $a")).toList()),
+        const SizedBox(height: 18),
+        const Text("📱 İletişim",
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 6),
+        Text("Instagram: ${d['iletisim']['instagram']}"),
+        Text("Mail: ${d['iletisim']['mail']}"),
+        Text("Telefon: ${d['iletisim']['telefon']}"),
+        const SizedBox(height: 24),
+
+        // Tarih & Saat Seçiciler
+        ElevatedButton(
+          onPressed: () async {
+            await pickDate();
+            await pickTime();
+            if (selectedDate != null && selectedTime != null) {
+              final dateStr = DateFormat('dd.MM.yyyy').format(selectedDate!);
+              final timeStr = selectedTime!.format(context);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                      'Randevunuz $dateStr $timeStr olarak kaydedildi 🎉')));
+            }
+          },
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
+          child: const Text("Randevu Tarih & Saat Seç"),
+        ),
+        const SizedBox(height: 12),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Kapat"),
+        ),
+        const SizedBox(height: 8),
+      ],
+    ),
+  );
 }

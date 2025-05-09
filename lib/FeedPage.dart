@@ -19,7 +19,18 @@ class _FeedPageState extends State<FeedPage> {
       "image": "lib/assets/girisekrani.jpg",
       "liked": false,
       "showComments": false,
-      "comments": ["Çok doğru!", "Bunu daha çok uygulamalıyım."]
+      "comments": [
+        {
+          "username": "elif_diyet",
+          "profile": "lib/assets/Nisa_Sakar.png",
+          "text": "Çok doğru!"
+        },
+        {
+          "username": "fitbaba",
+          "profile": "lib/assets/girisekrani.jpg",
+          "text": "Bunu daha çok uygulamalıyım."
+        }
+      ]
     },
     {
       "profile_Photo": "lib/assets/Nisa_Sakar.png",
@@ -30,7 +41,18 @@ class _FeedPageState extends State<FeedPage> {
       "image": "lib/assets/arkaPlan.jpg",
       "liked": false,
       "showComments": false,
-      "comments": ["Tavuk göğsü ve mercimek vazgeçilmezim!"]
+      "comments": [
+        {
+          "username": "Terorist_push_up",
+          "profile": "lib/assets/Nisa_Sakar.png",
+          "text": "Çok doğru!"
+        },
+        {
+          "username": "fitbaba",
+          "profile": "lib/assets/girisekrani.jpg",
+          "text": "Bunu daha çok uygulamalıyım."
+        }
+      ]
     },
     {
       "profile_Photo": "lib/assets/girisekrani.jpg",
@@ -41,7 +63,18 @@ class _FeedPageState extends State<FeedPage> {
       "image": "lib/assets/sporSalonu.jpeg",
       "liked": false,
       "showComments": false,
-      "comments": ["Bu bilgiyi bilmiyordum, teşekkürler!", "Deneyeceğim!"]
+      "comments": [
+        {
+          "username": "Nİke_Prosu",
+          "profile": "lib/assets/Nisa_Sakar.png",
+          "text": "Çok doğru!"
+        },
+        {
+          "username": "fitbaba",
+          "profile": "lib/assets/girisekrani.jpg",
+          "text": "Bunu daha çok uygulamalıyım."
+        }
+      ]
     },
     {
       "profile_Photo": "lib/assets/girisekrani.jpg",
@@ -51,7 +84,18 @@ class _FeedPageState extends State<FeedPage> {
       "image": "lib/assets/veganlife.jpeg",
       "liked": false,
       "showComments": false,
-      "comments": ["Çok önemli bir detay!", "Harika öneri."]
+      "comments": [
+        {
+          "username": "elif_diyet",
+          "profile": "lib/assets/Nisa_Sakar.png",
+          "text": "Çok doğru!"
+        },
+        {
+          "username": "fitbaba",
+          "profile": "lib/assets/girisekrani.jpg",
+          "text": "Bunu daha çok uygulamalıyım."
+        }
+      ]
     },
     {
       "profile_Photo": "lib/assets/girisekrani.jpg",
@@ -62,7 +106,18 @@ class _FeedPageState extends State<FeedPage> {
       "image": "lib/assets/atistirmalik.jpeg",
       "liked": false,
       "showComments": false,
-      "comments": ["Evet lütfen!", "Paylaşır mısınız tarifleri?"]
+      "comments": [
+        {
+          "username": "selin_healthy",
+          "profile": "lib/assets/Onur_Ozcan.png",
+          "text": "Evet lütfen!"
+        },
+        {
+          "username": "healthy_mama",
+          "profile": "lib/assets/girisekrani.jpg",
+          "text": "Paylaşır mısınız tarifleri?"
+        }
+      ]
     },
     {
       "profile_Photo": "lib/assets/girisekrani.jpg",
@@ -73,7 +128,40 @@ class _FeedPageState extends State<FeedPage> {
       "image": "lib/assets/atistirmalik.jpeg",
       "liked": false,
       "showComments": false,
-      "comments": ["Her sabah uyguluyorum!", "Kahvaltı favorim 💚"]
+      "comments": [
+        {
+          "username": "fitbaba",
+          "profile": "lib/assets/Nisa_Sakar.png",
+          "text": "Her sabah uyguluyorum!"
+        },
+        {
+          "username": "ahmetcan_diyet",
+          "profile": "lib/assets/girisekrani.jpg",
+          "text": "Kahvaltı favorim 💚"
+        }
+      ]
+    },
+    {
+      "profile_Photo": "lib/assets/girisekrani.jpg",
+      "username": "nutrition_tips",
+      "content":
+          "Günde 10 bin adım atmak sağlıklı bir yaşam için çok önemli! 🏃‍♂️",
+      "time": "Bugün",
+      "image": "lib/assets/fitnessArkaPlan.jpg",
+      "liked": false,
+      "showComments": false,
+      "comments": [
+        {
+          "username": "health_and_fitness",
+          "profile": "lib/assets/Onur_Ozcan.png",
+          "text": "Kesinlikle, her gün adım saymaya dikkat ediyorum!"
+        },
+        {
+          "username": "running_man",
+          "profile": "lib/assets/arkaPlan.jpg",
+          "text": "Harika bir motivasyon!"
+        }
+      ]
     }
   ];
 
@@ -108,16 +196,128 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   void toggleComments(int index) {
-    setState(() {
-      posts[index]["showComments"] = !posts[index]["showComments"];
-    });
+    final post = posts[index];
+    final TextEditingController commentController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            top: 16,
+            left: 16,
+            right: 16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Yorumlar",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              SizedBox(height: 10),
+              ...post["comments"].map<Widget>((yorum) => ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: AssetImage(yorum["profile"]),
+                    ),
+                    title: Text(yorum["username"]),
+                    subtitle: Text(yorum["text"]),
+                  )),
+              Divider(),
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: AssetImage("lib/assets/Onur_Ozcan.png"),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        hintText: "Yorumunuzu yazın...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      if (commentController.text.trim().isNotEmpty) {
+                        addComment(index, {
+                          "username": "Onur_ÖZCAN57",
+                          "profile": "lib/assets/Onur_Ozcan.png",
+                          "text": commentController.text.trim(),
+                        });
+                        Navigator.pop(context);
+                      }
+                    },
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  void addComment(int index, String comment) {
+  void addComment(int index, Map<String, String> comment) {
     setState(() {
       posts[index]["comments"].add(comment);
     });
   }
+
+  void showAddPostDialog(BuildContext context) {
+    TextEditingController postContentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Yeni Gönderi'),
+          content: TextField(
+            controller: postContentController,
+            decoration: InputDecoration(hintText: 'Gönderi içeriğini yazın...'),
+            maxLines: 5,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Dialog'u kapat
+              },
+              child: Text('İptal'),
+            ),
+            TextButton(
+              onPressed: () {
+                String content = postContentController.text.trim();
+                if (content.isNotEmpty) {
+                  addPost(content); // Yeni gönderiyi ekle
+                  Navigator.pop(context); // Dialog'u kapat
+                } else {
+                  // Eğer içerik boşsa, kullanıcıya bir uyarı ver
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Lütfen içerik girin')),
+                  );
+                }
+              },
+              child: Text('Gönder'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+// FloatingActionButton kodu
 
   void addPost(String content) {
     setState(() {
@@ -137,149 +337,150 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      // En dıştaki Scaffold kaldırıldı, yerine CustomScrollView
-      controller: _scrollController,
-      slivers: [
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final post = posts[index];
-              final commentController = commentControllers[index];
+    return Scaffold(
+        body: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final post = posts[index];
+                  final commentController = commentControllers[index];
 
-              return Card(
-                key: ValueKey("post_$index"),
-                margin: EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          if (post["profile_Photo"] != "")
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage:
-                                  AssetImage(post["profile_Photo"]),
-                              backgroundColor: Colors.grey[200],
-                            ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              post["username"],
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      if (post["image"] != "")
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            post["image"],
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 200,
-                          ),
-                        ),
-                      SizedBox(height: 10),
-                      Text(
-                        post["content"],
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return Card(
+                    key: ValueKey("post_$index"),
+                    margin: EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              IconButton(
-                                icon: Icon(
-                                  post["liked"]
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color:
-                                      post["liked"] ? Colors.red : Colors.black,
+                              if (post["profile_Photo"] != "")
+                                CircleAvatar(
+                                  radius: 30,
+                                  backgroundImage:
+                                      AssetImage(post["profile_Photo"]),
+                                  backgroundColor: Colors.grey[200],
                                 ),
-                                onPressed: () => toggleLike(index),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.comment),
-                                onPressed: () => toggleComments(index),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  post["username"],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                          Text(
-                            post["time"],
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
+                          SizedBox(height: 10),
+                          if (post["image"] != "")
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                post["image"],
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 200,
+                              ),
                             ),
+                          SizedBox(height: 10),
+                          Text(
+                            post["content"],
+                            style: TextStyle(fontSize: 14),
                           ),
-                        ],
-                      ),
-                      if (post["showComments"])
-                        Column(
-                          children: [
-                            ...post["comments"]
-                                .map<Widget>((comment) => Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 4),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.comment,
-                                              size: 16, color: Colors.grey),
-                                          SizedBox(width: 6),
-                                          Text(comment),
-                                        ],
-                                      ),
-                                    )),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
                                 children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: commentController,
-                                      decoration: InputDecoration(
-                                        hintText: "Yorum ekle...",
-                                        border: OutlineInputBorder(),
-                                      ),
+                                  IconButton(
+                                    icon: Icon(
+                                      post["liked"]
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: post["liked"]
+                                          ? Colors.red
+                                          : Colors.black,
                                     ),
+                                    onPressed: () => toggleLike(index),
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.send),
-                                    onPressed: () {
-                                      if (commentController.text.isNotEmpty) {
-                                        addComment(index,
-                                            commentController.text.trim());
-                                        commentController.clear();
-                                      }
-                                    },
+                                    icon: Icon(Icons.comment),
+                                    onPressed: () => toggleComments(index),
                                   ),
                                 ],
                               ),
+                              Text(
+                                post["time"],
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (post["showComments"])
+                            Column(
+                              children: [
+                                ...post["comments"]
+                                    .map<Widget>((comment) => Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 4),
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.comment,
+                                                  size: 16, color: Colors.grey),
+                                              SizedBox(width: 6),
+                                              Text(comment),
+                                            ],
+                                          ),
+                                        )),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: commentController,
+                                          decoration: InputDecoration(
+                                            hintText: "Yorum ekle...",
+                                            border: OutlineInputBorder(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            childCount: posts.length,
-          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                childCount: posts.length,
+              ),
+            ),
+          ],
         ),
-      ],
-    );
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showAddPostDialog(context); // Butona tıklanınca dialog açılır
+          },
+          backgroundColor: Color(0xFFD69C6C),
+          child: Icon(Icons.add, color: Colors.white),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ));
   }
 }
