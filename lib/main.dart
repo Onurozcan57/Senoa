@@ -8,9 +8,12 @@ import 'package:senoa/YemekTarifleri.dart';
 import 'package:senoa/diyetisyenler.dart';
 import 'Profile.dart';
 import 'package:get/get.dart';
-import 'package:senoa/ChatPage.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Anasayfa(),
+      home: Diyetisyenler(),
     );
   }
 }
