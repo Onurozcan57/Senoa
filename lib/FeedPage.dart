@@ -338,149 +338,150 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final post = posts[index];
-                  final commentController = commentControllers[index];
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final post = posts[index];
+                final commentController = commentControllers[index];
 
-                  return Card(
-                    key: ValueKey("post_$index"),
-                    margin: EdgeInsets.all(10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              if (post["profile_Photo"] != "")
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage:
-                                      AssetImage(post["profile_Photo"]),
-                                  backgroundColor: Colors.grey[200],
-                                ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  post["username"],
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  ),
-                                ),
+                return Card(
+                  key: ValueKey("post_$index"),
+                  margin: EdgeInsets.all(10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            if (post["profile_Photo"] != "")
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundImage:
+                                    AssetImage(post["profile_Photo"]),
+                                backgroundColor: Colors.grey[200],
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          if (post["image"] != "")
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.asset(
-                                post["image"],
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 200,
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                post["username"],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black87,
+                                ),
                               ),
                             ),
-                          SizedBox(height: 10),
-                          Text(
-                            post["content"],
-                            style: TextStyle(fontSize: 14),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        if (post["image"] != "")
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              post["image"],
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 200,
+                            ),
                           ),
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      post["liked"]
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: post["liked"]
-                                          ? Colors.red
-                                          : Colors.black,
-                                    ),
-                                    onPressed: () => toggleLike(index),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.comment),
-                                    onPressed: () => toggleComments(index),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                post["time"],
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (post["showComments"])
-                            Column(
+                        SizedBox(height: 10),
+                        Text(
+                          post["content"],
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
                               children: [
-                                ...post["comments"]
-                                    .map<Widget>((comment) => Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 4),
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.comment,
-                                                  size: 16, color: Colors.grey),
-                                              SizedBox(width: 6),
-                                              Text(comment),
-                                            ],
-                                          ),
-                                        )),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          controller: commentController,
-                                          decoration: InputDecoration(
-                                            hintText: "Yorum ekle...",
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                IconButton(
+                                  icon: Icon(
+                                    post["liked"]
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: post["liked"]
+                                        ? Colors.red
+                                        : Colors.black,
                                   ),
+                                  onPressed: () => toggleLike(index),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.comment),
+                                  onPressed: () => toggleComments(index),
                                 ),
                               ],
                             ),
-                        ],
-                      ),
+                            Text(
+                              post["time"],
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (post["showComments"])
+                          Column(
+                            children: [
+                              ...post["comments"]
+                                  .map<Widget>((comment) => Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 4),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.comment,
+                                                size: 16, color: Colors.grey),
+                                            SizedBox(width: 6),
+                                            Text(comment),
+                                          ],
+                                        ),
+                                      )),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: commentController,
+                                        decoration: InputDecoration(
+                                          hintText: "Yorum ekle...",
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
                     ),
-                  );
-                },
-                childCount: posts.length,
-              ),
+                  ),
+                );
+              },
+              childCount: posts.length,
             ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showAddPostDialog(context); // Butona tıklanınca dialog açılır
-          },
-          backgroundColor: Color(0xFFD69C6C),
-          child: Icon(Icons.add, color: Colors.white),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
           ),
-        ));
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showAddPostDialog(context); // Butona tıklanınca dialog açılır
+        },
+        backgroundColor: Color(0xFFD69C6C),
+        child: Icon(Icons.add, color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+    );
   }
 }

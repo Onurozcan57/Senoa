@@ -346,6 +346,9 @@ class RecipeCard extends StatelessWidget {
                   color: Colors.black87,
                 ),
                 textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ),
             Padding(
@@ -357,6 +360,8 @@ class RecipeCard extends StatelessWidget {
                   color: Colors.grey[700],
                 ),
                 textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

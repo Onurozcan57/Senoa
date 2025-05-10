@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class Diyetisyenim extends StatefulWidget {
   const Diyetisyenim({super.key});
@@ -11,6 +12,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _waterController = TextEditingController();
   double _waterIntake = 0;
+  double _dailyGoal = 2.0; // Günlük su içme hedefi
   int currentPageIndex = 0;
 
   void _submitWaterIntake() {
@@ -21,18 +23,20 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
 
   @override
   Widget build(BuildContext context) {
+    double percent =
+        (_waterIntake / _dailyGoal).clamp(0.0, 1.0); // Yüzde hesaplama
+
     return Container(
-      // En dıştaki Scaffold kaldırıldı, yerine Container
       decoration: BoxDecoration(
         image: DecorationImage(
-            image: AssetImage(
-                "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
+            image: AssetImage("lib/assets/girisekrani.jpg"), // Arkaplan resmi
             fit: BoxFit.cover,
             opacity: 0.07),
       ),
       child: SingleChildScrollView(
         child: Column(
           children: [
+            // Kullanıcı bilgileri
             Padding(
               padding: const EdgeInsets.all(16),
               child: Card(
@@ -46,7 +50,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                     children: [
                       ClipOval(
                         child: Image.asset(
-                          "lib/assets/Nisa_Sakar.png",
+                          "lib/assets/Nisa_Sakar.png", // Profil resmi
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,
@@ -84,6 +88,8 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                 ),
               ),
             ),
+
+            // Su içme takibi
             SizedBox(height: 20),
             Text(
               "Bugün Ne Kadar Su İçtin?",
@@ -123,15 +129,30 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                 ],
               ),
             ),
-            SizedBox(height: 10),
-            Text(
-              "Toplam İçilen Su: ${_waterIntake.toStringAsFixed(1)} L",
-              style: TextStyle(
-                  fontSize: 20,
+
+            SizedBox(height: 20),
+            // Dairesel su içme gösterge grafiği
+            CircularPercentIndicator(
+              radius: 100.0,
+              lineWidth: 13,
+              percent: percent,
+              center: Text(
+                "${(_waterIntake).toStringAsFixed(1)} L",
+                style: TextStyle(
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue),
+                ),
+              ),
+              progressColor: Colors.blueAccent,
+              backgroundColor: Colors.white,
             ),
             SizedBox(height: 20),
+
+            // Su içme girişi
+
+            SizedBox(height: 20),
+
+            // Diyet listesi
             Text(
               "Diyet Listem",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -145,7 +166,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
             MealCard(mealTime: "Akşam", meal: "Somon, sebzeler, esmer pirinç"),
             SizedBox(
               height: 30,
-            )
+            ),
           ],
         ),
       ),

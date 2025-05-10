@@ -308,7 +308,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 500,
+                    height: 730,
                     child: SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),

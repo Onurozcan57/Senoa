@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:senoa/LoginScreen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:senoa/CanliDestekPage.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -59,12 +61,12 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(3),
                     child: Column(
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundColor: Colors.orange.shade700,
+                          backgroundColor: const Color.fromARGB(255, 245, 0, 0),
                           child: Text(
                             userData!['nameSurname'][0].toUpperCase(),
                             style: TextStyle(
@@ -104,6 +106,28 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Card(
+                        elevation: 10,
+                        margin: EdgeInsets.all(3),
+                        child: ListTile(
+                          onTap: () {},
+                          title: Text(
+                            "Profil Bilgilerimi Düzenle",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.green,
+                            ),
+                          ),
+                          leading: Icon(
+                            Icons.person,
+                            size: 45,
+                            color: const Color.fromARGB(255, 255, 0, 0),
+                          ),
+                        ),
+                      )),
+                  Padding(
                     padding: const EdgeInsets.all(16),
                     child: Card(
                       elevation: 10,
@@ -111,7 +135,7 @@ class _ProfileState extends State<Profile> {
                       child: ListTile(
                         onTap: () {},
                         title: Text(
-                          "Şifremi Unuttum",
+                          "Şifremi Değiştir",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -121,7 +145,74 @@ class _ProfileState extends State<Profile> {
                         leading: Icon(
                           Icons.password,
                           size: 45,
-                          color: Colors.orange,
+                          color: const Color.fromARGB(255, 255, 0, 0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Card(
+                      elevation: 10,
+                      margin: EdgeInsets.all(3),
+                      child: ListTile(
+                        onTap: () async {
+                          final Uri emailLaunchUri = Uri(
+                            scheme: 'mailto',
+                            path: 'onur.islem57@gmail.com',
+                            query: Uri.encodeFull(
+                                'subject=Geri Bildirim&body=Uygulama hakkında...'),
+                          );
+
+                          if (await canLaunchUrl(emailLaunchUri)) {
+                            await launchUrl(emailLaunchUri);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Mail uygulaması açılamadı')),
+                            );
+                          }
+                        },
+                        title: Text(
+                          "Geri Bildirim Gönder",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.green,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.info,
+                          size: 45,
+                          color: const Color.fromARGB(255, 255, 0, 0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Card(
+                      elevation: 10,
+                      margin: EdgeInsets.all(3),
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (_) => CanliDestekPage()),
+                          );
+                        },
+                        title: Text(
+                          "Bize Ulaşın/Canlı Destek",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.green,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.phone,
+                          size: 45,
+                          color: const Color.fromARGB(255, 255, 0, 0),
                         ),
                       ),
                     ),
@@ -149,7 +240,7 @@ class _ProfileState extends State<Profile> {
                         leading: Icon(
                           Icons.output_sharp,
                           size: 45,
-                          color: Colors.orange,
+                          color: const Color.fromARGB(255, 255, 0, 0),
                         ),
                       ),
                     ),
