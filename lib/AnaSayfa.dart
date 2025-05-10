@@ -370,7 +370,11 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              // Buraya tıklanınca yapılacak işlemi yaz
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Diyetisyenler()),
+                              );
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.orange[800],
