@@ -7,6 +7,7 @@ import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'YemekTarifleri.dart';
 import 'Profile.dart';
+import 'package:senoa/Diyetisyenler.dart';
 
 class PaketKart extends StatelessWidget {
   final String baslik;
