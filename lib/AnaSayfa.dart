@@ -241,57 +241,80 @@ class AnaSayfaIcerigi extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    height: 200,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(
-                          Icons.auto_graph_outlined,
-                          size: 30,
-                          color: Colors.green,
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 12,
+                          offset: Offset(0, 4),
                         ),
-                        const SizedBox(width: 10),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                      ],
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularPercentIndicator(
+                          radius: 75.0,
+                          lineWidth: 14.0,
+                          animation: true,
+                          animationDuration: 1500,
+                          percent: (2250 / 2500).clamp(0.0, 1.0),
+                          circularStrokeCap: CircularStrokeCap.round,
+                          linearGradient: const LinearGradient(
+                            colors: [Color(0xFF00C853), Color(0xFFB2FF59)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          backgroundColor: Colors.grey.shade200,
+                          center: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                "Alınması Gereken Kalori Miktarı:",
+                              Text(
+                                "2250",
                                 style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green.shade800,
                                 ),
                               ),
-                              TweenAnimationBuilder(
-                                tween: Tween<double>(begin: 0, end: 2250),
-                                duration: const Duration(seconds: 3),
-                                builder: (context, value, child) {
-                                  double progress = value / 2500;
-
-                                  return Row(
-                                    children: [
-                                      CircularPercentIndicator(
-                                        radius: 70.0,
-                                        lineWidth: 12.0,
-                                        percent: progress.clamp(0.0, 1.0),
-                                        center: Text(
-                                          "${value.toStringAsFixed(0)}\nKcal",
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        progressColor: Colors.green,
-                                        backgroundColor: Colors.grey.shade300,
-                                        circularStrokeCap:
-                                            CircularStrokeCap.round,
-                                      ),
-                                    ],
-                                  );
-                                },
+                              const Text(
+                                "Kcal",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "Günlük Kalori Alımı",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Hedef: 2500 Kcal",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black54),
+                              ),
+                              Text(
+                                "Kalan: 250 Kcal",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black54),
                               ),
                             ],
                           ),
