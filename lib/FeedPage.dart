@@ -16,7 +16,7 @@ class _FeedPageState extends State<FeedPage> {
       "content":
           "Sağlıklı beslenme için gün içinde yeterli su içmeyi unutmayın! 💧",
       "time": "2 saat önce",
-      "image": "lib/assets/girisekrani.jpg",
+      "image": "lib/assets/su.jpg",
       "liked": false,
       "showComments": false,
       "comments": [
@@ -38,7 +38,7 @@ class _FeedPageState extends State<FeedPage> {
       "content":
           "Protein ihtiyacınızı karşılamak için hangi besinleri tercih ediyorsunuz? 🍗🥦",
       "time": "5 saat önce",
-      "image": "lib/assets/arkaPlan.jpg",
+      "image": "lib/assets/proteinn.jpeg",
       "liked": false,
       "showComments": false,
       "comments": [
@@ -103,7 +103,7 @@ class _FeedPageState extends State<FeedPage> {
       "content":
           "Çocuklar için sağlıklı atıştırmalık tarifleri isteyen var mı? 🍎🍌",
       "time": "4 saat önce",
-      "image": "lib/assets/atistirmalik.jpeg",
+      "image": "lib/assets/cocuk.jpeg",
       "liked": false,
       "showComments": false,
       "comments": [
@@ -125,7 +125,7 @@ class _FeedPageState extends State<FeedPage> {
       "content":
           "Kahvaltıyı atlamak metabolizmayı yavaşlatabilir. Dengeli kahvaltı şart! 🍳🥑",
       "time": "Bugün",
-      "image": "lib/assets/atistirmalik.jpeg",
+      "image": "lib/assets/kahvalti.jpeg",
       "liked": false,
       "showComments": false,
       "comments": [
@@ -147,7 +147,7 @@ class _FeedPageState extends State<FeedPage> {
       "content":
           "Günde 10 bin adım atmak sağlıklı bir yaşam için çok önemli! 🏃‍♂️",
       "time": "Bugün",
-      "image": "lib/assets/fitnessArkaPlan.jpg",
+      "image": "lib/assets/yuruyus.jpg",
       "liked": false,
       "showComments": false,
       "comments": [

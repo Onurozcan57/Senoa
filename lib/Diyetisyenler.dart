@@ -27,7 +27,7 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
           var data = doc.data();
           return {
             'id': doc.id,
-            'ad': data['nameSurname'] ?? 'İsimsiz Diyetisyen',
+            'ad': data['nameSurname'] ?? 'diyetisyen ad',
             'uzmanlik': data['expertise'] ?? 'Klinik Beslenme Uzmanı',
             'resim': 'lib/assets/kadin.png',
             'biyografi':
@@ -163,7 +163,7 @@ class DiyetisyenDetaySheet extends StatefulWidget {
 class _DiyetisyenDetaySheetState extends State<DiyetisyenDetaySheet> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-
+  String? _lastAppointmnetSummary;
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -255,7 +255,6 @@ class _DiyetisyenDetaySheetState extends State<DiyetisyenDetaySheet> {
                   final dateStr =
                       DateFormat('dd.MM.yyyy').format(_selectedDate!);
                   final timeStr = _selectedTime!.format(context);
-
                   try {
                     await FirebaseFirestore.instance
                         .collection('appointments')
@@ -267,13 +266,24 @@ class _DiyetisyenDetaySheetState extends State<DiyetisyenDetaySheet> {
                       'createdAt': FieldValue.serverTimestamp(),
                     });
 
+                    String dateStr =
+                        "${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}";
+                    String timeStr =
+                        "${_selectedTime!.hour}:${_selectedTime!.minute.toString().padLeft(2, '0')}";
+
+                    setState(() {
+                      _lastAppointmnetSummary =
+                          "Randevunuz $dateStr $timeStr olarak kaydedildi 🎉";
+                    });
+
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            'Randevunuz $dateStr $timeStr olarak kaydedildi 🎉')));
+                      content: Text(_lastAppointmnetSummary!),
+                    ));
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content:
-                            Text('Randevu kaydedilirken bir hata oluştu: $e')));
+                      content:
+                          Text('Randevu kaydedilirken bir hata oluştu: $e'),
+                    ));
                   }
                 }
               },
