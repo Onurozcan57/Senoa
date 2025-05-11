@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:senoa/firebase_options.dart';
 import 'package:senoa/AnaSayfa.dart';
 import 'package:senoa/CanliDestekPage.dart';
 import 'package:senoa/DiyAnaSayfa.dart';

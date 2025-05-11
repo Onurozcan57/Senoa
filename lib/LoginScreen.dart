@@ -32,48 +32,58 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
               children: [
-                // Rol seçimi
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildRoleButton("Diyetisyen", true),
-                    SizedBox(width: 10),
-                    _buildRoleButton("Kullanıcı", false),
+                    SizedBox(height: 100), // Üstten boşluk
+                    // Rol seçimi
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildRoleButton("Diyetisyen", true),
+                        SizedBox(width: 10),
+                        _buildRoleButton("Kullanıcı", false),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    // Email
+                    _customTextField(_emailController, "Email", false),
+                    SizedBox(height: 10),
+                    // Şifre
+                    _customTextField(_passwordController, "Şifre", true),
+                    SizedBox(height: 20),
+                    // Giriş Butonu
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange.shade700,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      onPressed: _login,
+                      child: Text(
+                        "Giriş Yap",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(height: 20),
-                // Email
-                _customTextField(_emailController, "Email", false),
-                SizedBox(height: 10),
-                // Şifre
-                _customTextField(_passwordController, "Şifre", true),
-                SizedBox(height: 20),
-                // Giriş Butonu
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange.shade700,
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  onPressed: _login,
-                  child: Text(
-                    "Giriş Yap",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-                // Kayıt Ol
-                TextButton(
-                  onPressed: () => _showRegisterPopup(context),
-                  child: Text(
-                    "Hesabın yok mu? --> Kayıt ol",
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                      fontWeight: FontWeight.bold,
+                Positioned(
+                  bottom: 50,
+                  left: 0,
+                  right: 0,
+                  child: TextButton(
+                    onPressed: () => _showRegisterPopup(context),
+                    child: Text(
+                      "Hesabın yok mu?  Kayıt ol",
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
@@ -117,7 +127,11 @@ class _LoginScreenState extends State<LoginScreen> {
       obscureText: isPassword,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
         filled: true,
         fillColor: Colors.white.withOpacity(0.2),
         border: OutlineInputBorder(
@@ -125,7 +139,11 @@ class _LoginScreenState extends State<LoginScreen> {
           borderSide: BorderSide.none,
         ),
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
     );
   }
 
@@ -325,6 +343,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'birthDate': selectedDate!.toIso8601String(),
                                 'createdAt': FieldValue.serverTimestamp(),
                               });
+                              Navigator.pop(context);
                             } else {
                               // Normal kullanıcı kaydı
                               await FirebaseFirestore.instance
@@ -337,12 +356,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'birthDate': selectedDate!.toIso8601String(),
                                 'createdAt': FieldValue.serverTimestamp(),
                               });
-                              // Sadece normal kullanıcılar için boy/kilo popup'ını göster
-                              _showBodyWeightPopup(context);
+
+                              Navigator.pop(context);
+                              Future.delayed(Duration(milliseconds: 100), () {
+                                _showBodyWeightPopup(context);
+                              });
                             }
 
                             print('Kullanıcı başarıyla kaydedildi!');
-                            Navigator.pop(context);
                           } catch (e) {
                             print('Hata: $e');
                             ScaffoldMessenger.of(context).showSnackBar(

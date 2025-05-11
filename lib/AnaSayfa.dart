@@ -7,6 +7,7 @@ import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'YemekTarifleri.dart';
 import 'Profile.dart';
+import 'package:senoa/Diyetisyenler.dart';
 
 class PaketKart extends StatelessWidget {
   final String baslik;
@@ -392,7 +393,11 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              // Buraya tıklanınca yapılacak işlemi yaz
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Diyetisyenler()),
+                              );
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.orange[800],
