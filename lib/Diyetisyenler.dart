@@ -10,40 +10,23 @@ class Diyetisyenler extends StatefulWidget {
 class _DiyetisyenlerState extends State<Diyetisyenler> {
   TextEditingController _controller = TextEditingController();
   List<Map<String, dynamic>> _filteredDiyetisyenler = [];
+  late Stream<QuerySnapshot> _dietitianStream;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(_filterDiyetisyenler);
+    _dietitianStream =
+        FirebaseFirestore.instance.collection('dietitians').snapshots();
   }
 
   void _filterDiyetisyenler() {
-    FirebaseFirestore.instance
-        .collection('dietitians')
-        .snapshots()
-        .listen((snapshot) {
-      setState(() {
-        _filteredDiyetisyenler = snapshot.docs.map((doc) {
-          var data = doc.data();
-          return {
-            'id': doc.id,
-            'ad': data['nameSurname'] ?? 'diyetisyen ad',
-            'uzmanlik': data['expertise'] ?? 'Klinik Beslenme Uzmanı',
-            'resim': 'lib/assets/kadin.png',
-            'biyografi':
-                data['biography'] ?? 'Biyografi bilgisi bulunmamaktadır.',
-            'iletisim': {
-              'instagram': data['instagram'] ?? '@diyetisyen',
-              'mail': data['email'] ?? 'Email bilgisi yok',
-              'telefon': data['phone'] ?? '+90 555 555 5555',
-            }
-          };
-        }).where((d) {
-          return d['ad']!
-              .toLowerCase()
-              .contains(_controller.text.toLowerCase());
-        }).toList();
-      });
+    String searchQuery = _controller.text.trim().toLowerCase();
+    setState(() {
+      _filteredDiyetisyenler = _filteredDiyetisyenler
+          .where((diyetisyen) =>
+              diyetisyen['ad'].toLowerCase().contains(searchQuery))
+          .toList();
     });
   }
 
@@ -58,18 +41,12 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
     return Scaffold(
       appBar: AppBar(
         title: Text("DİYETİSYENLER"),
-        backgroundColor: const Color.fromARGB(255, 190, 128, 105),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'lib/assets/girisekrani.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
           Container(
-            color: Colors.white.withOpacity(0.22),
+            color: Colors.white,
             child: Column(
               children: [
                 Padding(
@@ -88,9 +65,7 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
                 ),
                 Expanded(
                   child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('dietitians')
-                        .snapshots(),
+                    stream: _dietitianStream,
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Center(child: Text('Bir hata oluştu'));
@@ -106,13 +81,43 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
                                 'Henüz kayıtlı diyetisyen bulunmamaktadır'));
                       }
 
+                      // Verileri işleyip filtrelemek
+                      var dietitians = snapshot.data!.docs.map((doc) {
+                        var data = doc.data() as Map<String, dynamic>;
+                        return {
+                          'id': doc.id,
+                          'ad': data['nameSurname'] ?? 'Diyetisyen Adı',
+                          'uzmanlik':
+                              data['expertise'] ?? 'Klinik Beslenme Uzmanı',
+                          'resim': 'lib/assets/kadin.png',
+                          'biyografi': data['biography'] ??
+                              'Biyografi bilgisi bulunmamaktadır.',
+                          'iletisim': {
+                            'instagram': data['instagram'] ?? '@diyetisyen',
+                            'mail': data['email'] ?? 'Email bilgisi yok',
+                            'telefon': data['phone'] ?? '+90 555 555 5555',
+                          }
+                        };
+                      }).toList();
+
+                      // Filtreleme işlemi
+                      if (_controller.text.isNotEmpty) {
+                        dietitians = dietitians.where((diyetisyen) {
+                          return diyetisyen['ad']
+                              .toLowerCase()
+                              .contains(_controller.text.toLowerCase());
+                        }).toList();
+                      }
+
                       return ListView.builder(
-                        itemCount: _filteredDiyetisyenler.length,
+                        itemCount: dietitians.length,
                         itemBuilder: (context, index) {
-                          final d = _filteredDiyetisyenler[index];
+                          final d = dietitians[index];
                           return Card(
+                            color: Colors.white,
+                            shadowColor: Colors.grey,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                                borderRadius: BorderRadius.circular(20)),
                             elevation: 4,
                             child: ListTile(
                               contentPadding: EdgeInsets.all(12),

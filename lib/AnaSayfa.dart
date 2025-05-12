@@ -161,13 +161,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("lib/assets/girisekrani.jpg"),
-                fit: BoxFit.cover,
-                opacity: 0.07,
-              ),
-            ),
+            color: Colors.white,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -774,7 +768,7 @@ class _AnasayfaState extends State<Anasayfa> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: const Color(0xFFD69C6C),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {

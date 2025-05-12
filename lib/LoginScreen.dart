@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
           fontSize: 16,
         ),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.2),
+        fillColor: Colors.white.withOpacity(0.3),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
@@ -152,17 +152,19 @@ class _LoginScreenState extends State<LoginScreen> {
     String password = _passwordController.text.trim();
 
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      print("Giriş başarılı: ${userCredential.user?.uid}");
-
       // Rol yönlendirmesi
       if (isDietitian) {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+        print("Giriş başarılı: ${userCredential.user?.uid}");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Diyanasayfa()),
         );
       } else {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+        print("Giriş başarılı: ${userCredential.user?.uid}");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Anasayfa()),
@@ -357,10 +359,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'createdAt': FieldValue.serverTimestamp(),
                               });
 
-                              Navigator.pop(context);
                               Future.delayed(Duration(milliseconds: 100), () {
                                 _showBodyWeightPopup(context);
                               });
+                              Navigator.pop(context);
                             }
 
                             print('Kullanıcı başarıyla kaydedildi!');

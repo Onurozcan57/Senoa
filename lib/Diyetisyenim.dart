@@ -26,17 +26,8 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
     double percent = (_waterIntake / 5.0).clamp(0.0, 1.0);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Diyetisyenim"),
-      ),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("lib/assets/girisekrani.jpg"), // Arkaplan resmi
-            fit: BoxFit.cover,
-            opacity: 0.07,
-          ),
-        ),
+        color: Colors.white,
         child: SingleChildScrollView(
           child: Column(
             children: [
