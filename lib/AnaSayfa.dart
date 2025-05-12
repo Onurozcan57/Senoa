@@ -114,7 +114,7 @@ class PaketKart extends StatelessWidget {
               Text(
                 baslik,
                 style: const TextStyle(
-                    color: Colors.blue,
+                    color: Color.fromARGB(255, 21, 21, 21),
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
@@ -343,7 +343,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                                 "Diyabet Beslenmesi"
                               ],
                               "iletisim": {
-                                "instagram": "@diyetisyenselahattin",
+                                "instagram": "@diyetisyenNisa",
                                 "mail": "nisanur@example.com",
                                 "telefon": "+90 555 555 5555"
                               }
@@ -351,9 +351,9 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           DiyetisyenKart(
                             d: {
-                              "isim": "Dyt. Selahattin Durmaz",
+                              "isim": "Dyt. Onur Özcan",
                               "uzmanlik": "Klinik Beslenme Uzmanı",
-                              "resimYolu": "lib/assets/diyetisyenArkaPlan.jpg",
+                              "resimYolu": "lib/assets/Onur_Ozcan.png",
                               "biyografi": "10+ yıllık tecrübe...",
                               "alanlar": [
                                 "Kilo Kontrolü",
@@ -361,17 +361,17 @@ class AnaSayfaIcerigi extends StatelessWidget {
                                 "Diyabet Beslenmesi"
                               ],
                               "iletisim": {
-                                "instagram": "@diyetisyenselahattin",
-                                "mail": "selahattin@example.com",
+                                "instagram": "@diyetisyenOnur",
+                                "mail": "onur@example.com",
                                 "telefon": "+90 555 555 5555"
                               }
                             },
                           ),
                           DiyetisyenKart(
                             d: {
-                              "isim": "Dyt. Selahattin Durmaz",
+                              "isim": "Dyt. İrem Enginyurt",
                               "uzmanlik": "Klinik Beslenme Uzmanı",
-                              "resimYolu": "lib/assets/diyetisyenArkaPlan.jpg",
+                              "resimYolu": "lib/assets/diyeetisyen2.jpeg",
                               "biyografi": "10+ yıllık tecrübe...",
                               "alanlar": [
                                 "Kilo Kontrolü",
@@ -379,8 +379,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                                 "Diyabet Beslenmesi"
                               ],
                               "iletisim": {
-                                "instagram": "@diyetisyenselahattin",
-                                "mail": "selahattin@example.com",
+                                "instagram": "@diyetisyenirem",
+                                "mail": "irem@example.com",
                                 "telefon": "+90 555 555 5555"
                               }
                             },
@@ -424,7 +424,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           PaketKart(
                             'SIRT VE BACAK EGZERSİZİ PROGRAMI',
                             'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
-                            "lib/assets/fitnessArkaPlan.jpg",
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               'Sırt ve Bacak Egzersizleri',
@@ -434,7 +434,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           PaketKart(
                             'GÖĞÜS VE ÖN KOL PROGRAMI',
                             'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
-                            "lib/assets/fitnessArkaPlan.jpg",
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Göğüs ve Ön Kol Egzersizleri",
@@ -448,7 +448,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           PaketKart(
                             'OMUZ VE ARKA KOL PROGRAMI',
                             'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
-                            "lib/assets/fitnessArkaPlan.jpg",
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Omuz ve Arka Kol Programı",
@@ -462,7 +462,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           PaketKart(
                             'FULL BODY PROGRAM',
                             'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
-                            "lib/assets/fitnessArkaPlan.jpg",
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Full Body Egzersizleri",
@@ -472,7 +472,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           PaketKart(
                             "KARDİYO PROGRAMI",
                             "Yağ yağmak ve ödem atmak için egzersizler",
-                            "lib/assets/fitnessArkaPlan.jpg",
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Kardiyo Egzersizleri",
@@ -542,47 +542,32 @@ class _AnasayfaState extends State<Anasayfa> {
     YemekTarifleri(),
   ];
 
+  /// Belirtilen egzersiz adına göre ilgili GIF dosyasının yolunu döndürür.
   String _getGifPath(String hareketAdi) {
-    switch (hareketAdi) {
-      case "Barbell Row":
-        return "lib/assets/gifs/barbellRow.gif";
-      case "Deadlift":
-        return "lib/assets/gifs/deadlift.gif";
-      case "Squat":
-        return "lib/assets/gifs/squat.gif";
-      case "Leg Press":
-        return "lib/assets/gifs/legpress.gif";
-      case "Bench Press":
-        return "lib/assets/gifs/benchPress.gif";
-      case "Incline Dumbell Press":
-        return "lib/assets/gifs/inclinee.gif";
-      case "Biceps Curl":
-        return "lib/assets/gifs/bicepsCurl.gif";
-      case "Shoulder Press":
-        return "lib/assets/gifs/shoulderPress.gif";
-      case "Lateral Raise":
-        return "lib/assets/gifs/latereal.gif";
-      case "Triceps Dips":
-        return "lib/assets/gifs/dips.gif";
-      case "Squats":
-        return "lib/assets/gifs/squat.gif";
-      case "Push-ups":
-        return "lib/assets/gifs/pushUp.gif";
-      case "Deadlifts":
-        return "lib/assets/gifs/deadlift.gif";
-      case "Pull-ups":
-        return "lib/assets/gifs/pullUps.gif";
-      case "Running":
-        return "lib/assets/gifs/running.gif";
-      case "Cycling":
-        return "lib/assets/gifs/cycling.gif";
-      case "Jumping Jacks":
-        return "lib/assets/gifs/jmp.gif";
-      case "Mountain Climbers":
-        return "lib/assets/gifs/mountain.gif";
-      default:
-        return "lib/assets/gifs/default.gif";
-    }
+    final gifMap = {
+      "Barbell Row": "barbellRow.gif",
+      "Deadlift": "deadlift.gif",
+      "Deadlifts": "deadlift.gif",
+      "Squat": "squat.gif",
+      "Squats": "squat.gif",
+      "Leg Press": "legpress.gif",
+      "Bench Press": "benchPress.gif",
+      "Incline Dumbell Press": "inclinee.gif",
+      "Biceps Curl": "bicepsCurl.gif",
+      "Shoulder Press": "shoulderPress.gif",
+      "Lateral Raise": "latereal.gif",
+      "Triceps Dips": "dips.gif",
+      "Push-ups": "pushUp.gif",
+      "Pull-ups": "pullUps.gif",
+      "Running": "running.gif",
+      "Cycling": "cycling.gif",
+      "Jumping Jacks": "jmp.gif",
+      "Mountain Climbers": "mountain.gif",
+    };
+
+    // Eşleşen hareket varsa, dosya yolunu oluşturur, yoksa varsayılanı döner.
+    final fileName = gifMap[hareketAdi] ?? "default.gif";
+    return "lib/assets/gifs/$fileName";
   }
 
   void _showGif(BuildContext context, String hareketAdi, String giffYolu) {
@@ -693,13 +678,13 @@ class _AnasayfaState extends State<Anasayfa> {
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
-                title: const Text("TEBRİKLER:)"),
-                content: const Text("Tüm Egzersizleri Tamamladınız."),
+                title: const Text("TEBRİKLER! 🎉"),
+                content: const Text("Tüm egzersizleri tamamladınız."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: const Text("Kapat"),
-                  )
+                  ),
                 ],
               ),
             );
@@ -723,37 +708,85 @@ class _AnasayfaState extends State<Anasayfa> {
           String hareketAdi = hareketler[currentIndex];
           String gifPath = _getGifPath(hareketAdi);
 
-          return AlertDialog(
-            title: Text("$title\n(${currentIndex + 1}/${hareketler.length})"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  hareketAdi,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18),
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 124, 127, 99),
+                  image: const DecorationImage(
+                    image: AssetImage(''),
+                    fit: BoxFit.cover,
+                    opacity: 0.3,
+                  ),
                 ),
-                const SizedBox(height: 10),
-                Image.asset(gifPath, height: 150),
-                const SizedBox(height: 10),
-                Text(
-                  "$remainingSeconds saniye",
-                  style: const TextStyle(fontSize: 28, color: Colors.red),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "$title\n(${currentIndex + 1}/${hareketler.length})",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      hareketAdi,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 234, 231, 227),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        gifPath,
+                        height: 160,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      "$remainingSeconds saniye",
+                      style: const TextStyle(
+                        fontSize: 28,
+                        color: Color.fromARGB(255, 241, 223, 223),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        timer.cancel();
+                        if (currentIndex < hareketler.length - 1) {
+                          currentIndex++;
+                          startTimer(setState);
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      icon: const Icon(Icons.skip_next),
+                      label: const Text("Geç"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 242, 232, 229),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    timer.cancel();
-                    if (currentIndex < hareketler.length - 1) {
-                      currentIndex++;
-                      startTimer(setState);
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text("Geç (İleri)"),
-                ),
-              ],
+              ),
             ),
           );
         });
@@ -767,8 +800,8 @@ class _AnasayfaState extends State<Anasayfa> {
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text('Diyetisyenlik Uygulaması'),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        title: const Text('DİYETİSYENLİK UYGULAMASI'),
+        backgroundColor: const Color.fromARGB(255, 228, 238, 248),
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
