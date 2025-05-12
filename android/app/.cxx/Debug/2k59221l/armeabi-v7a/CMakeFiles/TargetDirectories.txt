@@ -1,2 +1,0 @@
-C:/Users/Acer/Desktop/SENOA/senoa/android/app/.cxx/Debug/2k59221l/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/Acer/Desktop/SENOA/senoa/android/app/.cxx/Debug/2k59221l/armeabi-v7a/CMakeFiles/rebuild_cache.dir
