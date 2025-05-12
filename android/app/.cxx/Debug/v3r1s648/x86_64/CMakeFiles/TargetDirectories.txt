@@ -1,0 +1,2 @@
+C:/SENOA/Senoa/android/app/.cxx/Debug/v3r1s648/x86_64/CMakeFiles/edit_cache.dir
+C:/SENOA/Senoa/android/app/.cxx/Debug/v3r1s648/x86_64/CMakeFiles/rebuild_cache.dir
