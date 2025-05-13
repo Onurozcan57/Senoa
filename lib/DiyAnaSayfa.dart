@@ -469,10 +469,22 @@ void _showPopup(
               children: [
                 TextButton(
                   onPressed: () {
-                    print("Sabah: ${_breakfastController.text}");
-                    print("Öğle: ${_lunchController.text}");
-                    print("Akşam: ${_dinnerController.text}");
-                    Navigator.pop(context);
+                    final sabah = _breakfastController.text;
+                    final ogle = _lunchController.text;
+                    final aksam = _dinnerController.text;
+
+                    print("Sabah: $sabah");
+                    print("Öğle: $ogle");
+                    print("Akşam: $aksam");
+
+                    Navigator.pop(
+                      context,
+                      {
+                        'kahvalti': sabah,
+                        'ogle': ogle,
+                        'aksam': aksam,
+                      },
+                    );
                   },
                   child: Text("Listeyi Gönder"),
                 ),
