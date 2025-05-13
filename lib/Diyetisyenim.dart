@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Diyetisyenim extends StatefulWidget {
   const Diyetisyenim({super.key});
@@ -15,7 +16,17 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
   double _dailyGoal = 5.0; // Günlük su içme hedefi
   int currentPageIndex = 0;
 
-  List<double> weeklyWaterIntake = [2.5, 3.0, 4.0, 1.5, 3.5, 2.0, 4.5];
+  Future<void> _saveWaterIntake() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('waterIntake', _waterIntake);
+  }
+
+  Future<void> _loadWaterIntake() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _waterIntake = prefs.getDouble('waterIntake') ?? 0.0;
+    });
+  }
 
   void _submitWaterIntake() {
     setState(() {
@@ -30,12 +41,20 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
         _waterIntake = _dailyGoal;
       }
     });
+    _saveWaterIntake(); // KAYDET
   }
 
   void _resetWater() {
     setState(() {
       _waterIntake = 0;
     });
+    _saveWaterIntake(); // KAYDET
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadWaterIntake(); // SharedPreferences'tan veriyi yükle
   }
 
   @override
