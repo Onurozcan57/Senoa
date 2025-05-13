@@ -508,4 +508,4 @@ final _popupValueStyle = TextStyle(
   color: Colors.black87,
 );
 
-// butonlar aktifleştirildi
+// butonlar aktifleştirildi.
