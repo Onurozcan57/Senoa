@@ -1,313 +1,282 @@
 import 'package:flutter/material.dart';
-import 'package:senoa/FeedPage.dart';
-import 'package:senoa/AnaSayfa.dart';
-import 'package:senoa/Diyetisyenim.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:senoa/LoginScreen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:senoa/CanliDestekPage.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
-
   @override
-  State<Profile> createState() => _MyWidgetState();
+  _ProfileState createState() => _ProfileState();
 }
 
-class _MyWidgetState extends State<Profile> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int currentPageIndex = 0;
+class _ProfileState extends State<Profile> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool isDietitian = false;
+  Map<String, dynamic>? userData;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      String userId = _auth.currentUser!.uid;
+
+      // Önce diyetisyen koleksiyonunda ara
+      DocumentSnapshot dietitianDoc =
+          await _firestore.collection('dietitians').doc(userId).get();
+
+      if (dietitianDoc.exists) {
+        setState(() {
+          isDietitian = true;
+          userData = dietitianDoc.data() as Map<String, dynamic>;
+        });
+      } else {
+        // Diyetisyen değilse users koleksiyonunda ara
+        DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(userId).get();
+
+        if (userDoc.exists) {
+          setState(() {
+            isDietitian = false;
+            userData = userDoc.data() as Map<String, dynamic>;
+          });
+        }
+      }
+    } catch (e) {
+      print('Veri yükleme hatası: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Ana Scaffold
-      key: _scaffoldKey,
-      body: Stack(
-        // Stack, Scaffold'ın body'sinde
-        children: [
-          Container(
-            // Arka plan Container'ı
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("lib/assets/girisekrani.jpg"),
-                  fit: BoxFit.cover,
-                  opacity: 0.8),
-            ),
-          ),
-          SingleChildScrollView(
-            // İçerik
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          ClipOval(
-                            child: Image.asset(
-                              "lib/assets/Onur_Ozcan.png",
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
+      backgroundColor: Colors.white,
+      body: userData == null
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(3),
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: const Color.fromARGB(255, 245, 0, 0),
+                          child: Text(
+                            userData!['nameSurname'][0].toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 40,
+                              color: Colors.white,
                             ),
                           ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Onur Özcan",
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "E-mail: onur.islem57@gmail.com",
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.grey[700]),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "Tel No: +90 555 555 55 55",
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.grey[700]),
-                                ),
-                              ],
-                            ),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          userData!['nameSurname'],
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        Text(
+                          userData!['email'],
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        _buildInfoCard(
+                            'Doğum Tarihi',
+                            DateTime.parse(userData!['birthDate'])
+                                .toString()
+                                .split(' ')[0]),
+                        if (!isDietitian) ...[
+                          _buildInfoCard('Boy', '${userData!['height']} cm'),
+                          _buildInfoCard('Kilo', '${userData!['weight']} kg'),
                         ],
-                      ),
+                        _buildInfoCard('Hesap Türü',
+                            isDietitian ? 'Diyetisyen' : 'Kullanıcı'),
+                      ],
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Card(
-                    elevation: 10,
-                    margin: EdgeInsets.all(3),
-                    child: ListTile(
-                      onTap: () {
-                        _showSettingsPopup(context);
-                      },
-                      title: Text(
-                        "Ayarlar",
-                        style: TextStyle(
+                  Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Card(
+                        elevation: 10,
+                        margin: EdgeInsets.all(3),
+                        child: ListTile(
+                          onTap: () {},
+                          title: Text(
+                            "Profil Bilgilerimi Düzenle",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.green,
+                            ),
+                          ),
+                          leading: Icon(
+                            Icons.person,
+                            size: 45,
+                            color: const Color.fromARGB(255, 255, 0, 0),
+                          ),
+                        ),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Card(
+                      elevation: 10,
+                      margin: EdgeInsets.all(3),
+                      child: ListTile(
+                        onTap: () {},
+                        title: Text(
+                          "Şifremi Değiştir",
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
-                            color: Colors.green),
-                      ),
-                      leading: Icon(
-                        Icons.settings_suggest,
-                        size: 45,
-                        color: Colors.orange,
+                            color: Colors.green,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.password,
+                          size: 45,
+                          color: const Color.fromARGB(255, 255, 0, 0),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Card(
-                    elevation: 10,
-                    margin: EdgeInsets.all(3),
-                    child: ListTile(
-                      onTap: () {},
-                      title: Text(
-                        "İletişim Bilgilerini Değiştir",
-                        style: TextStyle(
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Card(
+                      elevation: 10,
+                      margin: EdgeInsets.all(3),
+                      child: ListTile(
+                        onTap: () async {
+                          final Uri emailLaunchUri = Uri(
+                            scheme: 'mailto',
+                            path: 'onur.islem57@gmail.com',
+                            query: Uri.encodeFull(
+                                'subject=Geri Bildirim&body=Uygulama hakkında...'),
+                          );
+
+                          if (await canLaunchUrl(emailLaunchUri)) {
+                            await launchUrl(emailLaunchUri);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Mail uygulaması açılamadı')),
+                            );
+                          }
+                        },
+                        title: Text(
+                          "Geri Bildirim Gönder",
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
-                            color: Colors.green),
-                      ),
-                      leading: Icon(
-                        Icons.phone_android_sharp,
-                        size: 45,
-                        color: Colors.orange,
+                            color: Colors.green,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.info,
+                          size: 45,
+                          color: const Color.fromARGB(255, 255, 0, 0),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Card(
-                    elevation: 10,
-                    margin: EdgeInsets.all(3),
-                    child: ListTile(
-                      onTap: () {},
-                      title: Text(
-                        "Şifremi Unuttum",
-                        style: TextStyle(
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Card(
+                      elevation: 10,
+                      margin: EdgeInsets.all(3),
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (_) => CanliDestekPage()),
+                          );
+                        },
+                        title: Text(
+                          "Bize Ulaşın/Canlı Destek",
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
-                            color: Colors.green),
-                      ),
-                      leading: Icon(
-                        Icons.password,
-                        size: 45,
-                        color: Colors.orange,
+                            color: Colors.green,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.phone,
+                          size: 45,
+                          color: const Color.fromARGB(255, 255, 0, 0),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Card(
-                    elevation: 10,
-                    margin: EdgeInsets.all(3),
-                    child: ListTile(
-                      onTap: () {},
-                      title: Text(
-                        "Çıkış",
-                        style: TextStyle(
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Card(
+                      elevation: 10,
+                      margin: EdgeInsets.all(3),
+                      child: ListTile(
+                        onTap: () async {
+                          await _auth.signOut();
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (_) => LoginScreen()),
+                          );
+                        },
+                        title: Text(
+                          "Çıkış",
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
-                            color: Colors.green),
-                      ),
-                      leading: Icon(
-                        Icons.output_sharp,
-                        size: 45,
-                        color: Colors.orange,
+                            color: Colors.green,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.output_sharp,
+                          size: 45,
+                          color: const Color.fromARGB(255, 255, 0, 0),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+    );
+  }
+
+  Widget _buildInfoCard(String title, String value) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[700],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-}
-
-void _showSettingsPopup(BuildContext context) {
-  bool isDarkMode = false;
-  bool notificationsEnabled = true;
-  String selectedLanguage = "tr"; // varsayılan dil: Türkçe
-
-  showDialog(
-    context: context,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  "Ayarlar",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Theme(
-                  data: Theme.of(context).copyWith(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                  ),
-                  child: SwitchListTile(
-                    title: const Text("Karanlık Mod"),
-                    value: isDarkMode,
-                    activeColor: Colors.black,
-                    onChanged: (value) {
-                      setState(() => isDarkMode = value);
-                      // Temayı değiştirme işlemi
-                    },
-                  ),
-                ),
-                Theme(
-                  data: Theme.of(context).copyWith(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                  ),
-                  child: SwitchListTile(
-                    title: const Text("Bildirimler"),
-                    value: notificationsEnabled,
-                    activeColor: Color(0xFFD69C6C),
-                    onChanged: (value) {
-                      setState(() => notificationsEnabled = value);
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Text(
-                      "Dil Seçimi:",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(width: 16),
-                    DropdownButton<String>(
-                      value: selectedLanguage,
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          setState(() {
-                            selectedLanguage = newValue;
-                          });
-                          // Burada dil değişimini uygulamaya yansıtabilirsin
-                        }
-                      },
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'tr',
-                          child: Text("Türkçe"),
-                        ),
-                        DropdownMenuItem(
-                          value: 'en',
-                          child: Text("English"),
-                        ),
-                        DropdownMenuItem(
-                          value: 'de',
-                          child: Text("Deutsch"),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFD69C6C),
-                    foregroundColor: Colors.white,
-                    elevation: 5,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text("Kaydet ve Kapat"),
-                )
-              ],
-            ),
-          ),
-        ),
-      );
-    },
-  );
 }

@@ -14,13 +14,7 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("lib/assets/girisekrani.jpg"),
-          fit: BoxFit.cover,
-          opacity: 0.07,
-        ),
-      ),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GridView.count(
@@ -318,6 +312,7 @@ class RecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
@@ -346,6 +341,9 @@ class RecipeCard extends StatelessWidget {
                   color: Colors.black87,
                 ),
                 textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ),
             Padding(
@@ -357,6 +355,8 @@ class RecipeCard extends StatelessWidget {
                   color: Colors.grey[700],
                 ),
                 textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
