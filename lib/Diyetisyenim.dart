@@ -15,9 +15,26 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
   double _dailyGoal = 5.0; // Günlük su içme hedefi
   int currentPageIndex = 0;
 
+  List<double> weeklyWaterIntake = [2.5, 3.0, 4.0, 1.5, 3.5, 2.0, 4.5];
+
   void _submitWaterIntake() {
     setState(() {
       _waterIntake = double.tryParse(_waterController.text) ?? 0;
+    });
+  }
+
+  void _addWater(double amount) {
+    setState(() {
+      _waterIntake += amount;
+      if (_waterIntake > _dailyGoal) {
+        _waterIntake = _dailyGoal;
+      }
+    });
+  }
+
+  void _resetWater() {
+    setState(() {
+      _waterIntake = 0;
     });
   }
 
@@ -91,38 +108,50 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _waterController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: "Litres",
-                          filled: true,
-                          fillColor: Colors.blue[50],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
+              // Su miktarı başlık
+              Text(
+                "💧 Bugün İçilen Su: ${_waterIntake.toStringAsFixed(1)} / $_dailyGoal L",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+
+              SizedBox(height: 20),
+
+// Butonlar
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => _addWater(0.5),
+                    child: Text("+0.5 L"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightBlue,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: _submitWaterIntake,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text("Kaydet"),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () => _addWater(1.0),
+                    child: Text("+1 L"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 10),
+                  OutlinedButton(
+                    onPressed: _resetWater,
+                    child: Text("Sıfırla"),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      side: BorderSide(color: Colors.red),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    ),
+                  ),
+                ],
               ),
 
               SizedBox(height: 20),
