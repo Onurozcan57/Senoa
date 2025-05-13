@@ -28,13 +28,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
       // 1. "Ana Sayfa" için mevcut ana sayfa içeriğiniz
       Container(
         // Mevcut body içeriğiniz Container ile başlıyordu, onu buraya taşıdım
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(
-                  "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
-              fit: BoxFit.cover,
-              opacity: 0.06),
-        ),
+
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -53,7 +47,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                   headerStyle: HeaderStyle(
                     titleTextStyle: TextStyle(
                       fontSize: 18,
-                      color: Colors.deepPurple,
+                      color: Color(0xFF58A399),
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -163,13 +157,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
       YemekTarifleri(),
       Container(
         // Aynı body içeriğini buraya da ekledim
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(
-                  "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
-              fit: BoxFit.cover,
-              opacity: 0.06),
-        ),
+
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -188,7 +176,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                   headerStyle: HeaderStyle(
                     titleTextStyle: TextStyle(
                       fontSize: 18,
-                      color: Colors.deepPurple,
+                      color: Color(0xFFA8D5BA),
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -230,7 +218,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                 ),
               ),
               SizedBox(
-                height: 100,
+                height: 50,
                 child: _tasks[_selectedDay] == null ||
                         _tasks[_selectedDay]!.isEmpty
                     ? Center(child: Text("Bu gün için görev yok."))
@@ -295,7 +283,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text("Nisanur Şakar"),
-          backgroundColor: Color(0xFFF6F4FB),
+          backgroundColor: Color(0xFFA8D5BA),
         ),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (int index) {
@@ -303,8 +291,8 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
               currentPageIndex = index;
             });
           },
-          backgroundColor: Color(0xFFF6F4FB),
-          indicatorColor: Color(0xFFD69C6C),
+          backgroundColor: Color(0xFFF8FAF9),
+          indicatorColor: Color(0xFF58A399),
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
             NavigationDestination(

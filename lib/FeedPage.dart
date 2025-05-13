@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class FeedPage extends StatefulWidget {
   @override
@@ -278,55 +280,102 @@ class _FeedPageState extends State<FeedPage> {
 
   void showAddPostDialog(BuildContext context) {
     TextEditingController postContentController = TextEditingController();
+    File? selectedImage;
 
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Yeni Gönderi'),
-          content: TextField(
-            controller: postContentController,
-            decoration: InputDecoration(hintText: 'Gönderi içeriğini yazın...'),
-            maxLines: 5,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Dialog'u kapat
-              },
-              child: Text('İptal'),
-            ),
-            TextButton(
-              onPressed: () {
-                String content = postContentController.text.trim();
-                if (content.isNotEmpty) {
-                  addPost(content); // Yeni gönderiyi ekle
-                  Navigator.pop(context); // Dialog'u kapat
-                } else {
-                  // Eğer içerik boşsa, kullanıcıya bir uyarı ver
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Lütfen içerik girin')),
-                  );
-                }
-              },
-              child: Text('Gönder'),
-            ),
-          ],
+        return StatefulBuilder(
+          builder: (context, setState) {
+            Future<void> pickImage() async {
+              final picker = ImagePicker();
+              final pickedFile =
+                  await picker.pickImage(source: ImageSource.gallery);
+              if (pickedFile != null) {
+                setState(() {
+                  selectedImage = File(pickedFile.path);
+                });
+              }
+            }
+
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              backgroundColor: Colors.white,
+              title:
+                  Text('Yeni Gönderi', style: TextStyle(color: Colors.black87)),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: postContentController,
+                      decoration: InputDecoration(
+                        hintText: 'Gönderi içeriğini yazın...',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      maxLines: 5,
+                    ),
+                    SizedBox(height: 10),
+                    if (selectedImage != null)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.file(selectedImage!, height: 150),
+                      ),
+                    SizedBox(height: 10),
+                    ElevatedButton.icon(
+                      onPressed: pickImage,
+                      icon: Icon(Icons.photo, color: Colors.white),
+                      label: Text('Fotoğraf Ekle',
+                          style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF58A399),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('İptal'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    String content = postContentController.text.trim();
+                    if (content.isNotEmpty) {
+                      addPost(content, selectedImage?.path ?? "");
+                      Navigator.pop(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Lütfen içerik girin')),
+                      );
+                    }
+                  },
+                  child: Text('Gönder'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
   }
-
 // FloatingActionButton kodu
 
-  void addPost(String content) {
+  void addPost(String content, String imagePath) {
     setState(() {
       posts.insert(0, {
         "profile_Photo": "lib/assets/Onur_Ozcan.png",
         "username": "Onur_ÖZCAN57",
         "content": content,
         "time": "Şimdi",
-        "image": "", // Varsayılan boş
+        "image": imagePath,
         "liked": false,
         "showComments": false,
         "comments": [],
@@ -385,12 +434,16 @@ class _FeedPageState extends State<FeedPage> {
                         if (post["image"] != "")
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              post["image"],
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: 200,
-                            ),
+                            child:
+                                post["image"].toString().contains("lib/assets/")
+                                    ? Image.asset(post["image"],
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 200)
+                                    : Image.file(File(post["image"]),
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 200),
                           ),
                         SizedBox(height: 10),
                         Text(
