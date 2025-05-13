@@ -157,6 +157,10 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
       //profile butonun çalışması için yeri değişmesin bunun lütfen
       DiyProfile(),
 
+      // 3. "GÜndem" için FeedPage widget'ı
+      FeedPage(),
+      // 4. "Yemek" için YemekTarifleri widget'ı
+      YemekTarifleri(),
       Container(
         // Aynı body içeriğini buraya da ekledim
         decoration: BoxDecoration(
@@ -285,18 +289,13 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
           ),
         ),
       ),
-
-      // 3. "GÜndem" için FeedPage widget'ı
-      FeedPage(),
-      // 4. "Yemek" için YemekTarifleri widget'ı
-      YemekTarifleri(),
     ];
 
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text("Nisanur Şakar"),
-          backgroundColor: Color(0xFFD69C6C),
+          backgroundColor: Color(0xFFF6F4FB),
         ),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (int index) {
@@ -304,7 +303,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
               currentPageIndex = index;
             });
           },
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Color(0xFFF6F4FB),
           indicatorColor: Color(0xFFD69C6C),
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[

@@ -338,7 +338,7 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF8FAF9),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -409,7 +409,7 @@ class _FeedPageState extends State<FeedPage> {
                                         ? Icons.favorite
                                         : Icons.favorite_border,
                                     color: post["liked"]
-                                        ? Colors.red
+                                        ? Color(0xFF58A399)
                                         : Colors.black,
                                   ),
                                   onPressed: () => toggleLike(index),
@@ -477,7 +477,7 @@ class _FeedPageState extends State<FeedPage> {
         onPressed: () {
           showAddPostDialog(context); // Butona tıklanınca dialog açılır
         },
-        backgroundColor: Color(0xFFD69C6C),
+        backgroundColor: Color(0xFF58A399),
         child: Icon(Icons.add, color: Colors.white),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

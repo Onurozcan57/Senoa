@@ -161,81 +161,10 @@ class AnaSayfaIcerigi extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            color: Colors.white,
+            color: Color(0xFFF8FAF9),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: TableCalendar(
-                      firstDay: DateTime.utc(2010, 10, 20),
-                      lastDay: DateTime.utc(2060, 10, 20),
-                      focusedDay: selectedDay,
-                      selectedDayPredicate: (day) =>
-                          isSameDay(day, selectedDay),
-                      onDaySelected: (newSelectedDay, focusedDay) {
-                        onDaySelected(newSelectedDay, focusedDay);
-                      },
-                      headerStyle: const HeaderStyle(
-                        titleTextStyle: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      calendarStyle: const CalendarStyle(
-                        todayTextStyle: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: taskController,
-                            decoration: const InputDecoration(
-                              labelText: "Görev Ekle",
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: onAddTask,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 130,
-                    child: getTasksForSelectedDay(selectedDay).isEmpty
-                        ? const Center(child: Text("Bu gün için görev yok."))
-                        : ListView.builder(
-                            itemCount:
-                                getTasksForSelectedDay(selectedDay).length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(
-                                    getTasksForSelectedDay(selectedDay)[index]),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: () {
-                                    onDeleteTask(index);
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                  ),
-                  const SizedBox(height: 20),
-                  const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.all(20),
                     margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -317,6 +246,33 @@ class AnaSayfaIcerigi extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TableCalendar(
+                      firstDay: DateTime.utc(2010, 10, 20),
+                      lastDay: DateTime.utc(2060, 10, 20),
+                      focusedDay: selectedDay,
+                      selectedDayPredicate: (day) =>
+                          isSameDay(day, selectedDay),
+                      onDaySelected: (newSelectedDay, focusedDay) {
+                        onDaySelected(newSelectedDay, focusedDay);
+                      },
+                      headerStyle: const HeaderStyle(
+                        titleTextStyle: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      calendarStyle: const CalendarStyle(
+                        todayTextStyle: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                   const Padding(
                     padding: EdgeInsets.only(top: 35.0),
                     child: Text(
@@ -394,7 +350,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                               );
                             },
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.orange[800],
+                              foregroundColor: Color(0xFFA8D5BA),
                               textStyle: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -411,8 +367,10 @@ class AnaSayfaIcerigi extends StatelessWidget {
                     padding: EdgeInsets.only(top: 10.0),
                     child: Text(
                       'Egzersiz Bölümü',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF333333)),
                     ),
                   ),
                   SizedBox(
@@ -740,7 +698,7 @@ class _AnasayfaState extends State<Anasayfa> {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 234, 231, 227),
+                        color: Color(0xFF333333),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -801,7 +759,7 @@ class _AnasayfaState extends State<Anasayfa> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('DİYETİSYENLİK UYGULAMASI'),
-        backgroundColor: const Color.fromARGB(255, 228, 238, 248),
+        backgroundColor: Color(0xFFA8D5BA),
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -809,8 +767,8 @@ class _AnasayfaState extends State<Anasayfa> {
             currentPageIndex = index;
           });
         },
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        indicatorColor: Color(0xFFD69C6C),
+        backgroundColor: Color(0xFFF8FAF9),
+        indicatorColor: Color(0xFF58A399),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(

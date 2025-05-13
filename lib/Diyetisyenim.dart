@@ -44,7 +44,14 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
 
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue.shade100,
+              const Color.fromARGB(255, 114, 246, 182)
+            ],
+          ),
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -121,21 +128,23 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
+                  OutlinedButton(
                     onPressed: () => _addWater(0.5),
                     child: Text("+0.5 L"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightBlue,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 71, 54, 136),
+                      side: BorderSide(color: Colors.black),
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
                   ),
                   SizedBox(width: 10),
-                  ElevatedButton(
+                  OutlinedButton(
                     onPressed: () => _addWater(1.0),
                     child: Text("+1 L"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 71, 54, 136),
+                      side: BorderSide(color: Colors.black),
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
@@ -145,8 +154,8 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                     onPressed: _resetWater,
                     child: Text("Sıfırla"),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: BorderSide(color: Colors.red),
+                      foregroundColor: const Color.fromARGB(255, 71, 54, 136),
+                      side: BorderSide(color: Colors.black),
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
@@ -157,8 +166,8 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
               SizedBox(height: 20),
               // Dairesel su içme gösterge grafiği
               CircularPercentIndicator(
-                radius: 94.0,
-                lineWidth: 15,
+                radius: 90.0,
+                lineWidth: 22,
                 percent: percent, // % hesaplaması
                 center: Text(
                   "${(_waterIntake).toStringAsFixed(1)} L",
@@ -178,21 +187,29 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                   end: Alignment.bottomRight,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 30),
 
               // Diyet listesi
               Text(
                 "Diyet Listem",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               MealCard(
-                  mealTime: "Sabah", meal: "Yulaf ezmesi, meyve, yeşil çay"),
+                mealTime: "Sabah",
+                meal: "Yulaf ezmesi, meyve, yeşil çay",
+                imageAsset: "lib/assets/yulaf.jpeg",
+              ),
               MealCard(
-                  mealTime: "Öğle",
-                  meal: "Izgara tavuk, salata, tam tahıllı ekmek"),
+                mealTime: "Öğle",
+                meal: "Izgara tavuk, salata, tam tahıllı ekmek",
+                imageAsset: "lib/assets/ogle.jpg",
+              ),
               MealCard(
-                  mealTime: "Akşam", meal: "Somon, sebzeler, esmer pirinç"),
+                mealTime: "Akşam",
+                meal: "Somon, sebzeler, esmer pirinç",
+                imageAsset: "lib/assets/aksam.png",
+              ),
               SizedBox(
                 height: 30,
               ),
@@ -207,31 +224,40 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
 class MealCard extends StatelessWidget {
   final String mealTime;
   final String meal;
+  final String imageAsset;
 
-  MealCard({required this.mealTime, required this.meal});
+  MealCard(
+      {required this.mealTime, required this.meal, required this.imageAsset});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      elevation: 15,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
       child: ListTile(
         onTap: () {
           _showPopup(context, mealTime, meal);
         },
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            imageAsset,
+            width: 65,
+            height: 95,
+            fit: BoxFit.cover,
+          ),
+        ),
         title: Text(
           mealTime,
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.green),
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: const Color.fromARGB(255, 48, 68, 160)),
         ),
         subtitle: Text(
           meal,
           style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
-        ),
-        leading: Icon(
-          Icons.restaurant_menu,
-          color: Colors.orange,
+              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black87),
         ),
       ),
     );

@@ -54,7 +54,7 @@ class _ProfileState extends State<DiyProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF6F4FB),
       body: userData == null
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(

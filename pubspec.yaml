@@ -103,6 +103,9 @@ flutter:
     - lib/assets/kahvalti.jpeg
     - lib/assets/gym3.jpg
     - lib/assets/diyeetisyen2.jpeg
+    - lib/assets/aksam.png
+    - lib/assets/ogle.jpg
+    - lib/assets/yulaf.jpeg
   
      #   - images/a_dot_ham.jpeg
 

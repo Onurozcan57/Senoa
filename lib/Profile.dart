@@ -107,9 +107,10 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       child: Card(
-                        elevation: 10,
+                        elevation: 3,
                         margin: EdgeInsets.all(3),
                         child: ListTile(
                           onTap: () {},
