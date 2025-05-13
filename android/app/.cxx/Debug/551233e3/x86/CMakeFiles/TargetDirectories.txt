@@ -1,2 +1,0 @@
-C:/projectsflutter/Senoa/android/app/.cxx/Debug/551233e3/x86/CMakeFiles/edit_cache.dir
-C:/projectsflutter/Senoa/android/app/.cxx/Debug/551233e3/x86/CMakeFiles/rebuild_cache.dir

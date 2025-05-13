@@ -1,2 +1,0 @@
-C:/SENOA/Senoa/android/app/.cxx/Debug/v3r1s648/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/SENOA/Senoa/android/app/.cxx/Debug/v3r1s648/armeabi-v7a/CMakeFiles/rebuild_cache.dir
