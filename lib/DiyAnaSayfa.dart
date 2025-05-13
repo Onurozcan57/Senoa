@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:senoa/FeedPage.dart';
+import 'package:senoa/YemekTarifleri.dart';
 
 class Diyanasayfa extends StatefulWidget {
   const Diyanasayfa({super.key});
@@ -13,13 +15,281 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
   Map<DateTime, List<String>> _tasks = {};
   int currentPageIndex = 0;
   TextEditingController _taskController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>(); // scaffold key tanımlandı
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final List<Widget> _widgetOptions = <Widget>[
+    // Elemanlar buraya eklenecek
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _widgetOptions = <Widget>[
+      // 1. "Ana Sayfa" için mevcut ana sayfa içeriğiniz
+      Container(
+        // Mevcut body içeriğiniz Container ile başlıyordu, onu buraya taşıdım
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(
+                  "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
+              fit: BoxFit.cover,
+              opacity: 0.06),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TableCalendar(
+                  firstDay: DateTime.utc(2010, 10, 20),
+                  lastDay: DateTime.utc(2060, 10, 20),
+                  focusedDay: _selectedDay,
+                  selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                    });
+                  },
+                  headerStyle: HeaderStyle(
+                    titleTextStyle: TextStyle(
+                      fontSize: 18,
+                      color: Colors.deepPurple,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  calendarStyle: CalendarStyle(
+                    todayTextStyle: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _taskController,
+                        decoration: InputDecoration(
+                          labelText: "Randevu Ekle",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        if (_taskController.text.isNotEmpty) {
+                          setState(() {
+                            _tasks[_selectedDay] = _tasks[_selectedDay] ?? [];
+                            _tasks[_selectedDay]!.add(_taskController.text);
+                            _taskController.clear();
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                child: _tasks[_selectedDay] == null ||
+                        _tasks[_selectedDay]!.isEmpty
+                    ? Center(child: Text("Bu gün için görev yok."))
+                    : ListView.builder(
+                        itemCount: _tasks[_selectedDay]!.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(_tasks[_selectedDay]![index]),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  _tasks[_selectedDay]!.removeAt(index);
+                                });
+                              },
+                            ),
+                          );
+                        },
+                      ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Patients(
+                      nameSurname: "Onur Özcan",
+                      age: "20",
+                      height: 177,
+                      weight: 120)),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Patients(
+                    nameSurname: "Abdurrahman Gökçen",
+                    age: "22",
+                    height: 182,
+                    weight: 75),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Patients(
+                    nameSurname: "Ayşe Sümeyra Kesim",
+                    age: "18",
+                    height: 167,
+                    weight: 60),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Patients(
+                    nameSurname: "Emre İleri",
+                    age: "21",
+                    height: 182,
+                    weight: 80),
+              ),
+              SizedBox(
+                height: 0,
+              )
+            ],
+          ),
+        ),
+      ),
+      // 2. "Profilim" için (şimdilik aynı ana sayfa içeriği)
+      Container(
+        // Aynı body içeriğini buraya da ekledim
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(
+                  "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
+              fit: BoxFit.cover,
+              opacity: 0.06),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TableCalendar(
+                  firstDay: DateTime.utc(2010, 10, 20),
+                  lastDay: DateTime.utc(2060, 10, 20),
+                  focusedDay: _selectedDay,
+                  selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                    });
+                  },
+                  headerStyle: HeaderStyle(
+                    titleTextStyle: TextStyle(
+                      fontSize: 18,
+                      color: Colors.deepPurple,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  calendarStyle: CalendarStyle(
+                    todayTextStyle: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _taskController,
+                        decoration: InputDecoration(
+                          labelText: "Randevu Ekle",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        if (_taskController.text.isNotEmpty) {
+                          setState(() {
+                            _tasks[_selectedDay] = _tasks[_selectedDay] ?? [];
+                            _tasks[_selectedDay]!.add(_taskController.text);
+                            _taskController.clear();
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                child: _tasks[_selectedDay] == null ||
+                        _tasks[_selectedDay]!.isEmpty
+                    ? Center(child: Text("Bu gün için görev yok."))
+                    : ListView.builder(
+                        itemCount: _tasks[_selectedDay]!.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(_tasks[_selectedDay]![index]),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  _tasks[_selectedDay]!.removeAt(index);
+                                });
+                              },
+                            ),
+                          );
+                        },
+                      ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Patients(
+                      nameSurname: "Onur Özcan",
+                      age: "20",
+                      height: 177,
+                      weight: 120)),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Patients(
+                    nameSurname: "Abdurrahman Gökçen",
+                    age: "22",
+                    height: 182,
+                    weight: 75),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Patients(
+                    nameSurname: "Ayşe Sümeyra Kesim",
+                    age: "18",
+                    height: 167,
+                    weight: 60),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Patients(
+                    nameSurname: "Emre İleri",
+                    age: "21",
+                    height: 182,
+                    weight: 80),
+              ),
+              SizedBox(
+                height: 0,
+              )
+            ],
+          ),
+        ),
+      ),
+      // 3. "GÜndem" için FeedPage widget'ı
+      FeedPage(),
+      // 4. "Yemek" için YemekTarifleri widget'ı
+      YemekTarifleri(),
+    ];
+
     return Scaffold(
-        key: _scaffoldKey, // scaffold key buraya eklenmeli
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text("Nisanur Şakar"),
           backgroundColor: Color(0xFFD69C6C),
@@ -81,137 +351,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
             ),
           ],
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                    "lib/assets/girisekrani.jpg"), // Arkaplan resmi ekleniyor
-                fit: BoxFit.cover,
-                opacity: 0.06),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TableCalendar(
-                    firstDay: DateTime.utc(2010, 10, 20),
-                    lastDay: DateTime.utc(2060, 10, 20),
-                    focusedDay: _selectedDay,
-                    selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                      });
-                    },
-                    headerStyle: HeaderStyle(
-                      titleTextStyle: TextStyle(
-                        fontSize: 18,
-                        color: Colors.deepPurple,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    calendarStyle: CalendarStyle(
-                      todayTextStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Görev ekleme alanı
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _taskController,
-                          decoration: InputDecoration(
-                            labelText: "Randevu Ekle",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.send),
-                        onPressed: () {
-                          if (_taskController.text.isNotEmpty) {
-                            setState(() {
-                              _tasks[_selectedDay] = _tasks[_selectedDay] ?? [];
-                              _tasks[_selectedDay]!.add(_taskController.text);
-                              _taskController.clear();
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Seçilen güne ait görevler
-                SizedBox(
-                  height: 100, // Yükseklik vererek overflow hatasını önlüyoruz
-                  child: _tasks[_selectedDay] == null ||
-                          _tasks[_selectedDay]!.isEmpty
-                      ? Center(child: Text("Bu gün için görev yok."))
-                      : ListView.builder(
-                          itemCount: _tasks[_selectedDay]!.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(_tasks[_selectedDay]![index]),
-                              trailing: IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  setState(() {
-                                    _tasks[_selectedDay]!.removeAt(index);
-                                  });
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Patients(
-                        nameSurname: "Onur Özcan",
-                        age: "20",
-                        height: 177,
-                        weight: 120)),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Patients(
-                      nameSurname: "Abdurrahman Gökçen",
-                      age: "22",
-                      height: 182,
-                      weight: 75),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Patients(
-                      nameSurname: "Ayşe Sümeyra Keskin",
-                      age: "18",
-                      height: 167,
-                      weight: 60),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Patients(
-                      nameSurname: "Emre İleri",
-                      age: "21",
-                      height: 182,
-                      weight: 80),
-                ),
-                SizedBox(
-                  height: 0,
-                )
-              ],
-            ),
-          ),
-        ));
+        body: _widgetOptions.elementAt(currentPageIndex));
   }
 }
 
