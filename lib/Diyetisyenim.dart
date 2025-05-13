@@ -158,7 +158,7 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
               ),
               SizedBox(height: 10),
               MealCard(
-                  mealTime: "Kahvaltı", meal: "Yulaf ezmesi, meyve, yeşil çay"),
+                  mealTime: "Sabah", meal: "Yulaf ezmesi, meyve, yeşil çay"),
               MealCard(
                   mealTime: "Öğle",
                   meal: "Izgara tavuk, salata, tam tahıllı ekmek"),
