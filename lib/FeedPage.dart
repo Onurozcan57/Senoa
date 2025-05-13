@@ -13,6 +13,28 @@ class _FeedPageState extends State<FeedPage> {
   int currentPageIndex = 0;
   List<Map<String, dynamic>> posts = [
     {
+      "profile_Photo": "lib/assets/Helin_Ozalkan.png",
+      "username": "Helin_Özalkan",
+      "content":
+          "Sağlıklı beslenme için gün içinde yeterli su içmeyi unutmayın! 💧",
+      "time": "1 saat önce",
+      "image": "lib/assets/su.jpg",
+      "liked": false,
+      "showComments": false,
+      "comments": [
+        {
+          "username": "elif_diyet",
+          "profile": "lib/assets/Nisa_Sakar.png",
+          "text": "Çok doğru!"
+        },
+        {
+          "username": "fitbaba",
+          "profile": "lib/assets/girisekrani.jpg",
+          "text": "Bunu daha çok uygulamalıyım."
+        }
+      ]
+    },
+    {
       "profile_Photo": "lib/assets/Onur_Ozcan.png",
       "username": "Onur_ÖZCAN57",
       "content":

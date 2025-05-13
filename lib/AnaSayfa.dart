@@ -494,10 +494,10 @@ class _AnasayfaState extends State<Anasayfa> {
       showExercisePopup:
           _showExercisePopup, // İşte yeni eklenen parametre ve değeri
     ),
-    Profile(),
     Diyetisyenim(),
     FeedPage(),
     YemekTarifleri(),
+    Profile(),
   ];
 
   /// Belirtilen egzersiz adına göre ilgili GIF dosyasının yolunu döndürür.
@@ -785,18 +785,6 @@ class _AnasayfaState extends State<Anasayfa> {
           ),
           NavigationDestination(
             selectedIcon: Icon(
-              Icons.account_box,
-              size: 30,
-              color: Colors.white,
-            ),
-            icon: Icon(
-              Icons.account_box_outlined,
-              size: 30,
-            ),
-            label: 'Profilim',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(
               Icons.assignment_ind_rounded,
               size: 30,
               color: Colors.white,
@@ -829,6 +817,18 @@ class _AnasayfaState extends State<Anasayfa> {
               Icons.food_bank_outlined,
               size: 35,
             ),
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(
+              Icons.account_box,
+              size: 30,
+              color: Colors.white,
+            ),
+            icon: Icon(
+              Icons.account_box_outlined,
+              size: 30,
+            ),
+            label: 'Profilim',
           ),
         ],
       ),
