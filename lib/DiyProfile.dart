@@ -5,12 +5,12 @@ import 'package:senoa/LoginScreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:senoa/CanliDestekPage.dart';
 
-class Profile extends StatefulWidget {
+class DiyProfile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<DiyProfile> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool isDietitian = false;
@@ -36,7 +36,6 @@ class _ProfileState extends State<Profile> {
           userData = dietitianDoc.data() as Map<String, dynamic>;
         });
       } else {
-        // Diyetisyen değilse users koleksiyonunda ara
         DocumentSnapshot userDoc =
             await _firestore.collection('users').doc(userId).get();
 

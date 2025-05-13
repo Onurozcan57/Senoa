@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:senoa/FeedPage.dart';
 import 'package:senoa/YemekTarifleri.dart';
+import 'package:senoa/DiyProfile.dart';
 
 class Diyanasayfa extends StatefulWidget {
   const Diyanasayfa({super.key});
@@ -153,7 +154,9 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
           ),
         ),
       ),
-      // 2. "Profilim" için (şimdilik aynı ana sayfa içeriği)
+      //profile butonun çalışması için yeri değişmesin bunun lütfen
+      DiyProfile(),
+
       Container(
         // Aynı body içeriğini buraya da ekledim
         decoration: BoxDecoration(
@@ -282,6 +285,7 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
           ),
         ),
       ),
+
       // 3. "GÜndem" için FeedPage widget'ı
       FeedPage(),
       // 4. "Yemek" için YemekTarifleri widget'ı
@@ -507,5 +511,3 @@ final _popupValueStyle = TextStyle(
   fontSize: 16,
   color: Colors.black87,
 );
-
-// butonlar aktifleştirildi.
