@@ -149,12 +149,12 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
         ),
       ),
       //profile butonun çalışması için yeri değişmesin bunun lütfen
-      DiyProfile(),
 
       // 3. "GÜndem" için FeedPage widget'ı
       FeedPage(),
       // 4. "Yemek" için YemekTarifleri widget'ı
       YemekTarifleri(),
+      DiyProfile(),
       Container(
         // Aynı body içeriğini buraya da ekledim
 
@@ -309,18 +309,6 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
             ),
             NavigationDestination(
               selectedIcon: Icon(
-                Icons.account_box,
-                size: 30,
-                color: Colors.white,
-              ),
-              icon: Icon(
-                Icons.account_box_outlined,
-                size: 30,
-              ),
-              label: 'Profilim',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
                 Icons.messenger,
                 size: 25,
                 color: Colors.white,
@@ -339,6 +327,18 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                 Icons.food_bank_outlined,
                 size: 35,
               ),
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.account_box,
+                size: 30,
+                color: Colors.white,
+              ),
+              icon: Icon(
+                Icons.account_box_outlined,
+                size: 30,
+              ),
+              label: 'Profilim',
             ),
           ],
         ),
