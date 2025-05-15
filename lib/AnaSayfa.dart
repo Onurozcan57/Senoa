@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:senoa/ChatPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'FeedPage.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -131,6 +132,163 @@ class PaketKart extends StatelessWidget {
   }
 }
 
+class KaloriTakipWidget extends StatefulWidget {
+  const KaloriTakipWidget({super.key});
+
+  @override
+  State<KaloriTakipWidget> createState() => _KaloriTakipWidgetState();
+}
+
+class _KaloriTakipWidgetState extends State<KaloriTakipWidget> {
+  final int hedefKalori = 2500;
+  int alinankalori = 500;
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadCalories();
+  }
+
+  Future<void> loadCalories() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      alinankalori = prefs.getInt('alinan_kalori') ?? 0;
+    });
+  }
+
+  Future<void> saveCalories() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('alinan_kalori', alinankalori);
+  }
+
+  void kaloriEkle() {
+    final girilenDeger = int.tryParse(_controller.text);
+    if (girilenDeger != null) {
+      setState(() {
+        alinankalori += girilenDeger;
+        if (alinankalori > hedefKalori) {
+          alinankalori = hedefKalori;
+        }
+      });
+      saveCalories();
+      _controller.clear();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final kalanKalori = hedefKalori - alinankalori;
+    final yuzde = (alinankalori / hedefKalori).clamp(0.0, 1.0);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircularPercentIndicator(
+              radius: 75.0,
+              lineWidth: 14.0,
+              animation: true,
+              animationDuration: 1500,
+              percent: yuzde,
+              circularStrokeCap: CircularStrokeCap.round,
+              linearGradient: const LinearGradient(
+                colors: [Color(0xFF00C853), Color(0xFFB2FF59)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              backgroundColor: Colors.grey.shade200,
+              center: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "$alinankalori",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green.shade800,
+                    ),
+                  ),
+                  const Text(
+                    "Kcal",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Günlük Kalori Alımı",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Hedef: $hedefKalori Kcal",
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  ),
+                  Text(
+                    "Kalan: ${kalanKalori < 0 ? 0 : kalanKalori} Kcal",
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: 'Kalori ekle',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: kaloriEkle,
+            ),
+          ),
+        ),
+        const SizedBox(height: 5),
+        Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ChatPage()),
+              );
+            },
+            icon: const Icon(Icons.chat_bubble_outline),
+            label: const Text("KAÇ KALORİ?"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade600,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
 class Anasayfa extends StatefulWidget {
   const Anasayfa({super.key});
 
@@ -182,72 +340,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircularPercentIndicator(
-                          radius: 75.0,
-                          lineWidth: 14.0,
-                          animation: true,
-                          animationDuration: 1500,
-                          percent: (2250 / 2500).clamp(0.0, 1.0),
-                          circularStrokeCap: CircularStrokeCap.round,
-                          linearGradient: const LinearGradient(
-                            colors: [Color(0xFF00C853), Color(0xFFB2FF59)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          backgroundColor: Colors.grey.shade200,
-                          center: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "2250",
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green.shade800,
-                                ),
-                              ),
-                              const Text(
-                                "Kcal",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Günlük Kalori Alımı",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "Hedef: 2500 Kcal",
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.black54),
-                              ),
-                              Text(
-                                "Kalan: 250 Kcal",
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.black54),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: KaloriTakipWidget(),
                   ),
                   Container(
                     margin: const EdgeInsets.all(16),

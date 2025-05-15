@@ -33,7 +33,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Asistan', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFFD69C6C),
+        backgroundColor: const Color(0xFFA8D5BA),
         centerTitle: true,
         elevation: 4,
       ),
@@ -69,9 +69,8 @@ class _ChatPageState extends State<ChatPage> {
                         padding: const EdgeInsets.all(12),
                         constraints: const BoxConstraints(maxWidth: 250),
                         decoration: BoxDecoration(
-                          color: isUser
-                              ? const Color(0xFFD69C6C)
-                              : Colors.white.withOpacity(0.9),
+                          color:
+                              isUser ? const Color(0xFFA8D5BA) : Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -118,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
                     GestureDetector(
                       onTap: sendMessage,
                       child: CircleAvatar(
-                        backgroundColor: const Color(0xFFD69C6C),
+                        backgroundColor: const Color(0xFF58A399),
                         child: const Icon(Icons.send, color: Colors.white),
                       ),
                     )
