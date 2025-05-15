@@ -84,7 +84,6 @@ flutter:
     - lib/assets/sporSalonu.jpeg
     - lib/assets/veganlife.jpeg
     - lib/assets/diyetisyenArkaPlan.jpg
-    - lib/assets/fitnessArkaPlan.jpg
     - lib/assets/d3.jpeg
     - lib/assets/sandvic.jpg
     - lib/assets/detoks.jpg
@@ -114,6 +113,7 @@ flutter:
     - lib/assets/Helin_Ozalkan.png
     - lib/assets/diyetisyen.webp
     - lib/assets/egzersiz.jpg
+    - lib/assets/arkaPlan_egzersiz.jpeg
   
      #   - images/a_dot_ham.jpeg
 

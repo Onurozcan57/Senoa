@@ -403,7 +403,6 @@ void _showPopup(
   double bmi = weight / ((height / 100) * (height / 100));
   String bmiResult = bmi.toStringAsFixed(1);
 
-  // Diyet kontrolcüleri
   final TextEditingController _breakfastController = TextEditingController();
   final TextEditingController _lunchController = TextEditingController();
   final TextEditingController _dinnerController = TextEditingController();
@@ -412,49 +411,46 @@ void _showPopup(
     context: context,
     builder: (context) => AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(20),
       ),
-      contentPadding: const EdgeInsets.all(25),
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFA8D5BA), // Arka plan
+      contentPadding: const EdgeInsets.all(20),
       content: SingleChildScrollView(
-        // Taşmayı önler
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Bilgiler
-            Text("İsim ve Soyisim:", style: _popupLabelStyle),
-            Text(nameSurname, style: _popupValueStyle),
-            SizedBox(height: 10),
-            Text("Yaş:", style: _popupLabelStyle),
-            Text(age, style: _popupValueStyle),
-            SizedBox(height: 10),
-            Text("Boy:", style: _popupLabelStyle),
-            Text("$height cm", style: _popupValueStyle),
-            SizedBox(height: 10),
-            Text("Kilo:", style: _popupLabelStyle),
-            Text("$weight kg", style: _popupValueStyle),
-            SizedBox(height: 10),
-            Text("Vücut Kitle Endeksi:", style: _popupLabelStyle),
-            Text(bmiResult, style: _popupValueStyle),
-
+            Center(
+              child: Text(
+                "Hasta Bilgileri",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF58A399),
+                ),
+              ),
+            ),
             SizedBox(height: 20),
-            Divider(),
-
-            // Diyet Giriş Alanları
-            Text("Diyet Listesi Hazırla", style: _popupLabelStyle),
+            _infoRow("İsim ve Soyisim:", nameSurname),
+            _infoRow("Yaş:", age),
+            _infoRow("Boy:", "$height cm"),
+            _infoRow("Kilo:", "$weight kg"),
+            _infoRow("Vücut Kitle Endeksi:", bmiResult),
+            SizedBox(height: 20),
+            Divider(thickness: 1.2, color: Color(0xFF58A399)),
+            SizedBox(height: 10),
+            Text("Diyet Listesi", style: _sectionTitleStyle),
             SizedBox(height: 10),
             _buildTextField("Sabah Öğünü", _breakfastController),
             SizedBox(height: 10),
             _buildTextField("Öğle Öğünü", _lunchController),
             SizedBox(height: 10),
             _buildTextField("Akşam Öğünü", _dinnerController),
-
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                ElevatedButton.icon(
                   onPressed: () {
                     final sabah = _breakfastController.text;
                     final ogle = _lunchController.text;
@@ -473,11 +469,24 @@ void _showPopup(
                       },
                     );
                   },
-                  child: Text("Listeyi Gönder"),
+                  icon: Icon(Icons.check),
+                  label: Text("Gönder"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF58A399),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
                 ),
+                SizedBox(width: 10),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: Text("Kapat"),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.redAccent,
+                  ),
                 ),
               ],
             ),
@@ -488,25 +497,51 @@ void _showPopup(
   );
 }
 
+Widget _infoRow(String label, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        Expanded(child: Text(label, style: _popupLabelStyle)),
+        Expanded(child: Text(value, style: _popupValueStyle)),
+      ],
+    ),
+  );
+}
+
 Widget _buildTextField(String label, TextEditingController controller) {
   return TextField(
     controller: controller,
     decoration: InputDecoration(
       labelText: label,
-      border: OutlineInputBorder(),
-      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      labelStyle: TextStyle(color: Color(0xFF58A399)),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Color(0xFF58A399), width: 2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      filled: true,
+      fillColor: Colors.white,
     ),
     maxLines: 2,
   );
 }
 
 final _popupLabelStyle = TextStyle(
-  fontWeight: FontWeight.bold,
-  fontSize: 16,
-  color: Colors.black54,
+  fontWeight: FontWeight.w600,
+  fontSize: 15,
+  color: Colors.black87,
 );
 
 final _popupValueStyle = TextStyle(
-  fontSize: 16,
-  color: Colors.black87,
+  fontSize: 15,
+  color: Colors.black54,
+);
+
+final _sectionTitleStyle = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+  color: Color(0xFF58A399),
 );

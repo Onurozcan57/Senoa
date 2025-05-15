@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:senoa/LoginScreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:senoa/CanliDestekPage.dart';
@@ -36,6 +38,7 @@ class _ProfileState extends State<DiyProfile> {
           userData = dietitianDoc.data() as Map<String, dynamic>;
         });
       } else {
+        // Diyetisyen değilse users koleksiyonunda ara
         DocumentSnapshot userDoc =
             await _firestore.collection('users').doc(userId).get();
 
@@ -51,10 +54,23 @@ class _ProfileState extends State<DiyProfile> {
     }
   }
 
+  File? _secilenResim;
+
+  Future<void> _galeridenResimSec() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _secilenResim = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF6F4FB),
+      backgroundColor: Colors.white,
       body: userData == null
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -64,17 +80,36 @@ class _ProfileState extends State<DiyProfile> {
                     padding: EdgeInsets.all(3),
                     child: Column(
                       children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: const Color.fromARGB(255, 245, 0, 0),
-                          child: Text(
-                            userData!['nameSurname'][0].toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 40,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        GestureDetector(
+                            onTap: _galeridenResimSec,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: _secilenResim != null
+                                      ? FileImage(_secilenResim!)
+                                      : const AssetImage(
+                                              "lib/assets/Nisa_Sakar.png")
+                                          as ImageProvider,
+                                ),
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black.withOpacity(0.05),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )),
                         SizedBox(height: 20),
                         Text(
                           userData!['nameSurname'],
@@ -106,9 +141,11 @@ class _ProfileState extends State<DiyProfile> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       child: Card(
-                        elevation: 10,
+                        color: Color.fromARGB(250, 249, 255, 255),
+                        elevation: 3,
                         margin: EdgeInsets.all(3),
                         child: ListTile(
                           onTap: () {},
@@ -123,13 +160,14 @@ class _ProfileState extends State<DiyProfile> {
                           leading: Icon(
                             Icons.person,
                             size: 45,
-                            color: const Color.fromARGB(255, 236, 54, 54),
+                            color: const Color(0xFF58A399),
                           ),
                         ),
                       )),
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Card(
+                      color: Color.fromARGB(250, 249, 255, 255),
                       elevation: 10,
                       margin: EdgeInsets.all(3),
                       child: ListTile(
@@ -145,7 +183,7 @@ class _ProfileState extends State<DiyProfile> {
                         leading: Icon(
                           Icons.password,
                           size: 45,
-                          color: const Color.fromARGB(255, 236, 54, 54),
+                          color: const Color(0xFF58A399),
                         ),
                       ),
                     ),
@@ -153,6 +191,7 @@ class _ProfileState extends State<DiyProfile> {
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Card(
+                      color: Color.fromARGB(250, 249, 255, 255),
                       elevation: 10,
                       margin: EdgeInsets.all(3),
                       child: ListTile(
@@ -184,7 +223,7 @@ class _ProfileState extends State<DiyProfile> {
                         leading: Icon(
                           Icons.info,
                           size: 45,
-                          color: const Color.fromARGB(255, 236, 54, 54),
+                          color: const Color(0xFF58A399),
                         ),
                       ),
                     ),
@@ -192,6 +231,7 @@ class _ProfileState extends State<DiyProfile> {
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Card(
+                      color: Color.fromARGB(250, 249, 255, 255),
                       elevation: 10,
                       margin: EdgeInsets.all(3),
                       child: ListTile(
@@ -212,7 +252,7 @@ class _ProfileState extends State<DiyProfile> {
                         leading: Icon(
                           Icons.phone,
                           size: 45,
-                          color: const Color.fromARGB(255, 236, 54, 54),
+                          color: const Color(0xFF58A399),
                         ),
                       ),
                     ),
@@ -220,6 +260,7 @@ class _ProfileState extends State<DiyProfile> {
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Card(
+                      color: Color.fromARGB(250, 249, 255, 255),
                       elevation: 10,
                       margin: EdgeInsets.all(3),
                       child: ListTile(
@@ -240,7 +281,7 @@ class _ProfileState extends State<DiyProfile> {
                         leading: Icon(
                           Icons.output_sharp,
                           size: 45,
-                          color: const Color.fromARGB(255, 236, 54, 54),
+                          color: const Color(0xFF58A399),
                         ),
                       ),
                     ),
@@ -253,6 +294,7 @@ class _ProfileState extends State<DiyProfile> {
 
   Widget _buildInfoCard(String title, String value) {
     return Card(
+      color: Color.fromARGB(255, 222, 221, 221),
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
         padding: EdgeInsets.all(16),

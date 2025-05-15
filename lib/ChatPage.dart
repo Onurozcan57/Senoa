@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
@@ -9,8 +11,9 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
-  final List<Map<String, String>> messages =
-      []; // {'role': 'user' or 'bot', 'text': '...'}
+
+  // Her mesaj: {'role': 'user' / 'bot', 'text': '...', 'image': 'path'}
+  final List<Map<String, String>> messages = [];
 
   void sendMessage() {
     final text = _controller.text.trim();
@@ -18,7 +21,6 @@ class _ChatPageState extends State<ChatPage> {
 
     setState(() {
       messages.add({'role': 'user', 'text': text});
-      // Bot cevabı sonra gelecek (şimdilik sabit)
       messages.add({
         'role': 'bot',
         'text': 'Merhaba! Bu kısmı sonra yapay zeka ile dolduracağız.'
@@ -26,6 +28,27 @@ class _ChatPageState extends State<ChatPage> {
     });
 
     _controller.clear();
+  }
+
+  Future<void> sendImageMessage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        messages.add({
+          'role': 'user',
+          'image': pickedFile.path, // Fotoğraf yolu
+        });
+
+        messages.add({
+          'role': 'bot',
+          'text': 'Fotoğraf aldım! Bir şeyler tanıyabilirim yakında :)'
+        });
+      });
+    } else {
+      print("Fotoğraf çekilmedi.");
+    }
   }
 
   @override
@@ -39,7 +62,7 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Stack(
         children: [
-          // Arka plan resmi
+          // Arka plan
           Opacity(
             opacity: 0.08,
             child: Container(
@@ -51,7 +74,6 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
           ),
-          // İçerik
           Column(
             children: [
               Expanded(
@@ -61,6 +83,7 @@ class _ChatPageState extends State<ChatPage> {
                   itemBuilder: (context, index) {
                     final msg = messages[index];
                     final isUser = msg['role'] == 'user';
+
                     return Align(
                       alignment:
                           isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -70,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
                         constraints: const BoxConstraints(maxWidth: 250),
                         decoration: BoxDecoration(
                           color:
-                              isUser ? const Color(0xFFA8D5BA) : Colors.white,
+                              isUser ? const Color(0xFF58A399) : Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -80,12 +103,22 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                           ],
                         ),
-                        child: Text(
-                          msg['text']!,
-                          style: TextStyle(
-                            color: isUser ? Colors.white : Colors.black87,
-                          ),
-                        ),
+                        child: msg.containsKey('image')
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.file(
+                                  File(msg['image']!),
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Text(
+                                msg['text'] ?? '',
+                                style: TextStyle(
+                                  color: isUser ? Colors.white : Colors.black87,
+                                ),
+                              ),
                       ),
                     );
                   },
@@ -119,6 +152,14 @@ class _ChatPageState extends State<ChatPage> {
                       child: CircleAvatar(
                         backgroundColor: const Color(0xFF58A399),
                         child: const Icon(Icons.send, color: Colors.white),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: sendImageMessage,
+                      icon: const Icon(
+                        Icons.photo_camera_back_outlined,
+                        color: Color(0xFF58A399),
+                        size: 35,
                       ),
                     )
                   ],
