@@ -24,9 +24,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("lib/assets/girisekrani.jpg"),
-            fit: BoxFit.cover,
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue.shade100,
+              const Color.fromARGB(255, 114, 246, 182)
+            ],
           ),
         ),
         child: Center(
@@ -37,7 +39,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 100), // Üstten boşluk
+                    SizedBox(
+                      height: 100,
+                      child: Center(
+                        child: Text(
+                          "SENOA",
+                          style: TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ), // Üstten boşluk
                     // Rol seçimi
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -128,12 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-          color: Colors.white,
+          color: const Color.fromARGB(255, 255, 255, 255),
           fontWeight: FontWeight.bold,
-          fontSize: 16,
+          fontSize: 20,
         ),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.3),
+        fillColor: const Color.fromARGB(194, 0, 0, 0).withOpacity(0.6),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
@@ -203,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFFF5E7DC),
+          backgroundColor: const Color(0xFFA8D5BA),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
@@ -251,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             return Theme(
                               data: Theme.of(context).copyWith(
                                 colorScheme: ColorScheme.light(
-                                  primary: Color(0xFFD69C6C),
+                                  primary: Color(0xFF58A399),
                                   onPrimary: Colors.white,
                                   surface: Colors.white,
                                   onSurface: Colors.black,
@@ -289,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             Icon(Icons.calendar_today,
-                                color: Color(0xFFD69C6C)),
+                                color: Color(0xFFA8D5BA)),
                           ],
                         ),
                       ),
@@ -377,7 +391,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD69C6C),
+                        backgroundColor: const Color(0xFF58A399),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -403,7 +417,7 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Color(0xFFF5E7DC),
+          backgroundColor: Color(0xFFA8D5BA),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: Text("Boy & Kilo"),
@@ -437,7 +451,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFD69C6C),
+                backgroundColor: Color(0xFF58A399),
                 foregroundColor: Colors.white,
               ),
               child: Text("Kayıt Ol"),

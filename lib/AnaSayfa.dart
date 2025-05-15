@@ -2,12 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:senoa/ChatPage.dart';
 import 'FeedPage.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'YemekTarifleri.dart';
 import 'Profile.dart';
 import 'package:senoa/Diyetisyenler.dart';
+import 'package:pedometer/pedometer.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PaketKart extends StatelessWidget {
   final String baslik;
@@ -246,12 +249,29 @@ class AnaSayfaIcerigi extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
+                  Container(
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
                     child: TableCalendar(
                       firstDay: DateTime.utc(2010, 10, 20),
                       lastDay: DateTime.utc(2060, 10, 20),
                       focusedDay: selectedDay,
+                      calendarFormat:
+                          CalendarFormat.twoWeeks, // 👉 2 haftalık görünüm
+                      availableCalendarFormats: const {
+                        CalendarFormat.twoWeeks: '2 Hafta',
+                      },
                       selectedDayPredicate: (day) =>
                           isSameDay(day, selectedDay),
                       onDaySelected: (newSelectedDay, focusedDay) {
@@ -260,7 +280,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                       headerStyle: const HeaderStyle(
                         titleTextStyle: TextStyle(
                           fontSize: 18,
-                          color: Color.fromARGB(255, 0, 0, 0),
+                          color: Colors.black,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -270,9 +290,18 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
+                        todayDecoration: BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                        ),
+                        selectedDecoration: BoxDecoration(
+                          color: Colors.orange,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
                   ),
+                  const AdimSayarWidget(),
                   const Padding(
                     padding: EdgeInsets.only(top: 35.0),
                     child: Text(
@@ -457,7 +486,6 @@ class AnaSayfaIcerigi extends StatelessWidget {
 }
 
 class _AnasayfaState extends State<Anasayfa> {
-  int _seciliKart = -1;
   DateTime _selectedDay = DateTime.now();
   Map<DateTime, List<String>> _tasks = {};
   TextEditingController _taskController = TextEditingController();
@@ -466,6 +494,7 @@ class _AnasayfaState extends State<Anasayfa> {
 
   // static kaldırıldı, final kaldı
   late final List<Widget> _widgetOptions = <Widget>[
+    // İşte yeni eklenen parametre ve değeri
     AnaSayfaIcerigi(
       selectedDay: _selectedDay,
       onDaySelected: (newSelectedDay, focusedDay) {
@@ -477,7 +506,9 @@ class _AnasayfaState extends State<Anasayfa> {
       onAddTask: () {
         if (_taskController.text.isNotEmpty) {
           setState(() {
-            _tasks[_selectedDay] = _tasks[_selectedDay] ?? [];
+            if (_tasks[_selectedDay] == null) {
+              _tasks[_selectedDay] = [];
+            }
             _tasks[_selectedDay]!.add(_taskController.text);
             _taskController.clear();
           });
@@ -488,11 +519,8 @@ class _AnasayfaState extends State<Anasayfa> {
           _tasks[_selectedDay]!.removeAt(index);
         });
       },
-      getTasksForSelectedDay: (day) {
-        return _tasks[day] ?? [];
-      },
-      showExercisePopup:
-          _showExercisePopup, // İşte yeni eklenen parametre ve değeri
+      getTasksForSelectedDay: (day) => _tasks[day] ?? [],
+      showExercisePopup: _showExercisePopup,
     ),
     Diyetisyenim(),
     FeedPage(),
@@ -528,95 +556,6 @@ class _AnasayfaState extends State<Anasayfa> {
     return "lib/assets/gifs/$fileName";
   }
 
-  void _showGif(BuildContext context, String hareketAdi, String giffYolu) {
-    final gifPath = _getGifPath(hareketAdi);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(hareketAdi),
-        content: Image.asset(giffYolu),
-        actions: [
-          TextButton(
-            child: const Text("Kapat"),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showPopup(BuildContext context, String baslik, String aciklama) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        contentPadding: EdgeInsets.zero,
-        content: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            image: const DecorationImage(
-              image: AssetImage('lib/assets/girisekrani.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  baslik,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  aciklama,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
-                    child: const Text("Show more"),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
-                    child: const Text("Kapat"),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _showExercisePopup(
       BuildContext context, String title, List<String> hareketler) {
     int currentIndex = 0;
@@ -636,8 +575,11 @@ class _AnasayfaState extends State<Anasayfa> {
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
                 title: const Text("TEBRİKLER! 🎉"),
-                content: const Text("Tüm egzersizleri tamamladınız."),
+                content: const Text("Tüm egzersizleri başarıyla tamamladın."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
@@ -657,97 +599,111 @@ class _AnasayfaState extends State<Anasayfa> {
 
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          if (remainingSeconds == 10 && currentIndex == 0) {
-            startTimer(setState);
-          }
+        return StatefulBuilder(
+          builder: (context, setState) {
+            if (remainingSeconds == 10 && currentIndex == 0) {
+              startTimer(setState);
+            }
 
-          String hareketAdi = hareketler[currentIndex];
-          String gifPath = _getGifPath(hareketAdi);
+            String hareketAdi = hareketler[currentIndex];
+            String gifPath = _getGifPath(hareketAdi);
 
-          return Dialog(
-            backgroundColor: Colors.transparent,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 124, 127, 99),
-                  image: const DecorationImage(
-                    image: AssetImage(''),
-                    fit: BoxFit.cover,
-                    opacity: 0.3,
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFA8D5BA).withOpacity(0.95),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 20,
+                        offset: Offset(0, 10),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(30),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/background_texture.png'),
+                      fit: BoxFit.cover,
+                      opacity: 0.08,
+                    ),
                   ),
-                ),
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "$title\n(${currentIndex + 1}/${hareketler.length})",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      hareketAdi,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF333333),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        gifPath,
-                        height: 160,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      "$remainingSeconds saniye",
-                      style: const TextStyle(
-                        fontSize: 28,
-                        color: Color.fromARGB(255, 241, 223, 223),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        timer.cancel();
-                        if (currentIndex < hareketler.length - 1) {
-                          currentIndex++;
-                          startTimer(setState);
-                        } else {
-                          Navigator.pop(context);
-                        }
-                      },
-                      icon: const Icon(Icons.skip_next),
-                      label: const Text("Geç"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 242, 232, 229),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "$title\n(${currentIndex + 1}/${hareketler.length})",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+                      Text(
+                        hareketAdi,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.asset(
+                          gifPath,
+                          height: 160,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "$remainingSeconds saniye",
+                        style: const TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          timer.cancel();
+                          if (currentIndex < hareketler.length - 1) {
+                            currentIndex++;
+                            startTimer(setState);
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                        icon:
+                            const Icon(Icons.skip_next, color: Colors.black87),
+                        label: const Text(
+                          "Sonraki Hareket",
+                          style: TextStyle(color: Colors.black87),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          },
+        );
       },
     );
   }
@@ -1001,16 +957,175 @@ Widget _diyetisyenDetay(
                       'Randevunuz $dateStr $timeStr olarak kaydedildi 🎉')));
             }
           },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
-          child: const Text("Randevu Tarih & Saat Seç"),
+          style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF58A399)),
+          child: const Text("Randevu Tarih & Saat Seç",
+              style: TextStyle(color: Colors.white)),
         ),
         const SizedBox(height: 12),
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text("Kapat"),
+          child: const Text("Kapat",
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold)),
         ),
         const SizedBox(height: 8),
       ],
     ),
   );
+}
+
+class AdimSayarWidget extends StatefulWidget {
+  const AdimSayarWidget({super.key});
+
+  @override
+  State<AdimSayarWidget> createState() => _AdimSayarWidgetState();
+}
+
+class _AdimSayarWidgetState extends State<AdimSayarWidget> {
+  final stepService = StepCounterService();
+  StreamSubscription<StepCount>? _subscription;
+  final int hedefAdim = 6000;
+
+  @override
+  void initState() {
+    super.initState();
+    _initStepCountStream();
+  }
+
+  Future<void> _initStepCountStream() async {
+    var status = await Permission.activityRecognition.request();
+
+    if (status.isGranted) {
+      _subscription = stepService.stepStream.listen(
+        (event) {
+          setState(() {
+            stepService.update(event);
+          });
+        },
+        onError: (error) => print("Adım sayar hatası: $error"),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int adim = 2000;
+    int kalan = (hedefAdim - adim).clamp(0, hedefAdim);
+    double percent = (adim / hedefAdim).clamp(0.0, 1.0);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          CircularPercentIndicator(
+            radius: 60.0,
+            lineWidth: 12.0,
+            animation: true,
+            animationDuration: 900,
+            percent: percent,
+            circularStrokeCap: CircularStrokeCap.round,
+            linearGradient: const LinearGradient(
+              colors: [Color.fromARGB(255, 0, 143, 200), Color(0xFFB2FF59)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            backgroundColor: Colors.grey.shade200,
+            center: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "$adim",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green.shade800,
+                  ),
+                ),
+                const Text(
+                  "Adım",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Günlük Adım Hedefi",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Hedef: $hedefAdim adım",
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+                Text(
+                  "Kalan: $kalan adım",
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StepCounterService {
+  static final StepCounterService _instance = StepCounterService._internal();
+  factory StepCounterService() => _instance;
+  StepCounterService._internal();
+
+  Stream<StepCount>? _stepStream;
+  StepCount? _latestStep;
+  int? initialSteps;
+  int currentSteps = 0;
+
+  Stream<StepCount> get stepStream {
+    _stepStream ??= Pedometer.stepCountStream.asBroadcastStream(
+      onListen: (subscription) => print("Adım stream başladı"),
+      onCancel: (subscription) => print("Adım stream iptal edildi"),
+    );
+    return _stepStream!;
+  }
+
+  void update(StepCount event) {
+    _latestStep = event;
+    if (initialSteps == null) {
+      initialSteps = event.steps;
+    }
+    currentSteps = event.steps - initialSteps!;
+  }
 }
