@@ -259,48 +259,101 @@ class RecipeCard extends StatelessWidget {
     required this.kalori,
     required this.porsiyon,
   });
-
-  void _showPopup(BuildContext context, String baslik, String aciklama) {
-    showDialog(
+  void _showPopup(BuildContext context, String baslik, String aciklama,
+      String kalori, String porsiyon) {
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        content: Container(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (context) => DraggableScrollableSheet(
+        expand: false,
+        maxChildSize: 0.85,
+        minChildSize: 0.3,
+        initialChildSize: 0.6,
+        builder: (context, scrollController) => Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: SingleChildScrollView(
+            controller: scrollController,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
+                Center(
+                  child: Container(
+                    width: 60,
+                    height: 5,
+                    margin: EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                Center(
                   child: Text(
                     baslik,
-                    textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 0, 208, 255)),
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal[700],
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    aciklama,
-                    textAlign:
-                        TextAlign.left, // Sola hizalanacak şekilde düzelttik
-                    style: TextStyle(fontSize: 16, color: Colors.black87),
-                  ),
+                SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.local_fire_department,
+                        color: Colors.orange, size: 22),
+                    SizedBox(width: 6),
+                    Text(
+                      'Kalori: $kalori',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(width: 20),
+                    Icon(Icons.restaurant_menu, color: Colors.green, size: 22),
+                    SizedBox(width: 6),
+                    Text(
+                      'Porsiyon: $porsiyon',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      textStyle: TextStyle(fontSize: 16)),
-                  child: Text("Kapat"),
+                Text(
+                  aciklama,
+                  style: TextStyle(
+                    fontSize: 16,
+                    height: 1.5,
+                    color: Colors.grey[800],
+                  ),
+                  textAlign: TextAlign.left,
                 ),
+                SizedBox(height: 30),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 244, 236, 236),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      "Kapat",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 15),
               ],
             ),
           ),
@@ -317,7 +370,7 @@ class RecipeCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
-          _showPopup(context, title, description);
+          _showPopup(context, title, description, kalori, porsiyon);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

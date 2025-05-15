@@ -39,6 +39,7 @@ dependencies:
   shared_preferences: ^2.2.2
   image_picker: ^1.0.7
   pedometer: ^4.0.0
+  add_2_calendar: ^3.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -111,7 +112,8 @@ flutter:
     - lib/assets/ogle.jpg
     - lib/assets/yulaf.jpeg
     - lib/assets/Helin_Ozalkan.png
-    
+    - lib/assets/diyetisyen.webp
+    - lib/assets/egzersiz.jpg
   
      #   - images/a_dot_ham.jpeg
 

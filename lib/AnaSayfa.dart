@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:senoa/ChatPage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'FeedPage.dart';
 import 'package:senoa/Diyetisyenim.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -96,7 +95,7 @@ class PaketKart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 20,
+      width: MediaQuery.of(context).size.width - 180,
       height: 200,
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -118,7 +117,7 @@ class PaketKart extends StatelessWidget {
               Text(
                 baslik,
                 style: const TextStyle(
-                    color: Color.fromARGB(255, 21, 21, 21),
+                    color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
@@ -128,163 +127,6 @@ class PaketKart extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class KaloriTakipWidget extends StatefulWidget {
-  const KaloriTakipWidget({super.key});
-
-  @override
-  State<KaloriTakipWidget> createState() => _KaloriTakipWidgetState();
-}
-
-class _KaloriTakipWidgetState extends State<KaloriTakipWidget> {
-  final int hedefKalori = 2500;
-  int alinankalori = 500;
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    loadCalories();
-  }
-
-  Future<void> loadCalories() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      alinankalori = prefs.getInt('alinan_kalori') ?? 0;
-    });
-  }
-
-  Future<void> saveCalories() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('alinan_kalori', alinankalori);
-  }
-
-  void kaloriEkle() {
-    final girilenDeger = int.tryParse(_controller.text);
-    if (girilenDeger != null) {
-      setState(() {
-        alinankalori += girilenDeger;
-        if (alinankalori > hedefKalori) {
-          alinankalori = hedefKalori;
-        }
-      });
-      saveCalories();
-      _controller.clear();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final kalanKalori = hedefKalori - alinankalori;
-    final yuzde = (alinankalori / hedefKalori).clamp(0.0, 1.0);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircularPercentIndicator(
-              radius: 75.0,
-              lineWidth: 14.0,
-              animation: true,
-              animationDuration: 1500,
-              percent: yuzde,
-              circularStrokeCap: CircularStrokeCap.round,
-              linearGradient: const LinearGradient(
-                colors: [Color(0xFF00C853), Color(0xFFB2FF59)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              backgroundColor: Colors.grey.shade200,
-              center: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "$alinankalori",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green.shade800,
-                    ),
-                  ),
-                  const Text(
-                    "Kcal",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Günlük Kalori Alımı",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Hedef: $hedefKalori Kcal",
-                    style: const TextStyle(fontSize: 14, color: Colors.black54),
-                  ),
-                  Text(
-                    "Kalan: ${kalanKalori < 0 ? 0 : kalanKalori} Kcal",
-                    style: const TextStyle(fontSize: 14, color: Colors.black54),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: _controller,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            labelText: 'Kalori ekle',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: kaloriEkle,
-            ),
-          ),
-        ),
-        const SizedBox(height: 5),
-        Align(
-          alignment: Alignment.centerRight,
-          child: ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ChatPage()),
-              );
-            },
-            icon: const Icon(Icons.chat_bubble_outline),
-            label: const Text("KAÇ KALORİ?"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green.shade600,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        )
-      ],
     );
   }
 }
@@ -340,7 +182,72 @@ class AnaSayfaIcerigi extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: KaloriTakipWidget(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularPercentIndicator(
+                          radius: 75.0,
+                          lineWidth: 14.0,
+                          animation: true,
+                          animationDuration: 1500,
+                          percent: (2250 / 2500).clamp(0.0, 1.0),
+                          circularStrokeCap: CircularStrokeCap.round,
+                          linearGradient: const LinearGradient(
+                            colors: [Color(0xFF00C853), Color(0xFFB2FF59)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          backgroundColor: Colors.grey.shade200,
+                          center: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "2250",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green.shade800,
+                                ),
+                              ),
+                              const Text(
+                                "Kcal",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "Günlük Kalori Alımı",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Hedef: 2500 Kcal",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black54),
+                              ),
+                              Text(
+                                "Kalan: 250 Kcal",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black54),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Container(
                     margin: const EdgeInsets.all(16),
@@ -449,7 +356,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                             d: {
                               "isim": "Dyt. İrem Enginyurt",
                               "uzmanlik": "Klinik Beslenme Uzmanı",
-                              "resimYolu": "lib/assets/diyeetisyen2.jpeg",
+                              "resimYolu": "lib/assets/diyetisyen.webp",
                               "biyografi": "10+ yıllık tecrübe...",
                               "alanlar": [
                                 "Kilo Kontrolü",
@@ -457,7 +364,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                                 "Diyabet Beslenmesi"
                               ],
                               "iletisim": {
-                                "instagram": "@diyetisyenirem",
+                                "instagram": "@diyetisyenIrem",
                                 "mail": "irem@example.com",
                                 "telefon": "+90 555 555 5555"
                               }
@@ -502,9 +409,9 @@ class AnaSayfaIcerigi extends StatelessWidget {
                       child: Row(
                         children: [
                           PaketKart(
-                            'SIRT VE BACAK EGZERSİZİ PROGRAMI',
+                            'SIRT VE BACAK EGZERSİZİ PROGaRAMI',
                             'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
-                            "lib/assets/gym3.jpg",
+                            "lib/assets/egzersiz.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               'Sırt ve Bacak Egzersizleri',
@@ -521,7 +428,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                               [
                                 "Bench Press",
                                 "Incline Dumbell Press",
-                                "Biceps Curl"
+                                "Biceps Curl",
                               ],
                             ),
                           ),
@@ -807,8 +714,16 @@ class _AnasayfaState extends State<Anasayfa> {
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text('DİYETİSYENLİK UYGULAMASI'),
-        backgroundColor: Color(0xFFA8D5BA),
+        title: const Text(
+          'DİYETİSYENLİK UYGULAMASI',
+          style: TextStyle(
+            fontFamily: 'Poppins', // Örnek bir font adı
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFFA8D5BA),
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
