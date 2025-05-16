@@ -200,42 +200,92 @@ class AnaSayfaIcerigi extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: TableCalendar(
-                      firstDay: DateTime.utc(2010, 10, 20),
-                      lastDay: DateTime.utc(2060, 10, 20),
-                      focusedDay: selectedDay,
-                      calendarFormat:
-                          CalendarFormat.twoWeeks, // 👉 2 haftalık görünüm
-                      availableCalendarFormats: const {
-                        CalendarFormat.twoWeeks: '2 Hafta',
-                      },
-                      selectedDayPredicate: (day) =>
-                          isSameDay(day, selectedDay),
-                      onDaySelected: (newSelectedDay, focusedDay) {
-                        onDaySelected(newSelectedDay, focusedDay);
-                      },
-                      headerStyle: const HeaderStyle(
-                        titleTextStyle: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w900,
+                    child: Column(
+                      children: [
+                        TableCalendar(
+                          firstDay: DateTime.utc(2010, 10, 20),
+                          lastDay: DateTime.utc(2060, 10, 20),
+                          focusedDay: selectedDay,
+                          calendarFormat: CalendarFormat.twoWeeks,
+                          availableCalendarFormats: const {
+                            CalendarFormat.twoWeeks: '2 Hafta',
+                          },
+                          selectedDayPredicate: (day) =>
+                              isSameDay(day, selectedDay),
+                          onDaySelected: (newSelectedDay, focusedDay) {
+                            onDaySelected(newSelectedDay, focusedDay);
+                            _showAppointmentDialog(context, newSelectedDay);
+                          },
+                          headerStyle: const HeaderStyle(
+                            titleTextStyle: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          calendarStyle: const CalendarStyle(
+                            todayTextStyle: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            todayDecoration: BoxDecoration(
+                              color: Colors.green,
+                              shape: BoxShape.circle,
+                            ),
+                            selectedDecoration: BoxDecoration(
+                              color: Colors.orange,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
                         ),
-                      ),
-                      calendarStyle: const CalendarStyle(
-                        todayTextStyle: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                        StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('appointments')
+                              .where('userId',
+                                  isEqualTo:
+                                      FirebaseAuth.instance.currentUser?.uid)
+                              .where('date',
+                                  isEqualTo: Timestamp.fromDate(selectedDay))
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return SizedBox.shrink();
+                            }
+
+                            final appointments = snapshot.data!.docs;
+                            if (appointments.isEmpty) {
+                              return SizedBox.shrink();
+                            }
+
+                            return Column(
+                              children: appointments.map((doc) {
+                                final data = doc.data() as Map<String, dynamic>;
+                                return Card(
+                                  margin: EdgeInsets.only(top: 8),
+                                  child: ListTile(
+                                    leading: Icon(Icons.event,
+                                        color: Color(0xFF58A399)),
+                                    title: Text('Randevu: ${data['time']}'),
+                                    subtitle: Text(
+                                        'Diyetisyen: ${data['dietitianName']}'),
+                                    trailing: IconButton(
+                                      icon:
+                                          Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () async {
+                                        await FirebaseFirestore.instance
+                                            .collection('appointments')
+                                            .doc(doc.id)
+                                            .delete();
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          },
                         ),
-                        todayDecoration: BoxDecoration(
-                          color: Colors.green,
-                          shape: BoxShape.circle,
-                        ),
-                        selectedDecoration: BoxDecoration(
-                          color: Colors.orange,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                   const AdimSayarWidget(),
@@ -1566,4 +1616,152 @@ class _KaloriTakipWidgetState extends State<KaloriTakipWidget> {
       ],
     );
   }
+}
+
+void _showAppointmentDialog(BuildContext context, DateTime selectedDate) {
+  final TextEditingController timeController = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Randevu Al'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Tarih: ${DateFormat('dd/MM/yyyy').format(selectedDate)}'),
+          SizedBox(height: 16),
+          TextField(
+            controller: timeController,
+            decoration: InputDecoration(
+              labelText: 'Saat (HH:mm)',
+              hintText: 'Örn: 14:30',
+            ),
+          ),
+          SizedBox(height: 16),
+          TextField(
+            controller: noteController,
+            decoration: InputDecoration(
+              labelText: 'Not',
+              hintText: 'Randevu notu ekleyin',
+            ),
+            maxLines: 3,
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('İptal'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            if (timeController.text.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Lütfen saat girin')),
+              );
+              return;
+            }
+
+            try {
+              final user = FirebaseAuth.instance.currentUser;
+              if (user == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Lütfen giriş yapın')),
+                );
+                return;
+              }
+
+              // Diyetisyen bilgilerini al
+              final userDoc = await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(user.uid)
+                  .get();
+
+              final dietitianId = userDoc.data()?['dietitianId'];
+              if (dietitianId == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text('Önce bir diyetisyene üye olmalısınız')),
+                );
+                return;
+              }
+
+              final dietitianDoc = await FirebaseFirestore.instance
+                  .collection('dietitians')
+                  .doc(dietitianId)
+                  .get();
+
+              if (!dietitianDoc.exists) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Diyetisyen bilgileri bulunamadı')),
+                );
+                return;
+              }
+
+              // Randevu saatini kontrol et
+              final timeRegex = RegExp(r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$');
+              if (!timeRegex.hasMatch(timeController.text)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text('Lütfen geçerli bir saat girin (HH:mm)')),
+                );
+                return;
+              }
+
+              // Aynı gün ve saatte randevu var mı kontrol et
+              final existingAppointments = await FirebaseFirestore.instance
+                  .collection('appointments')
+                  .where('dietitianId', isEqualTo: dietitianId)
+                  .where('date', isEqualTo: Timestamp.fromDate(selectedDate))
+                  .where('time', isEqualTo: timeController.text)
+                  .get();
+
+              if (existingAppointments.docs.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content:
+                          Text('Bu saatte başka bir randevu bulunmaktadır')),
+                );
+                return;
+              }
+
+              // Randevuyu kaydet
+              await FirebaseFirestore.instance.collection('appointments').add({
+                'userId': user.uid,
+                'userName':
+                    userDoc.data()?['nameSurname'] ?? 'İsimsiz Kullanıcı',
+                'dietitianId': dietitianId,
+                'dietitianName':
+                    dietitianDoc.data()?['nameSurname'] ?? 'İsimsiz Diyetisyen',
+                'date': Timestamp.fromDate(selectedDate),
+                'time': timeController.text,
+                'note': noteController.text,
+                'status': 'pending',
+                'createdAt': FieldValue.serverTimestamp(),
+              });
+
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Randevu başarıyla oluşturuldu')),
+              );
+            } catch (e) {
+              print(
+                  'Randevu oluşturma hatası: $e'); // Hata detayını konsola yazdır
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(
+                        'Randevu oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.')),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF58A399),
+            foregroundColor: Colors.white,
+          ),
+          child: Text('Randevu Al'),
+        ),
+      ],
+    ),
+  );
 }

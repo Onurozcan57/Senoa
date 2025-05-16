@@ -279,11 +279,35 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                             child: Row(
                               children: [
                                 ClipOval(
-                                  child: Image.asset(
-                                    "lib/assets/Nisa_Sakar.png",
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
+                                  child: StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('dietitians')
+                                        .doc(dietitianId)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Image.asset(
+                                          "lib/assets/kadin.png",
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        );
+                                      }
+
+                                      final data = snapshot.data?.data()
+                                          as Map<String, dynamic>?;
+                                      final gender =
+                                          data?['gender'] ?? 'female';
+
+                                      return Image.asset(
+                                        gender == 'male'
+                                            ? "lib/assets/erekk.jpeg"
+                                            : "lib/assets/kadin.png",
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
                                   ),
                                 ),
                                 SizedBox(width: 16),
@@ -422,20 +446,86 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 20),
-                      MealCard(
-                        mealTime: "Sabah",
-                        meal: "Yulaf ezmesi, meyve, yeşil çay",
-                        imageAsset: "lib/assets/yulaf.jpeg",
-                      ),
-                      MealCard(
-                        mealTime: "Öğle",
-                        meal: "Izgara tavuk, salata, tam tahıllı ekmek",
-                        imageAsset: "lib/assets/ogle.jpg",
-                      ),
-                      MealCard(
-                        mealTime: "Akşam",
-                        meal: "Somon, sebzeler, esmer pirinç",
-                        imageAsset: "lib/assets/aksam.png",
+                      FutureBuilder<String?>(
+                        future: _getUserDietitianId(),
+                        builder: (context, dietitianIdSnapshot) {
+                          if (!dietitianIdSnapshot.hasData ||
+                              dietitianIdSnapshot.data == null) {
+                            return Center(
+                                child: Text('Diyetisyen bulunamadı.'));
+                          }
+                          final dietitianId = dietitianIdSnapshot.data!;
+                          return FutureBuilder<String?>(
+                            future: _getUserName(),
+                            builder: (context, userNameSnapshot) {
+                              if (!userNameSnapshot.hasData ||
+                                  userNameSnapshot.data == null) {
+                                return Center(
+                                    child: Text('Kullanıcı adı bulunamadı.'));
+                              }
+                              final userName = userNameSnapshot.data!;
+                              return StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('dietPlans')
+                                    .doc(dietitianId)
+                                    .collection('plans')
+                                    .where('userInfo.name', isEqualTo: userName)
+                                    .orderBy('createdAt', descending: true)
+                                    .limit(1)
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    print('Hata: \\${snapshot.error}');
+                                    return Center(
+                                        child: Text('Bir hata oluştu'));
+                                  }
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.data!.docs.isEmpty) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Text(
+                                        'Henüz diyet listesi oluşturulmamış',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  final planData = snapshot.data!.docs.first
+                                      .data() as Map<String, dynamic>;
+                                  final mealData =
+                                      planData['meals'] as Map<String, dynamic>;
+                                  return Column(
+                                    children: [
+                                      MealCard(
+                                        mealTime: "Sabah",
+                                        meal: mealData['breakfast'] ??
+                                            'Henüz belirlenmedi',
+                                        imageAsset: "lib/assets/yulaf.jpeg",
+                                      ),
+                                      MealCard(
+                                        mealTime: "Öğle",
+                                        meal: mealData['lunch'] ??
+                                            'Henüz belirlenmedi',
+                                        imageAsset: "lib/assets/ogle.jpg",
+                                      ),
+                                      MealCard(
+                                        mealTime: "Akşam",
+                                        meal: mealData['dinner'] ??
+                                            'Henüz belirlenmedi',
+                                        imageAsset: "lib/assets/aksam.png",
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
                       ),
                       SizedBox(height: 30),
                     ],
@@ -563,4 +653,20 @@ void _showPopup(BuildContext context, String baslik, String aciklama) {
       ),
     ),
   );
+}
+
+Future<String?> _getUserDietitianId() async {
+  final userDoc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .get();
+  return userDoc.data()?['dietitianId'];
+}
+
+Future<String?> _getUserName() async {
+  final userDoc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .get();
+  return userDoc.data()?['nameSurname'];
 }

@@ -5,6 +5,7 @@ import 'package:senoa/YemekTarifleri.dart';
 import 'package:senoa/DiyProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class Diyanasayfa extends StatefulWidget {
   const Diyanasayfa({super.key});
@@ -253,11 +254,13 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
-                          final userData = snapshot.data!.docs[index].data()
-                              as Map<String, dynamic>;
+                          final userDoc = snapshot.data!.docs[index];
+                          final userData =
+                              userDoc.data() as Map<String, dynamic>;
                           return Padding(
                             padding: const EdgeInsets.all(16),
                             child: Patients(
+                              userId: userDoc.id,
                               nameSurname: userData['nameSurname'] ??
                                   'İsimsiz Kullanıcı',
                               age: userData['age']?.toString() ??
@@ -398,12 +401,14 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
 }
 
 class Patients extends StatelessWidget {
+  final String userId;
   final String nameSurname;
   final String age;
   final int weight;
   final int height;
 
   Patients({
+    required this.userId,
     required this.nameSurname,
     required this.age,
     required this.height,
@@ -419,6 +424,7 @@ class Patients extends StatelessWidget {
         onTap: () {
           _showPopup(
             context,
+            userId,
             nameSurname,
             age,
             height,
@@ -495,6 +501,7 @@ class Patients extends StatelessWidget {
 
 void _showPopup(
   BuildContext context,
+  String userId,
   String nameSurname,
   String age,
   int height,
@@ -507,13 +514,15 @@ void _showPopup(
   final TextEditingController _lunchController = TextEditingController();
   final TextEditingController _dinnerController = TextEditingController();
 
+  print('userId: $userId, age: $age, height: $height, weight: $weight');
+
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      backgroundColor: const Color(0xFFA8D5BA), // Arka plan
+      backgroundColor: const Color(0xFFA8D5BA),
       contentPadding: const EdgeInsets.all(20),
       content: SingleChildScrollView(
         child: Column(
@@ -532,10 +541,119 @@ void _showPopup(
             ),
             SizedBox(height: 20),
             _infoRow("İsim ve Soyisim:", nameSurname),
-            _infoRow("Yaş:", age),
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .where('nameSurname', isEqualTo: nameSurname)
+                  .snapshots()
+                  .map((snapshot) => snapshot.docs.first),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return _infoRow("Yaş:", "Hesaplanıyor...");
+                }
+
+                final userData = snapshot.data?.data() as Map<String, dynamic>?;
+                if (userData == null || userData['birthDate'] == null) {
+                  return _infoRow("Yaş:", "Belirtilmemiş");
+                }
+
+                final birthDate = DateTime.parse(userData['birthDate']);
+                final today = DateTime.now();
+                int age = today.year - birthDate.year;
+
+                // Doğum günü henüz gelmediyse yaşı bir azalt
+                if (today.month < birthDate.month ||
+                    (today.month == birthDate.month &&
+                        today.day < birthDate.day)) {
+                  age--;
+                }
+
+                return _infoRow("Yaş:", "$age");
+              },
+            ),
             _infoRow("Boy:", "$height cm"),
             _infoRow("Kilo:", "$weight kg"),
             _infoRow("Vücut Kitle Endeksi:", bmiResult),
+            SizedBox(height: 20),
+            Divider(thickness: 1.2, color: Color(0xFF58A399)),
+            SizedBox(height: 10),
+            Text("Randevu Bilgileri", style: _sectionTitleStyle),
+            SizedBox(height: 10),
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('appointments')
+                  .where('userName', isEqualTo: nameSurname)
+                  .where('dietitianId',
+                      isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                  .orderBy('date', descending: false)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                final appointments = snapshot.data!.docs;
+                if (appointments.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Henüz randevu bulunmamaktadır',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  );
+                }
+
+                return Column(
+                  children: appointments.map((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    final date = (data['date'] as Timestamp).toDate();
+                    return Card(
+                      margin: EdgeInsets.symmetric(vertical: 4),
+                      child: ListTile(
+                        leading: Icon(Icons.event, color: Color(0xFF58A399)),
+                        title: Text(
+                          '${DateFormat('dd/MM/yyyy').format(date)} - ${data['time']}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Durum: ${data['status'] ?? 'Beklemede'}'),
+                            if (data['note'] != null &&
+                                data['note'].toString().isNotEmpty)
+                              Text('Not: ${data['note']}'),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () async {
+                            try {
+                              await FirebaseFirestore.instance
+                                  .collection('appointments')
+                                  .doc(doc.id)
+                                  .delete();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Randevu başarıyla silindi')),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        'Randevu silinirken bir hata oluştu')),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
             SizedBox(height: 20),
             Divider(thickness: 1.2, color: Color(0xFF58A399)),
             SizedBox(height: 10),
@@ -551,14 +669,33 @@ void _showPopup(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton.icon(
-                  onPressed: () {
+                  onPressed: () async {
                     final sabah = _breakfastController.text;
                     final ogle = _lunchController.text;
                     final aksam = _dinnerController.text;
 
-                    print("Sabah: $sabah");
-                    print("Öğle: $ogle");
-                    print("Akşam: $aksam");
+                    print('breakfast: $sabah, lunch: $ogle, dinner: $aksam');
+
+                    // Öğünleri Firestore'a kaydet
+                    try {
+                      await addDietPlanForUser(
+                        userId: userId,
+                        breakfast: sabah,
+                        lunch: ogle,
+                        dinner: aksam,
+                        age: age,
+                        height: height.toString(),
+                        weight: weight.toString(),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text('Diyet planı başarıyla kaydedildi!')),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Hata oluştu: $e')),
+                      );
+                    }
 
                     Navigator.pop(
                       context,
@@ -645,3 +782,42 @@ final _sectionTitleStyle = TextStyle(
   fontWeight: FontWeight.bold,
   color: Color(0xFF58A399),
 );
+
+Future<void> addDietPlanForUser({
+  required String userId,
+  required String breakfast,
+  required String lunch,
+  required String dinner,
+  required String age,
+  required String height,
+  required String weight,
+}) async {
+  // 1. Kullanıcının adını Firestore'dan çek
+  final userDoc =
+      await FirebaseFirestore.instance.collection('users').doc(userId).get();
+  final userName = userDoc.data()?['nameSurname'] ?? '';
+
+  // 2. Diyetisyen ID'sini al
+  final dietitianId = FirebaseAuth.instance.currentUser!.uid;
+
+  // 3. Planı ekle
+  await FirebaseFirestore.instance
+      .collection('dietPlans')
+      .doc(dietitianId)
+      .collection('plans')
+      .add({
+    'createdAt': FieldValue.serverTimestamp(),
+    'meals': {
+      'breakfast': breakfast,
+      'lunch': lunch,
+      'dinner': dinner,
+    },
+    'userInfo': {
+      'name': userName, // Firestore'dan çekilen ad!
+      'age': age,
+      'height': height,
+      'weight': weight,
+      'userId': userId,
+    }
+  });
+}
