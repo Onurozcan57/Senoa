@@ -344,9 +344,9 @@ class AnaSayfaIcerigi extends StatelessWidget {
                       child: Row(
                         children: [
                           PaketKart(
-                            'SIRT VE BACAK EGZERSİZİ PROGaRAMI',
-                            'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
-                            "lib/assets/gym3.jpg",
+                            'SIRT VE BACAK EGZERSİZİ PROGRAMI',
+                            '',
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               'Sırt ve Bacak Egzersizleri',
@@ -355,8 +355,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'GÖĞÜS VE ÖN KOL PROGRAMI',
-                            'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
-                            "lib/assets/gym3.jpg",
+                            '',
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Göğüs ve Ön Kol Egzersizleri",
@@ -369,8 +369,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'OMUZ VE ARKA KOL PROGRAMI',
-                            'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
-                            "lib/assets/gym3.jpg",
+                            '',
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Omuz ve Arka Kol Programı",
@@ -383,8 +383,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'FULL BODY PROGRAM',
-                            'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
-                            "lib/assets/gym3.jpg",
+                            '',
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Full Body Egzersizleri",
@@ -393,8 +393,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             "KARDİYO PROGRAMI",
-                            "Yağ yağmak ve ödem atmak için egzersizler",
-                            "lib/assets/gym3.jpg",
+                            "",
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Kardiyo Egzersizleri",
@@ -1207,20 +1207,25 @@ class _KaloriTakipWidgetState extends State<KaloriTakipWidget> {
         const SizedBox(height: 5),
         Align(
           alignment: Alignment.centerRight,
-          child: ElevatedButton.icon(
+          child: ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ChatPage()),
               );
             },
-            icon: const Icon(Icons.chat_bubble_outline),
-            label: const Text("KAÇ KALORİ?"),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green.shade600,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(12),
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                'lib/assets/image.png',
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
               ),
             ),
           ),

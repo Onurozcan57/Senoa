@@ -114,7 +114,9 @@ flutter:
     - lib/assets/diyetisyen.webp
     - lib/assets/egzersiz.jpg
     - lib/assets/arkaPlan_egzersiz.jpeg
-  
+    - lib/assets/fitnes1.jpg
+    - lib/assets/fitnes2.jpg
+    - lib/assets/image.png
      #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
