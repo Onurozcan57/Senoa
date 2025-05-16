@@ -1,6 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class Appointment {
+  final String id;
+  final String userId;
+  final String dietitianId;
+  final DateTime date;
+  final TimeOfDay time;
+  final String status;
+  final String notes;
+  final DateTime createdAt;
+
+  Appointment({
+    required this.id,
+    required this.userId,
+    required this.dietitianId,
+    required this.date,
+    required this.time,
+    required this.status,
+    required this.notes,
+    required this.createdAt,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': userId,
+      'dietitianId': dietitianId,
+      'date': date,
+      'time': '${time.hour}:${time.minute}',
+      'status': status,
+      'notes': notes,
+      'createdAt': createdAt,
+    };
+  }
+}
 
 class Diyetisyenler extends StatefulWidget {
   @override
@@ -89,7 +124,8 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
                           'ad': data['nameSurname'] ?? 'Diyetisyen Adı',
                           'uzmanlik':
                               data['expertise'] ?? 'Klinik Beslenme Uzmanı',
-                          'resim': 'lib/assets/kadin.png',
+                          'resim': data['image'] ??
+                              'lib/assets/default_dietitian.png',
                           'biyografi': data['biography'] ??
                               'Biyografi bilgisi bulunmamaktadır.',
                           'iletisim': {
@@ -122,14 +158,151 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
                             child: ListTile(
                               contentPadding: EdgeInsets.all(12),
                               leading: CircleAvatar(
-                                backgroundImage: AssetImage(d['resim']),
+                                backgroundImage: AssetImage(d['resim'] ??
+                                    'lib/assets/default_dietitian.png'),
                                 radius: 32,
+                                onBackgroundImageError:
+                                    (exception, stackTrace) {
+                                  // Resim yüklenemezse varsayılan resmi göster
+                                  Image.asset(
+                                      'lib/assets/default_dietitian.png');
+                                },
                               ),
                               title: Text(d['ad'],
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
                               subtitle: Text(d['uzmanlik']),
-                              trailing: Icon(Icons.arrow_forward_ios),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser?.uid)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return ElevatedButton(
+                                          onPressed: () async {
+                                            final user = FirebaseAuth
+                                                .instance.currentUser;
+                                            if (user == null) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Lütfen giriş yapın')),
+                                              );
+                                              return;
+                                            }
+
+                                            try {
+                                              await FirebaseFirestore.instance
+                                                  .collection('users')
+                                                  .doc(user.uid)
+                                                  .update({
+                                                'dietitianId': d['id'],
+                                                'subscriptionDate': FieldValue
+                                                    .serverTimestamp(),
+                                              });
+
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Diyetisyene başarıyla üye oldunuz')),
+                                              );
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Üyelik işlemi sırasında bir hata oluştu: $e')),
+                                              );
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color(0xFF58A399),
+                                            foregroundColor: Colors.white,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 8),
+                                          ),
+                                          child: Text('Üye Ol'),
+                                        );
+                                      }
+
+                                      final userData = snapshot.data?.data()
+                                          as Map<String, dynamic>?;
+                                      final isSubscribed =
+                                          userData?['dietitianId'] == d['id'];
+
+                                      return ElevatedButton(
+                                        onPressed: () async {
+                                          final user =
+                                              FirebaseAuth.instance.currentUser;
+                                          if (user == null) return;
+
+                                          try {
+                                            if (isSubscribed) {
+                                              await FirebaseFirestore.instance
+                                                  .collection('users')
+                                                  .doc(user.uid)
+                                                  .update({
+                                                'dietitianId':
+                                                    FieldValue.delete(),
+                                                'subscriptionDate':
+                                                    FieldValue.delete(),
+                                              });
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Üyelik iptal edildi')),
+                                              );
+                                            } else {
+                                              await FirebaseFirestore.instance
+                                                  .collection('users')
+                                                  .doc(user.uid)
+                                                  .update({
+                                                'dietitianId': d['id'],
+                                                'subscriptionDate': FieldValue
+                                                    .serverTimestamp(),
+                                              });
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Diyetisyene başarıyla üye oldunuz')),
+                                              );
+                                            }
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      'İşlem sırasında bir hata oluştu: $e')),
+                                            );
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: isSubscribed
+                                              ? Colors.red
+                                              : Color(0xFF58A399),
+                                          foregroundColor: Colors.white,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
+                                        ),
+                                        child: Text(isSubscribed
+                                            ? 'İptal Et'
+                                            : 'Üye Ol'),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.arrow_forward_ios),
+                                ],
+                              ),
                               onTap: () => showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
@@ -168,13 +341,28 @@ class DiyetisyenDetaySheet extends StatefulWidget {
 class _DiyetisyenDetaySheetState extends State<DiyetisyenDetaySheet> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-  String? _lastAppointmnetSummary;
+  final TextEditingController _notesController = TextEditingController();
+  bool _isLoading = false;
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 30)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFF58A399),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -187,10 +375,73 @@ class _DiyetisyenDetaySheetState extends State<DiyetisyenDetaySheet> {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFF58A399),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _selectedTime) {
       setState(() {
         _selectedTime = picked;
+      });
+    }
+  }
+
+  Future<void> _bookAppointment() async {
+    if (_selectedDate == null || _selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lütfen tarih ve saat seçin')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception('Kullanıcı girişi yapılmamış');
+      }
+
+      // Randevu oluştur
+      final appointment = Appointment(
+        id: '',
+        userId: user.uid,
+        dietitianId: widget.d['id'],
+        date: _selectedDate!,
+        time: _selectedTime!,
+        status: 'pending',
+        notes: _notesController.text,
+        createdAt: DateTime.now(),
+      );
+
+      // Firestore'a kaydet
+      await FirebaseFirestore.instance
+          .collection('appointments')
+          .add(appointment.toMap());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Randevu talebiniz alındı')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Randevu alınamadı: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -221,7 +472,8 @@ class _DiyetisyenDetaySheetState extends State<DiyetisyenDetaySheet> {
             SizedBox(height: 20),
             CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage(widget.d['resim']),
+              backgroundImage: AssetImage(
+                  widget.d['resim'] ?? 'lib/assets/default_dietitian.png'),
             ),
             SizedBox(height: 16),
             Text(
@@ -248,55 +500,63 @@ class _DiyetisyenDetaySheetState extends State<DiyetisyenDetaySheet> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            Text("Instagram: ${iletisim['instagram']}"),
-            Text("Email: ${iletisim['mail']}"),
-            Text("Telefon: ${iletisim['telefon']}"),
+            ListTile(
+              leading: Icon(Icons.email),
+              title: Text(iletisim['mail']),
+            ),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text(iletisim['telefon']),
+            ),
+            SizedBox(height: 24),
+            Text(
+              'Randevu Al',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () => _selectDate(context),
+              icon: Icon(Icons.calendar_today),
+              label: Text(_selectedDate == null
+                  ? 'Tarih Seçin'
+                  : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF58A399),
+                foregroundColor: Colors.white,
+              ),
+            ),
+            SizedBox(height: 8),
+            ElevatedButton.icon(
+              onPressed: () => _selectTime(context),
+              icon: Icon(Icons.access_time),
+              label: Text(_selectedTime == null
+                  ? 'Saat Seçin'
+                  : '${_selectedTime!.hour}:${_selectedTime!.minute.toString().padLeft(2, '0')}'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF58A399),
+                foregroundColor: Colors.white,
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _notesController,
+              decoration: InputDecoration(
+                labelText: 'Notlar (İsteğe bağlı)',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
             SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () async {
-                await _selectDate(context);
-                await _selectTime(context);
-                if (_selectedDate != null && _selectedTime != null) {
-                  final dateStr =
-                      DateFormat('dd.MM.yyyy').format(_selectedDate!);
-                  final timeStr = _selectedTime!.format(context);
-                  try {
-                    await FirebaseFirestore.instance
-                        .collection('appointments')
-                        .add({
-                      'dietitianId': widget.d['id'],
-                      'dietitianName': widget.d['ad'],
-                      'date': _selectedDate!.toIso8601String(),
-                      'time': '${_selectedTime!.hour}:${_selectedTime!.minute}',
-                      'createdAt': FieldValue.serverTimestamp(),
-                    });
-
-                    String dateStr =
-                        "${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}";
-                    String timeStr =
-                        "${_selectedTime!.hour}:${_selectedTime!.minute.toString().padLeft(2, '0')}";
-
-                    setState(() {
-                      _lastAppointmnetSummary =
-                          "Randevunuz $dateStr $timeStr olarak kaydedildi 🎉";
-                    });
-
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(_lastAppointmnetSummary!),
-                    ));
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text('Randevu kaydedilirken bir hata oluştu: $e'),
-                    ));
-                  }
-                }
-              },
+              onPressed: _isLoading ? null : _bookAppointment,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 190, 128, 105),
-                padding: EdgeInsets.symmetric(vertical: 12),
+                backgroundColor: Color(0xFF58A399),
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 16),
               ),
-              child: Text('Randevu Al'),
+              child: _isLoading
+                  ? CircularProgressIndicator(color: Colors.white)
+                  : Text('Randevu Al'),
             ),
           ],
         ),

@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isDietitian = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String? _selectedGender;
 
   @override
   Widget build(BuildContext context) {
@@ -162,54 +163,101 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
+    print('Giriş fonksiyonu başladı');
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
 
+    print('Email: $email');
+    print('Şifre: ${password.length} karakter');
+
+    if (email.isEmpty || password.isEmpty) {
+      print('Email veya şifre boş');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Email ve şifre boş olamaz')),
+      );
+      return;
+    }
+
     try {
+      print('Giriş denemesi yapılıyor...');
+      final Auth _auth = Auth();
+      await _auth.signIn(email: email, password: password);
+
+      // Kullanıcının seçtiği role göre koleksiyonu kontrol et
+      String collection = isDietitian ? 'dietitians' : 'users';
+      print('Koleksiyon kontrolü: $collection');
+
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection(collection)
+          .doc(_auth.currentUser!.uid)
+          .get();
+
+      print('Firestore kontrolü: ${userDoc.exists}');
+
+      if (!userDoc.exists) {
+        print('Kullanıcı yanlış koleksiyonda');
+        await _auth.signOut();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Bu hesap ${isDietitian ? "diyetisyen" : "kullanıcı"} hesabı değil')),
+        );
+        return;
+      }
+
       // Rol yönlendirmesi
       if (isDietitian) {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-        print("Giriş başarılı: ${userCredential.user?.uid}");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Diyanasayfa()),
         );
       } else {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-        print("Giriş başarılı: ${userCredential.user?.uid}");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Anasayfa()),
         );
       }
     } on FirebaseAuthException catch (e) {
+      print('Firebase Auth Hatası: ${e.code} - ${e.message}');
       String errorMessage = "Bir hata oluştu";
       if (e.code == 'user-not-found') {
         errorMessage = 'Kullanıcı bulunamadı';
       } else if (e.code == 'wrong-password') {
         errorMessage = 'Yanlış şifre';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Geçersiz email formatı';
+      } else if (e.code == 'user-disabled') {
+        errorMessage = 'Bu hesap devre dışı bırakılmış';
+      } else if (e.code == 'too-many-requests') {
+        errorMessage =
+            'Çok fazla başarısız giriş denemesi. Lütfen daha sonra tekrar deneyin';
       } else {
         errorMessage = e.message ?? "Bilinmeyen hata";
       }
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(errorMessage)));
+    } catch (e) {
+      print('Giriş hatası: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Beklenmeyen bir hata oluştu: $e')));
     }
   }
 
   void _showRegisterPopup(BuildContext context) {
+    print('Kayıt popup\'ı açılıyor');
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController nameController = TextEditingController();
     final TextEditingController surnameController = TextEditingController();
+    final TextEditingController biographyController = TextEditingController();
     DateTime? selectedDate;
-
     String? emailError;
     String? passwordError;
     String? dateError;
     String? nameError;
     String? surnameError;
+    String? genderError;
+    String? biographyError;
 
     final Auth _auth = Auth();
 
@@ -250,6 +298,143 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscure: true),
                     if (passwordError != null)
                       Text(passwordError!,
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 12)),
+                    if (isDietitian) ...[
+                      _customInputField(biographyController, "Biyografi",
+                          maxLines: 3),
+                      if (biographyError != null)
+                        Text(biographyError!,
+                            style: const TextStyle(
+                                color: Colors.red, fontSize: 12)),
+                    ],
+                    const SizedBox(height: 10),
+                    // Cinsiyet seçimi
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Cinsiyet",
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedGender = 'female';
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                    decoration: BoxDecoration(
+                                      color: _selectedGender == 'female'
+                                          ? Color(0xFF58A399).withOpacity(0.1)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: _selectedGender == 'female'
+                                            ? Color(0xFF58A399)
+                                            : Colors.grey.shade300,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.female,
+                                          color: _selectedGender == 'female'
+                                              ? Color(0xFF58A399)
+                                              : Colors.grey,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Kadın',
+                                          style: TextStyle(
+                                            color: _selectedGender == 'female'
+                                                ? Color(0xFF58A399)
+                                                : Colors.grey,
+                                            fontWeight:
+                                                _selectedGender == 'female'
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedGender = 'male';
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                    decoration: BoxDecoration(
+                                      color: _selectedGender == 'male'
+                                          ? Color(0xFF58A399).withOpacity(0.1)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: _selectedGender == 'male'
+                                            ? Color(0xFF58A399)
+                                            : Colors.grey.shade300,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.male,
+                                          color: _selectedGender == 'male'
+                                              ? Color(0xFF58A399)
+                                              : Colors.grey,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Erkek',
+                                          style: TextStyle(
+                                            color: _selectedGender == 'male'
+                                                ? Color(0xFF58A399)
+                                                : Colors.grey,
+                                            fontWeight:
+                                                _selectedGender == 'male'
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (genderError != null)
+                      Text(genderError!,
                           style:
                               const TextStyle(color: Colors.red, fontSize: 12)),
                     const SizedBox(height: 10),
@@ -315,89 +500,208 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () async {
+                        print('Kayıt butonu tıklandı');
+                        // Form validasyonu
+                        bool isValid = true;
                         setState(() {
-                          nameError = nameController.text.isEmpty
-                              ? "İsim giriniz"
-                              : null;
-                          surnameError = surnameController.text.isEmpty
-                              ? "Soyisim giriniz"
-                              : null;
-                          emailError = !emailController.text.contains('@')
-                              ? "Geçerli email girin"
-                              : null;
-                          passwordError = passwordController.text.length < 6
-                              ? "Şifre en az 6 karakter olmalı"
-                              : null;
-                          dateError = selectedDate == null
-                              ? "Doğum tarihi seçin"
-                              : null;
+                          emailError = null;
+                          passwordError = null;
+                          nameError = null;
+                          surnameError = null;
+                          biographyError = null;
+                          genderError = null;
+                          dateError = null;
                         });
 
-                        if (nameError == null &&
-                            surnameError == null &&
-                            emailError == null &&
-                            passwordError == null &&
-                            dateError == null) {
-                          try {
-                            await _auth.createUser(
-                              nameSurname:
-                                  '${nameController.text} ${surnameController.text}',
-                              email: emailController.text,
-                              password: passwordController.text,
-                            );
+                        // Validasyon kontrolleri
+                        if (nameController.text.isEmpty) {
+                          setState(() {
+                            nameError = 'İsim alanı zorunludur';
+                            isValid = false;
+                          });
+                        }
 
-                            // Diyetisyen veya normal kullanıcı kontrolü
+                        if (surnameController.text.isEmpty) {
+                          setState(() {
+                            surnameError = 'Soyisim alanı zorunludur';
+                            isValid = false;
+                          });
+                        }
+
+                        if (emailController.text.isEmpty) {
+                          setState(() {
+                            emailError = 'Email alanı zorunludur';
+                            isValid = false;
+                          });
+                        } else if (!emailController.text.contains('@')) {
+                          setState(() {
+                            emailError = 'Geçerli bir email adresi giriniz';
+                            isValid = false;
+                          });
+                        }
+
+                        if (passwordController.text.isEmpty) {
+                          setState(() {
+                            passwordError = 'Şifre alanı zorunludur';
+                            isValid = false;
+                          });
+                        } else if (passwordController.text.length < 6) {
+                          setState(() {
+                            passwordError = 'Şifre en az 6 karakter olmalıdır';
+                            isValid = false;
+                          });
+                        }
+
+                        if (_selectedGender == null) {
+                          setState(() {
+                            genderError = 'Cinsiyet seçimi zorunludur';
+                            isValid = false;
+                          });
+                        }
+
+                        if (selectedDate == null) {
+                          setState(() {
+                            dateError = 'Doğum tarihi seçimi zorunludur';
+                            isValid = false;
+                          });
+                        }
+
+                        if (isDietitian && biographyController.text.isEmpty) {
+                          setState(() {
+                            biographyError = 'Biyografi alanı zorunludur';
+                            isValid = false;
+                          });
+                        }
+
+                        if (!isValid) {
+                          print('Form validasyonu başarısız');
+                          return;
+                        }
+
+                        try {
+                          print('Kayıt işlemi başlatılıyor...');
+                          print(
+                              'Kullanıcı tipi: ${isDietitian ? "Diyetisyen" : "Normal Kullanıcı"}');
+
+                          // Firebase'in başlatıldığından emin ol
+                          if (FirebaseAuth.instance == null) {
+                            throw Exception('Firebase başlatılamadı');
+                          }
+
+                          if (isDietitian) {
+                            print('Diyetisyen kaydı yapılıyor...');
+                            try {
+                              await _auth.createDietitian(
+                                nameSurname:
+                                    '${nameController.text} ${surnameController.text}',
+                                email: emailController.text,
+                                password: passwordController.text,
+                                biography: biographyController.text,
+                              );
+                              print('Diyetisyen kaydı başarılı');
+                            } catch (e) {
+                              print('Diyetisyen kaydı hatası: $e');
+                              rethrow;
+                            }
+                          } else {
+                            print('Normal kullanıcı kaydı yapılıyor...');
+                            try {
+                              await _auth.createUser(
+                                nameSurname:
+                                    '${nameController.text} ${surnameController.text}',
+                                email: emailController.text,
+                                password: passwordController.text,
+                              );
+                              print('Normal kullanıcı kaydı başarılı');
+                            } catch (e) {
+                              print('Normal kullanıcı kaydı hatası: $e');
+                              rethrow;
+                            }
+                          }
+
+                          // Kullanıcı bilgilerini Firestore'a kaydet
+                          String? userId = _auth.currentUser?.uid;
+                          if (userId == null) {
+                            throw Exception('Kullanıcı ID alınamadı');
+                          }
+
+                          print('Firestore kaydı yapılıyor... UserID: $userId');
+
+                          Map<String, dynamic> userData = {
+                            'nameSurname':
+                                '${nameController.text} ${surnameController.text}',
+                            'email': emailController.text,
+                            'gender': _selectedGender,
+                            'birthDate': selectedDate!.toIso8601String(),
+                            'createdAt': FieldValue.serverTimestamp(),
+                          };
+
+                          try {
                             if (isDietitian) {
-                              // Diyetisyen kaydı
+                              userData['biography'] = biographyController.text;
+                              userData['role'] = 'dietitian';
                               await FirebaseFirestore.instance
                                   .collection('dietitians')
-                                  .doc(_auth.currentUser!.uid)
-                                  .set({
-                                'nameSurname':
-                                    '${nameController.text} ${surnameController.text}',
-                                'email': emailController.text,
-                                'birthDate': selectedDate!.toIso8601String(),
-                                'createdAt': FieldValue.serverTimestamp(),
-                              });
-                              Navigator.pop(context);
+                                  .doc(userId)
+                                  .set(userData);
+                              print(
+                                  'Diyetisyen bilgileri Firestore\'a kaydedildi');
                             } else {
-                              // Normal kullanıcı kaydı
+                              userData['role'] = 'user';
                               await FirebaseFirestore.instance
                                   .collection('users')
-                                  .doc(_auth.currentUser!.uid)
-                                  .set({
-                                'nameSurname':
-                                    '${nameController.text} ${surnameController.text}',
-                                'email': emailController.text,
-                                'birthDate': selectedDate!.toIso8601String(),
-                                'createdAt': FieldValue.serverTimestamp(),
-                              });
-
-                              Future.delayed(Duration(milliseconds: 100), () {
-                                _showBodyWeightPopup(context);
-                              });
-                              Navigator.pop(context);
+                                  .doc(userId)
+                                  .set(userData);
+                              print(
+                                  'Kullanıcı bilgileri Firestore\'a kaydedildi');
                             }
-
-                            print('Kullanıcı başarıyla kaydedildi!');
                           } catch (e) {
-                            print('Hata: $e');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      'Kayıt sırasında bir hata oluştu: $e')),
-                            );
+                            print('Firestore kayıt hatası: $e');
+                            // Firestore kaydı başarısız olursa, oluşturulan kullanıcıyı sil
+                            await _auth.currentUser?.delete();
+                            rethrow;
                           }
+
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Kayıt başarılı! Giriş yapabilirsiniz.')),
+                          );
+                        } catch (e) {
+                          print('Kayıt hatası: $e');
+                          String errorMessage = 'Kayıt işlemi başarısız oldu';
+
+                          if (e is FirebaseAuthException) {
+                            print(
+                                'Firebase Auth Hatası: ${e.code} - ${e.message}');
+                            if (e.code == 'email-already-in-use') {
+                              errorMessage = 'Bu email adresi zaten kullanımda';
+                            } else if (e.code == 'weak-password') {
+                              errorMessage = 'Şifre çok zayıf';
+                            } else if (e.code == 'invalid-email') {
+                              errorMessage = 'Geçersiz email formatı';
+                            } else if (e.code == 'operation-not-allowed') {
+                              errorMessage = 'Email/şifre girişi etkin değil';
+                            } else if (e.code == 'network-request-failed') {
+                              errorMessage =
+                                  'İnternet bağlantınızı kontrol edin';
+                            }
+                          } else {
+                            print('Beklenmeyen hata: $e');
+                            errorMessage = 'Beklenmeyen bir hata oluştu: $e';
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(errorMessage)),
+                          );
                         }
                       },
+                      child: Text('Kayıt Ol'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF58A399),
+                        backgroundColor: Color(0xFF58A399),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
                       ),
-                      child: const Text("Devam Et"),
                     ),
                   ],
                 ),
@@ -463,12 +767,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _customInputField(TextEditingController controller, String label,
-      {bool obscure = false}) {
+      {bool obscure = false, int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
         controller: controller,
         obscureText: obscure,
+        maxLines: maxLines,
         decoration: InputDecoration(
           labelText: label,
           filled: true,

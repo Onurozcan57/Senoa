@@ -68,134 +68,336 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  Future<void> _changePassword() async {
+    final TextEditingController currentPasswordController =
+        TextEditingController();
+    final TextEditingController newPasswordController = TextEditingController();
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Şifre Değiştir'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: currentPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Mevcut Şifre',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: newPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Yeni Şifre',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: confirmPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Yeni Şifre (Tekrar)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('İptal'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (newPasswordController.text !=
+                  confirmPasswordController.text) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Yeni şifreler eşleşmiyor')),
+                );
+                return;
+              }
+
+              try {
+                // Mevcut kullanıcıyı al
+                final user = _auth.currentUser;
+                if (user != null) {
+                  // Şifre değiştirme işlemi
+                  await user.updatePassword(newPasswordController.text);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Şifre başarıyla değiştirildi')),
+                  );
+                  Navigator.pop(context);
+                }
+              } on FirebaseAuthException catch (e) {
+                String message = 'Şifre değiştirme işlemi başarısız oldu';
+                if (e.code == 'requires-recent-login') {
+                  message = 'Güvenlik nedeniyle lütfen tekrar giriş yapın';
+                }
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(message)),
+                );
+              }
+            },
+            child: Text('Değiştir'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFF58A399),
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _editProfile() async {
+    final TextEditingController nameController =
+        TextEditingController(text: userData!['nameSurname']);
+    final TextEditingController emailController =
+        TextEditingController(text: userData!['email']);
+    String? selectedGender = userData!['gender'];
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Profili Düzenle'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Ad Soyad',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'E-posta',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Cinsiyet",
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: RadioListTile<String>(
+                            title: Text('Kadın'),
+                            value: 'female',
+                            groupValue: selectedGender,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGender = value;
+                              });
+                            },
+                            activeColor: Color(0xFF58A399),
+                          ),
+                        ),
+                        Expanded(
+                          child: RadioListTile<String>(
+                            title: Text('Erkek'),
+                            value: 'male',
+                            groupValue: selectedGender,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGender = value;
+                              });
+                            },
+                            activeColor: Color(0xFF58A399),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('İptal'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(_auth.currentUser!.uid)
+                    .update({
+                  'nameSurname': nameController.text,
+                  'email': emailController.text,
+                  'gender': selectedGender,
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Profil başarıyla güncellendi')),
+                );
+                Navigator.pop(context);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text('Güncelleme sırasında bir hata oluştu')),
+                );
+              }
+            },
+            child: Text('Kaydet'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFF58A399),
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: userData == null
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser?.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Bir hata oluştu'));
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          final userData = snapshot.data?.data() as Map<String, dynamic>?;
+          if (userData == null) {
+            return Center(child: Text('Kullanıcı bilgileri bulunamadı'));
+          }
+
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFFA8D5BA),
+                  Colors.white,
+                ],
+              ),
+            ),
+            child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(3),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                            onTap: _galeridenResimSec,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: _secilenResim != null
-                                      ? FileImage(_secilenResim!)
-                                      : const AssetImage(
-                                              "lib/assets/Onur_Ozcan.png")
-                                          as ImageProvider,
-                                ),
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.black.withOpacity(0.05),
-                                  ),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )),
-                        SizedBox(height: 20),
-                        Text(
-                          userData!['nameSurname'],
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          userData!['email'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        _buildInfoCard(
-                            'Doğum Tarihi',
-                            DateTime.parse(userData!['birthDate'])
-                                .toString()
-                                .split(' ')[0]),
-                        if (!isDietitian) ...[
-                          _buildInfoCard('Boy', '${userData!['height']} cm'),
-                          _buildInfoCard('Kilo', '${userData!['weight']} kg'),
-                        ],
-                        _buildInfoCard('Hesap Türü',
-                            isDietitian ? 'Diyetisyen' : 'Kullanıcı'),
-                      ],
+                  SizedBox(height: 40),
+                  CircleAvatar(
+                    radius: 60,
+                    backgroundImage: _secilenResim != null
+                        ? FileImage(_secilenResim!)
+                        : userData['gender'] == 'female'
+                            ? const AssetImage("lib/assets/default_female.png")
+                            : userData['gender'] == 'male'
+                                ? const AssetImage(
+                                    "lib/assets/default_male.png")
+                                : const AssetImage(
+                                        "lib/assets/default_avatar.png")
+                                    as ImageProvider,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    userData['nameSurname'] ?? 'İsimsiz',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: Card(
-                        color: Color.fromARGB(250, 249, 255, 255),
-                        elevation: 3,
-                        margin: EdgeInsets.all(3),
-                        child: ListTile(
-                          onTap: () {},
-                          title: Text(
-                            "Profil Bilgilerimi Düzenle",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: const Color.fromARGB(255, 26, 31, 26),
-                            ),
-                          ),
-                          leading: Icon(
-                            Icons.person,
-                            size: 45,
-                            color: const Color(0xFF58A399),
-                          ),
-                        ),
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Card(
-                      color: Color.fromARGB(250, 249, 255, 255),
-                      elevation: 10,
-                      margin: EdgeInsets.all(3),
-                      child: ListTile(
-                        onTap: () {},
-                        title: Text(
-                          "Şifremi Değiştir",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: const Color.fromARGB(255, 26, 31, 26),
-                          ),
-                        ),
-                        leading: Icon(
-                          Icons.password,
-                          size: 45,
-                          color: const Color(0xFF58A399),
-                        ),
+                  SizedBox(height: 8),
+                  Text(
+                    userData['email'] ?? 'E-posta yok',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  _buildInfoCard(
+                    title: 'Kişisel Bilgiler',
+                    children: [
+                      _buildInfoRow(
+                        Icons.cake,
+                        'Doğum Tarihi',
+                        DateTime.parse(userData['birthDate'])
+                            .toString()
+                            .split(' ')[0],
                       ),
-                    ),
+                      _buildInfoRow(
+                        Icons.height,
+                        'Boy',
+                        '${userData['height']} cm',
+                      ),
+                      _buildInfoRow(
+                        Icons.monitor_weight,
+                        'Kilo',
+                        '${userData['weight']} kg',
+                      ),
+                      _buildInfoRow(
+                        Icons.person,
+                        'Cinsiyet',
+                        userData['gender'] == 'female'
+                            ? 'Kadın'
+                            : userData['gender'] == 'male'
+                                ? 'Erkek'
+                                : 'Belirtilmemiş',
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Card(
-                      color: Color.fromARGB(250, 249, 255, 255),
-                      elevation: 10,
-                      margin: EdgeInsets.all(3),
-                      child: ListTile(
+                  SizedBox(height: 20),
+                  _buildInfoCard(
+                    title: 'Hesap İşlemleri',
+                    children: [
+                      ListTile(
+                        onTap: _editProfile,
+                        leading: Icon(Icons.edit, color: Color(0xFF58A399)),
+                        title: Text('Profili Düzenle'),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                      ),
+                      ListTile(
+                        onTap: _changePassword,
+                        leading: Icon(Icons.password, color: Color(0xFF58A399)),
+                        title: Text('Şifremi Değiştir'),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                      ),
+                      ListTile(
                         onTap: () async {
                           final Uri emailLaunchUri = Uri(
                             scheme: 'mailto',
@@ -213,112 +415,180 @@ class _ProfileState extends State<Profile> {
                             );
                           }
                         },
-                        title: Text(
-                          "Geri Bildirim Gönder",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: const Color.fromARGB(255, 26, 31, 26),
-                          ),
-                        ),
-                        leading: Icon(
-                          Icons.info,
-                          size: 45,
-                          color: const Color(0xFF58A399),
-                        ),
+                        leading: Icon(Icons.info, color: Color(0xFF58A399)),
+                        title: Text('Geri Bildirim Gönder'),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Card(
-                      color: Color.fromARGB(250, 249, 255, 255),
-                      elevation: 10,
-                      margin: EdgeInsets.all(3),
-                      child: ListTile(
+                      ListTile(
                         onTap: () {
-                          Navigator.of(context).pushReplacement(
+                          Navigator.push(
+                            context,
                             MaterialPageRoute(
-                                builder: (_) => CanliDestekPage()),
+                              builder: (context) => Scaffold(
+                                appBar: AppBar(
+                                  title: Text('Bize Ulaşın'),
+                                ),
+                                body: _buildContactSection(),
+                              ),
+                            ),
                           );
                         },
-                        title: Text(
-                          "Bize Ulaşın/Canlı Destek",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: const Color.fromARGB(255, 26, 31, 26),
-                          ),
-                        ),
-                        leading: Icon(
-                          Icons.phone,
-                          size: 45,
-                          color: const Color(0xFF58A399),
-                        ),
+                        leading: Icon(Icons.phone, color: Color(0xFF58A399)),
+                        title: Text('Bize Ulaşın/Canlı Destek'),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Card(
-                      color: Color.fromARGB(250, 249, 255, 255),
-                      elevation: 10,
-                      margin: EdgeInsets.all(3),
-                      child: ListTile(
+                      ListTile(
                         onTap: () async {
                           await _auth.signOut();
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (_) => LoginScreen()),
                           );
                         },
-                        title: Text(
-                          "Çıkış",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: const Color.fromARGB(255, 26, 31, 26),
-                          ),
-                        ),
-                        leading: Icon(
-                          Icons.output_sharp,
-                          size: 45,
-                          color: const Color(0xFF58A399),
-                        ),
+                        leading: Icon(Icons.logout, color: Colors.red),
+                        title: Text('Çıkış Yap',
+                            style: TextStyle(color: Colors.red)),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
                       ),
-                    ),
+                    ],
                   ),
+                  SizedBox(height: 30),
                 ],
               ),
             ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildInfoCard(String title, String value) {
-    return Card(
-      color: Color.fromARGB(255, 222, 221, 221),
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[700],
-              ),
-            ),
-          ],
-        ),
+  Widget _buildInfoCard(
+      {required String title, required List<Widget> children}) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF58A399),
+            ),
+          ),
+          SizedBox(height: 15),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, color: Color(0xFF58A399), size: 24),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactSection() {
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Bize Ulaşın',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          _buildContactItem(
+            Icons.email,
+            'Email',
+            'info@senoa.com',
+            () {
+              // Email işlemi
+            },
+          ),
+          _buildContactItem(
+            Icons.phone,
+            'Telefon',
+            '+90 555 123 4567',
+            () {
+              // Telefon işlemi
+            },
+          ),
+          _buildContactItem(
+            Icons.location_on,
+            'Adres',
+            'İstanbul, Türkiye',
+            () {
+              // Adres işlemi
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactItem(
+      IconData icon, String label, String value, VoidCallback onPressed) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(label),
+      trailing: Text(value),
+      onTap: onPressed,
     );
   }
 }

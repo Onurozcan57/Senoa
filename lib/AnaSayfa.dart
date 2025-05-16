@@ -12,6 +12,8 @@ import 'package:senoa/Diyetisyenler.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PaketKart extends StatelessWidget {
   final String baslik;
@@ -247,84 +249,304 @@ class AnaSayfaIcerigi extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 730,
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(children: [
-                          DiyetisyenKart(
-                            d: {
-                              "isim": "Dyt. Nisanur Irmak Şakar",
-                              "uzmanlik": "Klinik Beslenme Uzmanı",
-                              "resimYolu": "lib/assets/Nisa_Sakar.png",
-                              "biyografi": "10+ yıllık tecrübe...",
-                              "alanlar": [
-                                "Kilo Kontrolü",
-                                "Sporcu Beslenmesi",
-                                "Diyabet Beslenmesi"
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('dietitians')
+                          .limit(3)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(child: Text('Bir hata oluştu'));
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          return Center(
+                              child: Text(
+                                  'Henüz kayıtlı diyetisyen bulunmamaktadır'));
+                        }
+
+                        var dietitians = snapshot.data!.docs.map((doc) {
+                          var data = doc.data() as Map<String, dynamic>;
+                          return {
+                            'id': doc.id,
+                            'ad': data['nameSurname'] ?? 'Diyetisyen Adı',
+                            'uzmanlik':
+                                data['expertise'] ?? 'Klinik Beslenme Uzmanı',
+                            'resim': data['image'] ??
+                                'lib/assets/default_dietitian.png',
+                            'biyografi': data['biography'] ??
+                                'Biyografi bilgisi bulunmamaktadır.',
+                            'iletisim': {
+                              'instagram': data['instagram'] ?? '@diyetisyen',
+                              'mail': data['email'] ?? 'Email bilgisi yok',
+                              'telefon': data['phone'] ?? '+90 555 555 5555',
+                            }
+                          };
+                        }).toList();
+
+                        return SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Column(
+                              children: [
+                                ...dietitians
+                                    .map((d) => Card(
+                                          color: Colors.white,
+                                          shadowColor: Colors.grey,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          elevation: 4,
+                                          margin: EdgeInsets.all(16),
+                                          child: ListTile(
+                                            contentPadding: EdgeInsets.all(12),
+                                            leading: CircleAvatar(
+                                              backgroundImage: AssetImage(d[
+                                                      'resim'] ??
+                                                  'lib/assets/default_dietitian.png'),
+                                              radius: 32,
+                                            ),
+                                            title: Text(d['ad'],
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(d['uzmanlik']),
+                                                StreamBuilder<DocumentSnapshot>(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection('users')
+                                                      .doc(FirebaseAuth.instance
+                                                          .currentUser?.uid)
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    if (!snapshot.hasData) {
+                                                      return Text(
+                                                          'Yaş: Belirtilmemiş');
+                                                    }
+
+                                                    final userData =
+                                                        snapshot.data?.data()
+                                                            as Map<String,
+                                                                dynamic>?;
+                                                    if (userData == null ||
+                                                        userData['birthDate'] ==
+                                                            null) {
+                                                      return Text(
+                                                          'Yaş: Belirtilmemiş');
+                                                    }
+
+                                                    final birthDate =
+                                                        DateTime.parse(userData[
+                                                            'birthDate']);
+                                                    final age =
+                                                        DateTime.now().year -
+                                                            birthDate.year;
+                                                    return Text('Yaş: $age');
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            trailing:
+                                                StreamBuilder<DocumentSnapshot>(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection('users')
+                                                  .doc(FirebaseAuth.instance
+                                                      .currentUser?.uid)
+                                                  .snapshots(),
+                                              builder: (context, snapshot) {
+                                                if (!snapshot.hasData) {
+                                                  return ElevatedButton(
+                                                    onPressed: () async {
+                                                      final user = FirebaseAuth
+                                                          .instance.currentUser;
+                                                      if (user == null) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                              content: Text(
+                                                                  'Lütfen giriş yapın')),
+                                                        );
+                                                        return;
+                                                      }
+
+                                                      try {
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection('users')
+                                                            .doc(user.uid)
+                                                            .update({
+                                                          'dietitianId':
+                                                              d['id'],
+                                                          'subscriptionDate':
+                                                              FieldValue
+                                                                  .serverTimestamp(),
+                                                        });
+
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                              content: Text(
+                                                                  'Diyetisyene başarıyla üye oldunuz')),
+                                                        );
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                              content: Text(
+                                                                  'Üyelik işlemi sırasında bir hata oluştu: $e')),
+                                                        );
+                                                      }
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Color(0xFF58A399),
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 12,
+                                                              vertical: 8),
+                                                    ),
+                                                    child: Text('Üye Ol'),
+                                                  );
+                                                }
+
+                                                final userData = snapshot.data
+                                                        ?.data()
+                                                    as Map<String, dynamic>?;
+                                                final isSubscribed =
+                                                    userData?['dietitianId'] ==
+                                                        d['id'];
+
+                                                return ElevatedButton(
+                                                  onPressed: () async {
+                                                    final user = FirebaseAuth
+                                                        .instance.currentUser;
+                                                    if (user == null) return;
+
+                                                    try {
+                                                      if (isSubscribed) {
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection('users')
+                                                            .doc(user.uid)
+                                                            .update({
+                                                          'dietitianId':
+                                                              FieldValue
+                                                                  .delete(),
+                                                          'subscriptionDate':
+                                                              FieldValue
+                                                                  .delete(),
+                                                        });
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                              content: Text(
+                                                                  'Üyelik iptal edildi')),
+                                                        );
+                                                      } else {
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection('users')
+                                                            .doc(user.uid)
+                                                            .update({
+                                                          'dietitianId':
+                                                              d['id'],
+                                                          'subscriptionDate':
+                                                              FieldValue
+                                                                  .serverTimestamp(),
+                                                        });
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                              content: Text(
+                                                                  'Diyetisyene başarıyla üye oldunuz')),
+                                                        );
+                                                      }
+                                                    } catch (e) {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                            content: Text(
+                                                                'İşlem sırasında bir hata oluştu: $e')),
+                                                      );
+                                                    }
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        isSubscribed
+                                                            ? Colors.red
+                                                            : Color(0xFF58A399),
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                            vertical: 8),
+                                                  ),
+                                                  child: Text(isSubscribed
+                                                      ? 'İptal Et'
+                                                      : 'Üye Ol'),
+                                                );
+                                              },
+                                            ),
+                                            onTap: () => showModalBottomSheet(
+                                              context: context,
+                                              isScrollControlled: true,
+                                              backgroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                        top: Radius.circular(
+                                                            20)),
+                                              ),
+                                              builder: (_) =>
+                                                  DiyetisyenDetaySheet(d: d),
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Diyetisyenler()),
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Color(0xFFA8D5BA),
+                                    textStyle: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  child: const Text("Tümünü Gör"),
+                                ),
                               ],
-                              "iletisim": {
-                                "instagram": "@diyetisyenNisa",
-                                "mail": "nisanur@example.com",
-                                "telefon": "+90 555 555 5555"
-                              }
-                            },
-                          ),
-                          DiyetisyenKart(
-                            d: {
-                              "isim": "Dyt. Onur Özcan",
-                              "uzmanlik": "Klinik Beslenme Uzmanı",
-                              "resimYolu": "lib/assets/Onur_Ozcan.png",
-                              "biyografi": "10+ yıllık tecrübe...",
-                              "alanlar": [
-                                "Kilo Kontrolü",
-                                "Sporcu Beslenmesi",
-                                "Diyabet Beslenmesi"
-                              ],
-                              "iletisim": {
-                                "instagram": "@diyetisyenOnur",
-                                "mail": "onur@example.com",
-                                "telefon": "+90 555 555 5555"
-                              }
-                            },
-                          ),
-                          DiyetisyenKart(
-                            d: {
-                              "isim": "Dyt. İrem Enginyurt",
-                              "uzmanlik": "Klinik Beslenme Uzmanı",
-                              "resimYolu": "lib/assets/diyetisyen.webp",
-                              "biyografi": "10+ yıllık tecrübe...",
-                              "alanlar": [
-                                "Kilo Kontrolü",
-                                "Sporcu Beslenmesi",
-                                "Diyabet Beslenmesi"
-                              ],
-                              "iletisim": {
-                                "instagram": "@diyetisyenIrem",
-                                "mail": "irem@example.com",
-                                "telefon": "+90 555 555 5555"
-                              }
-                            },
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Diyetisyenler()),
-                              );
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: Color(0xFFA8D5BA),
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
                             ),
-                            child: const Text("Tümünü Gör"),
                           ),
-                        ]),
-                      ),
+                        );
+                      },
                     ),
                   ),
                   const Padding(
@@ -344,9 +566,9 @@ class AnaSayfaIcerigi extends StatelessWidget {
                       child: Row(
                         children: [
                           PaketKart(
-                            'SIRT VE BACAK EGZERSİZİ PROGRAMI',
-                            '',
-                            "lib/assets/fitnes1.jpg",
+                            'SIRT VE BACAK EGZERSİZİ PROGaRAMI',
+                            'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               'Sırt ve Bacak Egzersizleri',
@@ -355,8 +577,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'GÖĞÜS VE ÖN KOL PROGRAMI',
-                            '',
-                            "lib/assets/fitnes1.jpg",
+                            'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Göğüs ve Ön Kol Egzersizleri",
@@ -369,8 +591,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'OMUZ VE ARKA KOL PROGRAMI',
-                            '',
-                            "lib/assets/fitnes1.jpg",
+                            'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Omuz ve Arka Kol Programı",
@@ -383,8 +605,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'FULL BODY PROGRAM',
-                            '',
-                            "lib/assets/fitnes1.jpg",
+                            'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Full Body Egzersizleri",
@@ -393,8 +615,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             "KARDİYO PROGRAMI",
-                            "",
-                            "lib/assets/fitnes1.jpg",
+                            "Yağ yağmak ve ödem atmak için egzersizler",
+                            "lib/assets/gym3.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Kardiyo Egzersizleri",
@@ -643,20 +865,72 @@ class _AnasayfaState extends State<Anasayfa> {
     );
   }
 
+  Future<void> _subscribeToDietitian(String dietitianId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lütfen giriş yapın')),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({
+        'dietitianId': dietitianId,
+        'subscriptionDate': FieldValue.serverTimestamp(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Diyetisyene başarıyla üye oldunuz')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Üyelik işlemi sırasında bir hata oluştu: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text(
-          'DİYETİSYENLİK UYGULAMASI',
-          style: TextStyle(
-            fontFamily: 'Poppins', // Örnek bir font adı
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+        title: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser?.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Text(
+                'DİYETİSYENLİK UYGULAMASI',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              );
+            }
+
+            final userData = snapshot.data?.data() as Map<String, dynamic>?;
+            final userName =
+                userData?['nameSurname'] ?? 'DİYETİSYENLİK UYGULAMASI';
+
+            return Text(
+              userName,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            );
+          },
         ),
         backgroundColor: const Color(0xFFA8D5BA),
       ),
@@ -740,15 +1014,43 @@ class _AnasayfaState extends State<Anasayfa> {
 
 /// 📌 DİYETİSYEN KARTI  ────────────────────────────────────────────────
 class DiyetisyenKart extends StatelessWidget {
-  final Map<String, dynamic> d; // Kart + detay verisi
+  final Map<String, dynamic> d;
 
   const DiyetisyenKart({super.key, required this.d});
+
+  Future<void> _subscribeToDietitian(
+      BuildContext context, String dietitianId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lütfen giriş yapın')),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({
+        'dietitianId': dietitianId,
+        'subscriptionDate': FieldValue.serverTimestamp(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Diyetisyene başarıyla üye oldunuz')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Üyelik işlemi sırasında bir hata oluştu: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // ⬆️ Alttan detay ekranını aç
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
@@ -774,15 +1076,13 @@ class DiyetisyenKart extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: Stack(
             children: [
-              // 📷 Fotoğraf
               AspectRatio(
-                aspectRatio: 2, // kare
+                aspectRatio: 2,
                 child: Image.asset(
                   d['resimYolu'],
                   fit: BoxFit.cover,
                 ),
               ),
-              // 🌫️ Alt gölge + isim/uzmanlık
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -808,6 +1108,18 @@ class DiyetisyenKart extends StatelessWidget {
                           fontSize: 14,
                         ),
                       ),
+                      SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () =>
+                            _subscribeToDietitian(context, d['id']),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.blue[700],
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        ),
+                        child: Text('Üye Ol'),
+                      ),
                     ],
                   ),
                 ),
@@ -825,6 +1137,35 @@ Widget _diyetisyenDetay(
     BuildContext context, Map<String, dynamic> d, ScrollController c) {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+
+  Future<void> _subscribeToDietitian(
+      BuildContext context, String dietitianId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lütfen giriş yapın')),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({
+        'dietitianId': dietitianId,
+        'subscriptionDate': FieldValue.serverTimestamp(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Diyetisyene başarıyla üye oldunuz')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Üyelik işlemi sırasında bir hata oluştu: $e')),
+      );
+    }
+  }
 
   Future<void> pickDate() async {
     final picked = await showDatePicker(
@@ -886,23 +1227,20 @@ Widget _diyetisyenDetay(
         Text("Mail: ${d['iletisim']['mail']}"),
         Text("Telefon: ${d['iletisim']['telefon']}"),
         const SizedBox(height: 24),
-
-        // Tarih & Saat Seçiciler
         ElevatedButton(
-          onPressed: () async {
-            await pickDate();
-            await pickTime();
-            if (selectedDate != null && selectedTime != null) {
-              final dateStr = DateFormat('dd.MM.yyyy').format(selectedDate!);
-              final timeStr = selectedTime!.format(context);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                      'Randevunuz $dateStr $timeStr olarak kaydedildi 🎉')));
-            }
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF58A399)),
-          child: const Text("Randevu Tarih & Saat Seç",
-              style: TextStyle(color: Colors.white)),
+          onPressed: () => _subscribeToDietitian(context, d['id']),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF58A399),
+            padding: EdgeInsets.symmetric(vertical: 15),
+          ),
+          child: const Text(
+            "Diyetisyene Üye Ol",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         const SizedBox(height: 12),
         TextButton(
@@ -1207,25 +1545,20 @@ class _KaloriTakipWidgetState extends State<KaloriTakipWidget> {
         const SizedBox(height: 5),
         Align(
           alignment: Alignment.centerRight,
-          child: ElevatedButton(
+          child: ElevatedButton.icon(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ChatPage()),
               );
             },
+            icon: const Icon(Icons.chat_bubble_outline),
+            label: const Text("KAÇ KALORİ?"),
             style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(12),
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                'lib/assets/image.png',
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
+              backgroundColor: Colors.green.shade600,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
           ),
