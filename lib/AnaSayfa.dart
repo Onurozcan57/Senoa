@@ -298,7 +298,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 730,
+                    height: 500,
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('dietitians')
@@ -327,8 +327,9 @@ class AnaSayfaIcerigi extends StatelessWidget {
                             'ad': data['nameSurname'] ?? 'Diyetisyen Adı',
                             'uzmanlik':
                                 data['expertise'] ?? 'Klinik Beslenme Uzmanı',
-                            'resim': data['image'] ??
-                                'lib/assets/default_dietitian.png',
+                            'resim':
+                                data['image'] ?? 'lib/assets/Onur_Ozcan.png',
+                            'gender': data['gender'],
                             'biyografi': data['biography'] ??
                                 'Biyografi bilgisi bulunmamaktadır.',
                             'iletisim': {
@@ -356,10 +357,19 @@ class AnaSayfaIcerigi extends StatelessWidget {
                                           child: ListTile(
                                             contentPadding: EdgeInsets.all(12),
                                             leading: CircleAvatar(
-                                              backgroundImage: AssetImage(d[
-                                                      'resim'] ??
-                                                  'lib/assets/default_dietitian.png'),
-                                              radius: 32,
+                                              radius: 30,
+                                              backgroundImage: d['image'] !=
+                                                      null
+                                                  ? NetworkImage(d['image'])
+                                                      as ImageProvider
+                                                  : AssetImage(
+                                                      d['gender'] == 'female'
+                                                          ? 'lib/assets/kadin.png'
+                                                          : d['gender'] ==
+                                                                  'male'
+                                                              ? 'lib/assets/erekk.jpeg'
+                                                              : 'lib/assets/default_avatar.png',
+                                                    ),
                                             ),
                                             title: Text(d['ad'],
                                                 style: TextStyle(
@@ -1128,9 +1138,17 @@ class DiyetisyenKart extends StatelessWidget {
             children: [
               AspectRatio(
                 aspectRatio: 2,
-                child: Image.asset(
-                  d['resimYolu'],
-                  fit: BoxFit.cover,
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: d['image'] != null
+                      ? NetworkImage(d['image']) as ImageProvider
+                      : AssetImage(
+                          d['gender'] == 'female'
+                              ? 'lib/assets/kadin.png'
+                              : d['gender'] == 'male'
+                                  ? 'lib/assets/erekk.jpeg'
+                                  : 'lib/assets/default_avatar.png',
+                        ),
                 ),
               ),
               Positioned(

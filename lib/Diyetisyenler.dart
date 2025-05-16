@@ -75,8 +75,17 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("DİYETİSYENLER"),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        title: Text(
+          "DİYETİSYENLER",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: Color(0xFF58A399),
+        centerTitle: true,
+        elevation: 4,
       ),
       body: Stack(
         children: [
@@ -126,6 +135,7 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
                               data['expertise'] ?? 'Klinik Beslenme Uzmanı',
                           'resim': data['image'] ??
                               'lib/assets/default_dietitian.png',
+                          'gender': data['gender'],
                           'biyografi': data['biography'] ??
                               'Biyografi bilgisi bulunmamaktadır.',
                           'iletisim': {
@@ -158,15 +168,16 @@ class _DiyetisyenlerState extends State<Diyetisyenler> {
                             child: ListTile(
                               contentPadding: EdgeInsets.all(12),
                               leading: CircleAvatar(
-                                backgroundImage: AssetImage(d['resim'] ??
-                                    'lib/assets/default_dietitian.png'),
-                                radius: 32,
-                                onBackgroundImageError:
-                                    (exception, stackTrace) {
-                                  // Resim yüklenemezse varsayılan resmi göster
-                                  Image.asset(
-                                      'lib/assets/default_dietitian.png');
-                                },
+                                radius: 30,
+                                backgroundImage: d['image'] != null
+                                    ? NetworkImage(d['image']) as ImageProvider
+                                    : AssetImage(
+                                        d['gender'] == 'female'
+                                            ? 'lib/assets/kadin.png'
+                                            : d['gender'] == 'male'
+                                                ? 'lib/assets/erekk.jpeg'
+                                                : 'lib/assets/default_avatar.png',
+                                      ),
                               ),
                               title: Text(d['ad'],
                                   style:

@@ -265,8 +265,8 @@ class _DiyanasayfaState extends State<Diyanasayfa> {
                                   'İsimsiz Kullanıcı',
                               age: userData['age']?.toString() ??
                                   'Belirtilmemiş',
-                              height: userData['height'] ?? 0,
-                              weight: userData['weight'] ?? 0,
+                              height: (userData['height'] ?? 0).toInt(),
+                              weight: (userData['weight'] ?? 0).toInt(),
                             ),
                           );
                         },

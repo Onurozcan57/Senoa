@@ -319,18 +319,49 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 children: [
                   SizedBox(height: 40),
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: _secilenResim != null
-                        ? FileImage(_secilenResim!)
-                        : userData['gender'] == 'female'
-                            ? const AssetImage("lib/assets/default_female.png")
-                            : userData['gender'] == 'male'
-                                ? const AssetImage(
-                                    "lib/assets/default_male.png")
-                                : const AssetImage(
-                                        "lib/assets/default_avatar.png")
-                                    as ImageProvider,
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey.shade200, // Hafif gri arka plan
+                        ),
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: _secilenResim != null
+                              ? FileImage(_secilenResim!)
+                              : userData['gender'] == 'female'
+                                  ? const AssetImage("lib/assets/kadin.png")
+                                  : userData['gender'] == 'male'
+                                      ? const AssetImage(
+                                          "lib/assets/erekk.jpeg")
+                                      : const AssetImage(
+                                              "lib/assets/default_avatar.png")
+                                          as ImageProvider,
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: _galeridenResimSec,
+                          child: Container(
+                            padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey.shade700.withOpacity(0.8),
+                            ),
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
                   Text(

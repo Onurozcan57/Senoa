@@ -54,14 +54,15 @@ class _DiyProfileState extends State<DiyProfile> {
                   SizedBox(height: 40),
                   CircleAvatar(
                     radius: 60,
-                    backgroundImage: NetworkImage(
-                      dietitianData['image'] ??
-                          (dietitianData['gender'] == 'female'
-                              ? 'https://via.placeholder.com/150?text=Kadın'
-                              : dietitianData['gender'] == 'male'
-                                  ? 'https://via.placeholder.com/150?text=Erkek'
-                                  : 'https://via.placeholder.com/150?text=Belirsiz'),
-                    ),
+                    backgroundImage: dietitianData['image'] != null
+                        ? NetworkImage(dietitianData['image']) as ImageProvider
+                        : AssetImage(
+                            dietitianData['gender'] == 'female'
+                                ? 'lib/assets/kadin.png'
+                                : dietitianData['gender'] == 'male'
+                                    ? 'lib/assets/erekk.jpeg'
+                                    : 'assets/images/default_avatar.png',
+                          ),
                   ),
                   SizedBox(height: 20),
                   Text(
@@ -153,85 +154,101 @@ class _DiyProfileState extends State<DiyProfile> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Profili Düzenle'),
+        backgroundColor: Color(0xFFA8D5BA),
+        title: Text(
+          'Profili Düzenle',
+          style: TextStyle(color: Color(0xFF58A399)),
+        ),
         content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Ad Soyad',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'E-posta',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Cinsiyet",
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Ad Soyad',
+                      border: OutlineInputBorder(),
+                      fillColor: Colors.white,
+                      filled: true,
                     ),
-                    SizedBox(height: 8),
-                    Row(
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: 'E-posta',
+                      border: OutlineInputBorder(),
+                      fillColor: Colors.white,
+                      filled: true,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: RadioListTile<String>(
-                            title: Text('Kadın'),
-                            value: 'female',
-                            groupValue: selectedGender,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGender = value;
-                              });
-                            },
-                            activeColor: Color(0xFF58A399),
+                        Text(
+                          "Cinsiyet",
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 14,
                           ),
                         ),
-                        Expanded(
-                          child: RadioListTile<String>(
-                            title: Text('Erkek'),
-                            value: 'male',
-                            groupValue: selectedGender,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGender = value;
-                              });
-                            },
-                            activeColor: Color(0xFF58A399),
-                          ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile<String>(
+                                title: Text('Kadın'),
+                                value: 'female',
+                                groupValue: selectedGender,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedGender = value;
+                                  });
+                                },
+                                activeColor: Color(0xFF58A399),
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile<String>(
+                                title: Text('Erkek'),
+                                value: 'male',
+                                groupValue: selectedGender,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedGender = value;
+                                  });
+                                },
+                                activeColor: Color(0xFF58A399),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text('İptal'),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.black,
+            ),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -240,8 +257,8 @@ class _DiyProfileState extends State<DiyProfile> {
                     .collection('dietitians')
                     .doc(FirebaseAuth.instance.currentUser!.uid)
                     .update({
-                  'nameSurname': nameController.text,
-                  'email': emailController.text,
+                  'nameSurname': nameController.text.trim(),
+                  'email': emailController.text.trim(),
                   'gender': selectedGender,
                 });
 
@@ -252,7 +269,8 @@ class _DiyProfileState extends State<DiyProfile> {
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                      content: Text('Güncelleme sırasında bir hata oluştu')),
+                      content: Text(
+                          'Güncelleme sırasında bir hata oluştu: ${e.toString()}')),
                 );
               }
             },

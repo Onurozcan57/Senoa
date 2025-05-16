@@ -3,6 +3,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:senoa/Diyetisyenler.dart';
 
 class Diyetisyenim extends StatefulWidget {
   const Diyetisyenim({super.key});
@@ -90,74 +91,6 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(FirebaseAuth.instance.currentUser?.uid)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Text(
-                'Diyetisyenim',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              );
-            }
-
-            final userData = snapshot.data?.data() as Map<String, dynamic>?;
-            final dietitianId = userData?['dietitianId'];
-
-            if (dietitianId == null) {
-              return Text(
-                'Diyetisyenim',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              );
-            }
-
-            return StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('dietitians')
-                  .doc(dietitianId)
-                  .snapshots(),
-              builder: (context, dietitianSnapshot) {
-                if (!dietitianSnapshot.hasData) {
-                  return Text(
-                    'Diyetisyenim',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  );
-                }
-
-                final dietitianData =
-                    dietitianSnapshot.data?.data() as Map<String, dynamic>?;
-                final dietitianName =
-                    dietitianData?['nameSurname'] ?? 'Diyetisyenim';
-
-                return Text(
-                  dietitianName,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                );
-              },
-            );
-          },
-        ),
-        backgroundColor: const Color(0xFFA8D5BA),
-      ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
@@ -215,7 +148,12 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                     SizedBox(height: 30),
                     ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/dietitians');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => (Diyetisyenler()),
+                          ),
+                        );
                       },
                       icon: Icon(Icons.search),
                       label: Text('Diyetisyen Bul'),
@@ -278,37 +216,20 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                             padding: const EdgeInsets.all(16),
                             child: Row(
                               children: [
-                                ClipOval(
-                                  child: StreamBuilder<DocumentSnapshot>(
-                                    stream: FirebaseFirestore.instance
-                                        .collection('dietitians')
-                                        .doc(dietitianId)
-                                        .snapshots(),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Image.asset(
-                                          "lib/assets/kadin.png",
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                        );
-                                      }
-
-                                      final data = snapshot.data?.data()
-                                          as Map<String, dynamic>?;
-                                      final gender =
-                                          data?['gender'] ?? 'female';
-
-                                      return Image.asset(
-                                        gender == 'male'
-                                            ? "lib/assets/erekk.jpeg"
-                                            : "lib/assets/kadin.png",
-                                        width: 100,
-                                        height: 100,
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                  ),
+                                CircleAvatar(
+                                  radius: 60,
+                                  backgroundImage: dietitianData['image'] !=
+                                          null
+                                      ? NetworkImage(dietitianData['image'])
+                                          as ImageProvider
+                                      : AssetImage(
+                                          dietitianData['gender'] == 'female'
+                                              ? 'lib/assets/kadin.png'
+                                              : dietitianData['gender'] ==
+                                                      'male'
+                                                  ? 'lib/assets/erekk.jpeg'
+                                                  : 'assets/images/default_avatar.png',
+                                        ),
                                 ),
                                 SizedBox(width: 16),
                                 Expanded(
@@ -334,12 +255,19 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                                             size: 20,
                                           ),
                                           SizedBox(width: 8),
-                                          Text(
-                                            dietitianData['email'] ??
-                                                'Belirtilmemiş',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[700],
+                                          Expanded(
+                                            // <== BU satırı ekle
+                                            child: Text(
+                                              dietitianData['email'] ??
+                                                  'Belirtilmemiş',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey[700],
+                                              ),
+                                              softWrap:
+                                                  true, // Satıra sığmazsa alta geçsin
+                                              overflow: TextOverflow
+                                                  .visible, // Taşma olmasın
                                             ),
                                           ),
                                         ],
