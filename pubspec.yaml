@@ -83,7 +83,7 @@ flutter:
     - lib/assets/atistirmalik.jpeg
     - lib/assets/sporSalonu.jpeg
     - lib/assets/veganlife.jpeg
-    - lib/assets/diyetisyenArkaPlan.jpg
+  
     - lib/assets/d3.jpeg
     - lib/assets/sandvic.jpg
     - lib/assets/detoks.jpg
@@ -106,7 +106,7 @@ flutter:
     - lib/assets/cocuk.jpeg
     - lib/assets/kahvalti.jpeg
     - lib/assets/gym3.jpg
-    - lib/assets/diyeetisyen2.jpeg
+    - lib/assets/smothie.jpeg
     - lib/assets/aksam.png
     - lib/assets/ogle.jpg
     - lib/assets/yulaf.jpeg
@@ -114,6 +114,9 @@ flutter:
     - lib/assets/diyetisyen.webp
     - lib/assets/egzersiz.jpg
     - lib/assets/arkaPlan_egzersiz.jpeg
+    - lib/assets/fitnes1.jpg
+    - lib/assets/image.png
+   
   
      #   - images/a_dot_ham.jpeg
 

@@ -186,6 +186,29 @@ class _FeedPageState extends State<FeedPage> {
           "text": "Harika bir motivasyon!"
         }
       ]
+    },
+    {
+      "profile_Photo":
+          "lib/assets/diyetisyen.webp", // Diyetisyen profil fotoğrafı
+      "username": "diyetisyen_irem",
+      "content":
+          "Diyetisyenizden sağlıklı smoothie tarifi: 1 adet muz, 1 avuç ıspanak, 1 bardak badem sütü, 1 tatlı kaşığı bal. Karıştırıp afiyetle tüketebilirsiniz! 🍌🥬🥛🍯",
+      "time": "Az önce",
+      "image": "lib/assets/smothie.jpeg",
+      "liked": false,
+      "showComments": false,
+      "comments": [
+        {
+          "username": "fitbaba",
+          "profile": "lib/assets/girisekrani.jpg",
+          "text": "Harika tarif, deneyeceğim!"
+        },
+        {
+          "username": "irem_enginyurt",
+          "profile": "lib/assets/Nisa_Sakar.png",
+          "text": "Teşekkürler, çok faydalı!"
+        }
+      ]
     }
   ];
 

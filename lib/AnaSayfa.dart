@@ -626,9 +626,9 @@ class AnaSayfaIcerigi extends StatelessWidget {
                       child: Row(
                         children: [
                           PaketKart(
-                            'SIRT VE BACAK EGZERSİZİ PROGaRAMI',
-                            'Isınma hareketleri, Sırt kasları ve bacak kasları için hareketler',
-                            "lib/assets/gym3.jpg",
+                            'SIRT VE BACAK EGZERSİZİ PROGARAMI',
+                            '',
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               'Sırt ve Bacak Egzersizleri',
@@ -637,8 +637,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'GÖĞÜS VE ÖN KOL PROGRAMI',
-                            'Isınma hareketleri, Gögüs ve ön kol kasları için hareketler',
-                            "lib/assets/gym3.jpg",
+                            '',
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Göğüs ve Ön Kol Egzersizleri",
@@ -651,8 +651,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'OMUZ VE ARKA KOL PROGRAMI',
-                            'Isınma hareketleri, Omuz ve Arka kol kasları için hareketler',
-                            "lib/assets/gym3.jpg",
+                            '',
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Omuz ve Arka Kol Programı",
@@ -665,8 +665,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             'FULL BODY PROGRAM',
-                            'Bu egzersiz programı bütün kas gruplarını çalıştırmak içindir.',
-                            "lib/assets/gym3.jpg",
+                            '',
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Full Body Egzersizleri",
@@ -675,8 +675,8 @@ class AnaSayfaIcerigi extends StatelessWidget {
                           ),
                           PaketKart(
                             "KARDİYO PROGRAMI",
-                            "Yağ yağmak ve ödem atmak için egzersizler",
-                            "lib/assets/gym3.jpg",
+                            "",
+                            "lib/assets/fitnes1.jpg",
                             onTap: () => showExercisePopup(
                               context,
                               "Kardiyo Egzersizleri",
@@ -1613,24 +1613,73 @@ class _KaloriTakipWidgetState extends State<KaloriTakipWidget> {
         const SizedBox(height: 5),
         Align(
           alignment: Alignment.centerRight,
-          child: ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ChatPage()),
-              );
-            },
-            icon: const Icon(Icons.chat_bubble_outline),
-            label: const Text("KAÇ KALORİ?"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green.shade600,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF00C853), Color(0xFFB2FF59)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: const [
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                    SizedBox(width: 6),
+                    Text(
+                      "Nasıl Yardımcı Olabilirim",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(12),
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    'lib/assets/image.png',
+                    width: 55,
+                    height: 55,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ],
           ),
-        )
+        ),
       ],
     );
   }
