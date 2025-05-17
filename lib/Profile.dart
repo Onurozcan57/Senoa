@@ -78,47 +78,61 @@ class _ProfileState extends State<Profile> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Şifre Değiştir'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: currentPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Mevcut Şifre',
-                border: OutlineInputBorder(),
+        backgroundColor: Color(0xFFA8D5BA),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text('Şifre Değiştir', style: TextStyle(color: Colors.black87)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: currentPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Mevcut Şifre',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              controller: newPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Yeni Şifre',
-                border: OutlineInputBorder(),
+              SizedBox(height: 10),
+              TextField(
+                controller: newPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Yeni Şifre',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              controller: confirmPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Yeni Şifre (Tekrar)',
-                border: OutlineInputBorder(),
+              SizedBox(height: 10),
+              TextField(
+                controller: confirmPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Yeni Şifre (Tekrar)',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text('İptal'),
+            style: TextButton.styleFrom(foregroundColor: Colors.black87),
           ),
           ElevatedButton(
             onPressed: () async {
-              if (newPasswordController.text !=
-                  confirmPasswordController.text) {
+              final currentPassword = currentPasswordController.text;
+              final newPassword = newPasswordController.text;
+              final confirmPassword = confirmPasswordController.text;
+
+              if (newPassword != confirmPassword) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Yeni şifreler eşleşmiyor')),
                 );
@@ -126,11 +140,16 @@ class _ProfileState extends State<Profile> {
               }
 
               try {
-                // Mevcut kullanıcıyı al
                 final user = _auth.currentUser;
-                if (user != null) {
-                  // Şifre değiştirme işlemi
-                  await user.updatePassword(newPasswordController.text);
+                if (user != null && user.email != null) {
+                  // Yeniden doğrulama (required by Firebase)
+                  final cred = EmailAuthProvider.credential(
+                    email: user.email!,
+                    password: currentPassword,
+                  );
+
+                  await user.reauthenticateWithCredential(cred);
+                  await user.updatePassword(newPassword);
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Şifre başarıyla değiştirildi')),
@@ -139,9 +158,15 @@ class _ProfileState extends State<Profile> {
                 }
               } on FirebaseAuthException catch (e) {
                 String message = 'Şifre değiştirme işlemi başarısız oldu';
-                if (e.code == 'requires-recent-login') {
-                  message = 'Güvenlik nedeniyle lütfen tekrar giriş yapın';
+                if (e.code == 'wrong-password') {
+                  message = 'Mevcut şifre yanlış';
+                } else if (e.code == 'weak-password') {
+                  message = 'Yeni şifre çok zayıf';
+                } else if (e.code == 'requires-recent-login') {
+                  message =
+                      'Güvenlik nedeniyle tekrar giriş yapmanız gerekiyor';
                 }
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(message)),
                 );
@@ -168,7 +193,12 @@ class _ProfileState extends State<Profile> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Profili Düzenle'),
+        backgroundColor: Color(0xFFA8D5BA), // senin arkaplan rengin
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Profili Düzenle',
+          style: TextStyle(color: Colors.black87),
+        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -177,6 +207,8 @@ class _ProfileState extends State<Profile> {
                 controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Ad Soyad',
+                  filled: true,
+                  fillColor: Colors.white,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -185,15 +217,17 @@ class _ProfileState extends State<Profile> {
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'E-posta',
+                  filled: true,
+                  fillColor: Colors.white,
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 16),
               Container(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
                 child: Column(
@@ -202,16 +236,20 @@ class _ProfileState extends State<Profile> {
                     Text(
                       "Cinsiyet",
                       style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 6),
                     Row(
                       children: [
                         Expanded(
                           child: RadioListTile<String>(
-                            title: Text('Kadın'),
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            title:
+                                Text('Kadın', style: TextStyle(fontSize: 14)),
                             value: 'female',
                             groupValue: selectedGender,
                             onChanged: (value) {
@@ -224,7 +262,10 @@ class _ProfileState extends State<Profile> {
                         ),
                         Expanded(
                           child: RadioListTile<String>(
-                            title: Text('Erkek'),
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            title:
+                                Text('Erkek', style: TextStyle(fontSize: 14)),
                             value: 'male',
                             groupValue: selectedGender,
                             onChanged: (value) {
@@ -247,6 +288,7 @@ class _ProfileState extends State<Profile> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text('İptal'),
+            style: TextButton.styleFrom(foregroundColor: Colors.black87),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -271,11 +313,11 @@ class _ProfileState extends State<Profile> {
                 );
               }
             },
-            child: Text('Kaydet'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xFF58A399),
               foregroundColor: Colors.white,
             ),
+            child: Text('Kaydet'),
           ),
         ],
       ),
@@ -457,7 +499,9 @@ class _ProfileState extends State<Profile> {
                             MaterialPageRoute(
                               builder: (context) => Scaffold(
                                 appBar: AppBar(
-                                  title: Text('Bize Ulaşın'),
+                                  title: Text('Canlı Destek'),
+                                  backgroundColor: Color(0xFFA8D5BA),
+                                  centerTitle: true,
                                 ),
                                 body: _buildContactSection(),
                               ),
@@ -574,12 +618,6 @@ class _ProfileState extends State<Profile> {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
               ),
             ],
           ),

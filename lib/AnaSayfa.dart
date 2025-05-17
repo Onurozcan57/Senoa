@@ -298,7 +298,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 500,
+                    height: 550,
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('dietitians')
@@ -327,8 +327,6 @@ class AnaSayfaIcerigi extends StatelessWidget {
                             'ad': data['nameSurname'] ?? 'Diyetisyen Adı',
                             'uzmanlik':
                                 data['expertise'] ?? 'Klinik Beslenme Uzmanı',
-                            'resim':
-                                data['image'] ?? 'lib/assets/Onur_Ozcan.png',
                             'gender': data['gender'],
                             'biyografi': data['biography'] ??
                                 'Biyografi bilgisi bulunmamaktadır.',
@@ -368,7 +366,7 @@ class AnaSayfaIcerigi extends StatelessWidget {
                                                           : d['gender'] ==
                                                                   'male'
                                                               ? 'lib/assets/erekk.jpeg'
-                                                              : 'lib/assets/default_avatar.png',
+                                                              : 'lib/assets/kadin.png',
                                                     ),
                                             ),
                                             title: Text(d['ad'],
@@ -1028,7 +1026,7 @@ class _AnasayfaState extends State<Anasayfa> {
                 size: 30,
               ),
             ),
-            label: 'Diyetisyenim',
+            label: 'Diyetisyen',
           ),
           NavigationDestination(
             selectedIcon: Icon(
@@ -1147,7 +1145,7 @@ class DiyetisyenKart extends StatelessWidget {
                               ? 'lib/assets/kadin.png'
                               : d['gender'] == 'male'
                                   ? 'lib/assets/erekk.jpeg'
-                                  : 'lib/assets/default_avatar.png',
+                                  : 'lib/assets/image.png',
                         ),
                 ),
               ),
@@ -1641,20 +1639,19 @@ class _KaloriTakipWidgetState extends State<KaloriTakipWidget> {
                       color: Colors.white,
                       size: 28,
                     ),
-                    SizedBox(width: 6),
                     Text(
                       "Nasıl Yardımcı Olabilirim",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 10,
                         letterSpacing: 1.2,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 5),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(

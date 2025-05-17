@@ -79,8 +79,8 @@ class _FeedPageState extends State<FeedPage> {
       ]
     },
     {
-      "profile_Photo": "lib/assets/girisekrani.jpg",
-      "username": "sporcan",
+      "profile_Photo": "lib/assets/emre.png",
+      "username": "Emre_İleri",
       "content":
           "Antrenman öncesi bir avuç badem yemek enerji verir! Deneyin! 💪",
       "time": "1 gün önce",
@@ -101,8 +101,8 @@ class _FeedPageState extends State<FeedPage> {
       ]
     },
     {
-      "profile_Photo": "lib/assets/girisekrani.jpg",
-      "username": "veganlife",
+      "profile_Photo": "lib/assets/apo.png",
+      "username": "Abdurrahman_Gökçen",
       "content": "Vegan beslenmede B12 takviyesi almayı unutmayın! 🌱",
       "time": "3 gün önce",
       "image": "lib/assets/veganlife.jpeg",

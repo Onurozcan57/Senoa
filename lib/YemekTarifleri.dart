@@ -379,7 +379,7 @@ class RecipeCard extends StatelessWidget {
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
               child: Image.asset(
                 imagePath,
-                height: 100,
+                height: 95,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -396,7 +396,7 @@ class RecipeCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 1,
               ),
             ),
             Padding(

@@ -116,7 +116,8 @@ flutter:
     - lib/assets/arkaPlan_egzersiz.jpeg
     - lib/assets/fitnes1.jpg
     - lib/assets/image.png
-   
+    - lib/assets/apo.png
+    - lib/assets/emre.png
   
      #   - images/a_dot_ham.jpeg
 
