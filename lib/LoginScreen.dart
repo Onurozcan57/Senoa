@@ -661,8 +661,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             await _auth.currentUser?.delete();
                             rethrow;
                           }
-
-                          Navigator.pop(context);
+                          _showBodyWeightPopup(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                                 content: Text(

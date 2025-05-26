@@ -434,14 +434,14 @@ class RecipeCard extends StatelessWidget {
                   Text(
                     'Kalori: $kalori / Porsiyon: $porsiyon',
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 8,
                       color: Colors.grey[700],
                     ),
                     textAlign: TextAlign.center,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -374,86 +374,33 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 20),
-                      FutureBuilder<String?>(
-                        future: _getUserDietitianId(),
-                        builder: (context, dietitianIdSnapshot) {
-                          if (!dietitianIdSnapshot.hasData ||
-                              dietitianIdSnapshot.data == null) {
-                            return Center(
-                                child: Text('Diyetisyen bulunamadı.'));
-                          }
-                          final dietitianId = dietitianIdSnapshot.data!;
-                          return FutureBuilder<String?>(
-                            future: _getUserName(),
-                            builder: (context, userNameSnapshot) {
-                              if (!userNameSnapshot.hasData ||
-                                  userNameSnapshot.data == null) {
-                                return Center(
-                                    child: Text('Kullanıcı adı bulunamadı.'));
-                              }
-                              final userName = userNameSnapshot.data!;
-                              return StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('dietPlans')
-                                    .doc(dietitianId)
-                                    .collection('plans')
-                                    .where('userInfo.name', isEqualTo: userName)
-                                    .orderBy('createdAt', descending: true)
-                                    .limit(1)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    print('Hata: \\${snapshot.error}');
-                                    return Center(
-                                        child: Text('Bir hata oluştu'));
-                                  }
-                                  if (!snapshot.hasData) {
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  }
-                                  if (snapshot.data!.docs.isEmpty) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Text(
-                                        'Henüz diyet listesi oluşturulmamış',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey[700],
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  final planData = snapshot.data!.docs.first
-                                      .data() as Map<String, dynamic>;
-                                  final mealData =
-                                      planData['meals'] as Map<String, dynamic>;
-                                  return Column(
-                                    children: [
-                                      MealCard(
-                                        mealTime: "Sabah",
-                                        meal: mealData['breakfast'] ??
-                                            'Henüz belirlenmedi',
-                                        imageAsset: "lib/assets/yulaf.jpeg",
-                                      ),
-                                      MealCard(
-                                        mealTime: "Öğle",
-                                        meal: mealData['lunch'] ??
-                                            'Henüz belirlenmedi',
-                                        imageAsset: "lib/assets/ogle.jpg",
-                                      ),
-                                      MealCard(
-                                        mealTime: "Akşam",
-                                        meal: mealData['dinner'] ??
-                                            'Henüz belirlenmedi',
-                                        imageAsset: "lib/assets/aksam.png",
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            MealCard(
+                              mealTime: "Öğle Yemeği",
+                              meal: "Izgara Tavuk + Bulgur + Yoğurt",
+                              portion: "1 porsiyon",
+                              calories: "450",
+                              imageAsset: "lib/assets/yulaf.jpeg",
+                            ),
+                            MealCard(
+                              mealTime: "Öğle Yemeği",
+                              meal: "Izgara Tavuk + Bulgur + Yoğurt",
+                              portion: "1 porsiyon",
+                              calories: "450",
+                              imageAsset: "lib/assets/kinoa.jpg",
+                            ),
+                            MealCard(
+                              mealTime: "Öğle Yemeği",
+                              meal: "Izgara Tavuk + Bulgur + Yoğurt",
+                              portion: "1 porsiyon",
+                              calories: "450",
+                              imageAsset: "lib/assets/tart.jpg",
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 30),
                     ],
@@ -471,46 +418,77 @@ class _DiyetisyenimState extends State<Diyetisyenim> {
 class MealCard extends StatelessWidget {
   final String mealTime;
   final String meal;
+  final String portion;
+  final String calories;
   final String imageAsset;
 
-  MealCard({
+  const MealCard({
+    Key? key,
     required this.mealTime,
     required this.meal,
+    required this.portion,
+    required this.calories,
     required this.imageAsset,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 15,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
-      child: ListTile(
-        onTap: () {
-          _showPopup(context, mealTime, meal);
-        },
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.asset(
-            imageAsset,
-            width: 65,
-            height: 95,
-            fit: BoxFit.cover,
-          ),
-        ),
-        title: Text(
-          mealTime,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: const Color.fromARGB(255, 48, 68, 160),
-          ),
-        ),
-        subtitle: Text(
-          meal,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
+    return GestureDetector(
+      onTap: () =>
+          _showPopup(context, mealTime, meal, portion, calories, imageAsset),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 10,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        color: const Color.fromARGB(255, 198, 233, 212),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset(
+                  imageAsset,
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      mealTime,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF3D3D3D),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      meal,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF555555),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "$portion | $calories kcal",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF777777),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, color: Color(0xFF58A399)),
+            ],
           ),
         ),
       ),
@@ -518,83 +496,93 @@ class MealCard extends StatelessWidget {
   }
 }
 
-void _showPopup(BuildContext context, String baslik, String aciklama) {
+void _showPopup(BuildContext context, String title, String meal, String portion,
+    String calories, String imageAsset) {
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      contentPadding: EdgeInsets.zero,
-      content: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                baslik,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
+    builder: (context) => Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFA8D5BA),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset(
+                  imageAsset,
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 208, 255),
+                  color: Color(0xFF3D3D3D),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                aciklama,
+              const SizedBox(height: 10),
+              Text(
+                meal,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: const Color.fromARGB(255, 8, 0, 255),
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Color(0xFF444444),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    foregroundColor: const Color.fromARGB(255, 0, 191, 255),
-                    textStyle: TextStyle(fontSize: 16),
-                  ),
-                  child: Text("Show more"),
+              const SizedBox(height: 10),
+              Text(
+                "Porsiyon: $portion\nKalori: $calories kcal",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFF555555),
                 ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    textStyle: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Detaylı besin içeriği vs. açılabilir
+                    },
+                    icon: const Icon(Icons.info_outline),
+                    label: const Text("Detay"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF58A399),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
-                  child: Text("Kapat"),
-                ),
-              ],
-            ),
-          ],
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Kapat"),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF3D3D3D),
+                      side: const BorderSide(color: Color(0xFF58A399)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     ),
   );
-}
-
-Future<String?> _getUserDietitianId() async {
-  final userDoc = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser?.uid)
-      .get();
-  return userDoc.data()?['dietitianId'];
-}
-
-Future<String?> _getUserName() async {
-  final userDoc = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser?.uid)
-      .get();
-  return userDoc.data()?['nameSurname'];
 }
