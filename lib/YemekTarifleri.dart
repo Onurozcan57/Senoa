@@ -43,6 +43,8 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               imagePath: "lib/assets/sandvic.jpg",
               kalori: "250 kcal",
               porsiyon: "1",
+              diyetisyenAdi: "Dyt. İrem Enginyurt tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/diyetisyen.webp",
             ),
             RecipeCard(
               title: "Detoks Suyu",
@@ -60,6 +62,8 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               imagePath: "lib/assets/detoks.jpg",
               kalori: "80 kcal",
               porsiyon: "1",
+              diyetisyenAdi: "Dyt. Helin Özalkan tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/Helin_Ozalkan.png",
             ),
             RecipeCard(
               title: "Patatesli Omlet",
@@ -78,6 +82,8 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               imagePath: "lib/assets/omlet.jpeg",
               kalori: "290 kcal",
               porsiyon: "2",
+              diyetisyenAdi: "Dyt. Elif Kabaklı tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/diyetisyen2.jpg",
             ),
             RecipeCard(
               title: "Sebzeli Biftek",
@@ -98,6 +104,8 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               imagePath: "lib/assets/biftek.jpg",
               kalori: "200 kcal",
               porsiyon: "2",
+              diyetisyenAdi: "Dyt. Beyzanur Bayır tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/diyetisyen2.jpg",
             ),
             RecipeCard(
               title: "Poşe Somon",
@@ -114,6 +122,8 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               imagePath: "lib/assets/somon.webp",
               kalori: "210 kcal",
               porsiyon: "1",
+              diyetisyenAdi: "Dyt. Ayşe Sümeyra Kesim tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/diyetisyen3.webp",
             ),
             RecipeCard(
               title: "Kinoalı Girit Kebabı",
@@ -146,6 +156,8 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               imagePath: "lib/assets/kinoa.jpg",
               kalori: "237 kcal",
               porsiyon: "1",
+              diyetisyenAdi: "Dyt. İrem Enginyurt tarfından öneriliyor",
+              diyetisyenResimPath: "lib/assets/diyetisyen.webp",
             ),
             RecipeCard(
               title: "Böğürtlenli Tart",
@@ -176,6 +188,8 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               imagePath: "lib/assets/tart.jpg",
               kalori: "150 kcal",
               porsiyon: "12",
+              diyetisyenAdi: "Dyt. Helin  Özalkan tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/Helin_Ozalkan.png",
             ),
             RecipeCard(
               title: "Portakal Soslu Enginar",
@@ -197,47 +211,55 @@ class _YemekTarifleriState extends State<YemekTarifleri> {
               imagePath: "lib/assets/enginar.jpg",
               kalori: "150 kcal",
               porsiyon: "1",
+              diyetisyenAdi: "Dyt. İrem Enginyurt tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/diyetisyen.webp",
             ),
             RecipeCard(
-                title: "Tavuk ve Avakadolu Tam Buğday Tostu",
-                description: "Malzemeler:\n"
-                    "2 dilim tam buğday ekmeği\n"
-                    "100 gram haşlanmış tavuk göğsü (ince dilimlenmiş)\n"
-                    "1/2 avokado (ezilmiş)\n"
-                    "1 tatlı kaşığı limon suyu\n"
-                    "Tuz ve karabiber\n"
-                    "Hazırlanışı:\n"
-                    "Ezilmiş avokadoyu limon suyu, tuz ve karabiber ile karıştırın."
-                    "Karışımı ekmek dilimlerine sürün."
-                    "Haşlanmış tavuk dilimlerini ekmeklerin arasına yerleştirin ve tost makinesinde kızartın.",
-                imagePath: "lib/assets/avokado.webp",
-                kalori: "386 kcal",
-                porsiyon: "1"),
+              title: "Tavuk ve Avakadolu Tam Buğday Tostu",
+              description: "Malzemeler:\n"
+                  "2 dilim tam buğday ekmeği\n"
+                  "100 gram haşlanmış tavuk göğsü (ince dilimlenmiş)\n"
+                  "1/2 avokado (ezilmiş)\n"
+                  "1 tatlı kaşığı limon suyu\n"
+                  "Tuz ve karabiber\n"
+                  "Hazırlanışı:\n"
+                  "Ezilmiş avokadoyu limon suyu, tuz ve karabiber ile karıştırın."
+                  "Karışımı ekmek dilimlerine sürün."
+                  "Haşlanmış tavuk dilimlerini ekmeklerin arasına yerleştirin ve tost makinesinde kızartın.",
+              imagePath: "lib/assets/avokado.webp",
+              kalori: "386 kcal",
+              porsiyon: "1",
+              diyetisyenAdi: "Dyt. Helin Özalkan tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/Helin_Ozalkan.png",
+            ),
             RecipeCard(
-                title: "Acai Bowl",
-                description: "1 su bardağı badem sütü\n"
-                    "1/2 su bardağı süzme yoğurt\n"
-                    "1/2 su bardağı dondurulmuş böğürtlen\n"
-                    "1/2 su bardağı dondurulmuş frambuaz\n"
-                    "1/2 su bardağı dondurulmuş yaban mersini\n"
-                    "2 adet muz (dilimleyerek dondurulmuş)\n"
-                    "4 yemek kaşığı acai tozu\n\n"
-                    "Acai Bowl Üzerini Süslemek İçin:\n"
-                    "3-4 adet yaban mersini\n"
-                    "3-4 adet frambuaz\n"
-                    "3-4 adet böğürtlen\n"
-                    "3-4 adet dilimlenmiş muz\n"
-                    "1-2 yemek kaşığı granola\n"
-                    "1-2 yemek kaşığı chia tohumu\n"
-                    "1-2 yemek kaşığı fıstık ezmesi\n\n"
-                    "Acai Bowl Tarifi Nasıl Yapılır?"
-                    "Tarife başlamadan önce yaban mersini ve iki muzu dilimleyerek buzluğa atın. Donduktan sonra buzluktan çıkarın ve kaseleri hazırlamaya başlayın."
-                    "Dondurulmuş böğürtlen, dondurulmuş frambuaz, yaban mersini, muz, badem sütü, süzme yoğurt ve acai tozunu blenderda pürüzsüz bir kıvam alana dek çekin."
-                    "Daha tatlı olmasını isterseniz 1-2 tatlı kaşığı kadar bal veya agave şurubu da ilave edebilirsiniz."
-                    "Kaselere paylaştırın ve üzerini arzu ettiğiniz gibi süsleyin. Acai bowl hazır! Meyveler, granola, chia tohumu ve fıstık ezmesi oldukça yakışıyor. Afiyet olsun!",
-                imagePath: "lib/assets/acaibowll.jpg",
-                kalori: "350",
-                porsiyon: "1"),
+              title: "Acai Bowl",
+              description: "1 su bardağı badem sütü\n"
+                  "1/2 su bardağı süzme yoğurt\n"
+                  "1/2 su bardağı dondurulmuş böğürtlen\n"
+                  "1/2 su bardağı dondurulmuş frambuaz\n"
+                  "1/2 su bardağı dondurulmuş yaban mersini\n"
+                  "2 adet muz (dilimleyerek dondurulmuş)\n"
+                  "4 yemek kaşığı acai tozu\n\n"
+                  "Acai Bowl Üzerini Süslemek İçin:\n"
+                  "3-4 adet yaban mersini\n"
+                  "3-4 adet frambuaz\n"
+                  "3-4 adet böğürtlen\n"
+                  "3-4 adet dilimlenmiş muz\n"
+                  "1-2 yemek kaşığı granola\n"
+                  "1-2 yemek kaşığı chia tohumu\n"
+                  "1-2 yemek kaşığı fıstık ezmesi\n\n"
+                  "Acai Bowl Tarifi Nasıl Yapılır?"
+                  "Tarife başlamadan önce yaban mersini ve iki muzu dilimleyerek buzluğa atın. Donduktan sonra buzluktan çıkarın ve kaseleri hazırlamaya başlayın."
+                  "Dondurulmuş böğürtlen, dondurulmuş frambuaz, yaban mersini, muz, badem sütü, süzme yoğurt ve acai tozunu blenderda pürüzsüz bir kıvam alana dek çekin."
+                  "Daha tatlı olmasını isterseniz 1-2 tatlı kaşığı kadar bal veya agave şurubu da ilave edebilirsiniz."
+                  "Kaselere paylaştırın ve üzerini arzu ettiğiniz gibi süsleyin. Acai bowl hazır! Meyveler, granola, chia tohumu ve fıstık ezmesi oldukça yakışıyor. Afiyet olsun!",
+              imagePath: "lib/assets/acaibowll.jpg",
+              kalori: "350",
+              porsiyon: "1",
+              diyetisyenAdi: "Dyt. Ayşe Sümeyra Kesim tarafından öneriliyor",
+              diyetisyenResimPath: "lib/assets/diyetisyen3.webp",
+            ),
           ],
         ),
       ),
@@ -251,6 +273,8 @@ class RecipeCard extends StatelessWidget {
   final String imagePath;
   final String kalori;
   final String porsiyon;
+  final String diyetisyenAdi;
+  final String diyetisyenResimPath;
 
   const RecipeCard({
     required this.title,
@@ -258,6 +282,9 @@ class RecipeCard extends StatelessWidget {
     required this.imagePath,
     required this.kalori,
     required this.porsiyon,
+    required this.diyetisyenAdi,
+    required this.diyetisyenResimPath,
+    Key? key,
   });
   void _showPopup(BuildContext context, String baslik, String aciklama,
       String kalori, String porsiyon) {
@@ -401,15 +428,42 @@ class RecipeCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                'Kalori: $kalori / Porsiyon: $porsiyon',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey[700],
-                ),
-                textAlign: TextAlign.center,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Kalori: $kalori / Porsiyon: $porsiyon',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey[700],
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 10,
+                        backgroundImage: AssetImage(diyetisyenResimPath),
+                      ),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          diyetisyenAdi,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],

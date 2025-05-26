@@ -105,7 +105,7 @@ class _FeedPageState extends State<FeedPage> {
       "username": "Abdurrahman_Gökçen",
       "content": "Vegan beslenmede B12 takviyesi almayı unutmayın! 🌱",
       "time": "3 gün önce",
-      "image": "lib/assets/veganlife.jpeg",
+      "image": "lib/assets/vegan.jpg",
       "liked": false,
       "showComments": false,
       "comments": [
@@ -194,7 +194,7 @@ class _FeedPageState extends State<FeedPage> {
       "content":
           "Diyetisyenizden sağlıklı smoothie tarifi: 1 adet muz, 1 avuç ıspanak, 1 bardak badem sütü, 1 tatlı kaşığı bal. Karıştırıp afiyetle tüketebilirsiniz! 🍌🥬🥛🍯",
       "time": "Az önce",
-      "image": "lib/assets/smothie.jpeg",
+      "image": "lib/assets/smothiee.jpg",
       "liked": false,
       "showComments": false,
       "comments": [

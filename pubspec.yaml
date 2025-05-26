@@ -82,9 +82,9 @@ flutter:
     - lib/assets/arkaPlan4.jpg
     - lib/assets/atistirmalik.jpeg
     - lib/assets/sporSalonu.jpeg
-    - lib/assets/veganlife.jpeg
+    - lib/assets/vegan.jpg
   
-    - lib/assets/d3.jpeg
+    
     - lib/assets/sandvic.jpg
     - lib/assets/detoks.jpg
     - lib/assets/omlet.jpeg
@@ -106,7 +106,7 @@ flutter:
     - lib/assets/cocuk.jpeg
     - lib/assets/kahvalti.jpeg
     - lib/assets/gym3.jpg
-    - lib/assets/smothie.jpeg
+    - lib/assets/smothiee.jpg
     - lib/assets/aksam.png
     - lib/assets/ogle.jpg
     - lib/assets/yulaf.jpeg
@@ -118,7 +118,8 @@ flutter:
     - lib/assets/image.png
     - lib/assets/apo.png
     - lib/assets/emre.png
-  
+    - lib/assets/diyetisyen2.jpg
+    - lib/assets/diyetisyen3.webp
      #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
